@@ -6,3 +6,9 @@
   margin: 0 auto;
   text-align: center;
 }
+
+@layer components {
+  .icon-btn {
+    @apply duration-100 hover:bg-black/10 active:bg-black/20 hover:dark:bg-white/10 active:dark:bg-white/20 p-2 rounded-full;
+  }
+}

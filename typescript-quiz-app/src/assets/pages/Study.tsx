@@ -1,8 +1,10 @@
 import { Progress } from "@nextui-org/react";
-import StudyMenu from "../components/StudyMenu";
+import StudyButtons from "../components/StudyButtons";
 import StudyCard from "../components/StudyCard";
+import StudyInfo from "../components/StudyInfo";
 import { Flashcard } from "../globalTypes";
 import { useState } from "react";
+import arrayShuffle from "array-shuffle";
 
 const flashcards: Flashcard[] = [
   {
@@ -15,7 +17,7 @@ const flashcards: Flashcard[] = [
     front: "In which century was the Colosseum built?",
     back: "1st century AD",
     cardId: 2,
-    isStarred: false,
+    isStarred: true,
   },
   {
     front: "Who was the first Roman Emperor?",
@@ -27,7 +29,7 @@ const flashcards: Flashcard[] = [
     front: "What river flows through Rome?",
     back: "Tiber River",
     cardId: 4,
-    isStarred: false,
+    isStarred: true,
   },
   {
     front: "Which famous fountain is located in Rome's Trevi District?",
@@ -39,7 +41,7 @@ const flashcards: Flashcard[] = [
     front: "What is the Vatican City's status in relation to Rome?",
     back: "It is an independent city-state surrounded by Rome.",
     cardId: 6,
-    isStarred: false,
+    isStarred: true,
   },
   {
     front: "Which ancient Roman road connected Rome to the south of Italy?",
@@ -69,7 +71,31 @@ const flashcards: Flashcard[] = [
 ];
 
 const Study = () => {
+  const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
+  const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck
   const [index, setIndex] = useState(0);
+  const [isFrontFirst, setIsFrontFirst] = useState(true);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [isStarredOnly, setIsStarredOnly] = useState(false);
+
+  const shuffleDeck = (bool: boolean) => {
+    if (bool) {
+      setCurrentDeck(originalDeck);
+      setIsShuffled(false);
+    } else {
+      setCurrentDeck(arrayShuffle(originalDeck));
+      setIsShuffled(true);
+    }
+  };
+
+  const changeStarredSelected = (val: string) => {
+    if (val === "starred") {
+      setIsStarredOnly(true);
+    } else {
+      setIsStarredOnly(false);
+    }
+  };
+
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-[#0f0f11]">
       <div className="flex justify-center">
@@ -78,18 +104,26 @@ const Study = () => {
           <p className="font-semibold text-sm">
             {index + 1} / {flashcards.length}
           </p>
+          <p>{currentDeck[0].front}</p>
           <Progress
             aria-label="Loading..."
-            value={((index + 1) / flashcards.length) * 100}
+            value={((index + 1) / currentDeck.length) * 100}
             className=""
             size="sm"
           />
-          <StudyCard flashcard={flashcards[index]} />
-          <StudyMenu
+          <StudyCard
+            flashcard={currentDeck[index]}
+            isShuffled={isShuffled}
+            shuffleDeck={shuffleDeck}
+            changeStarredSelected={changeStarredSelected}
+          />
+          <StudyButtons
             index={index}
             setIndex={setIndex}
-            length={flashcards.length}
+            length={currentDeck.length}
           />
+          <StudyInfo />
+          <div className="pt-10"></div>
         </div>
       </div>
     </div>

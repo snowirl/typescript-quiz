@@ -1,13 +1,13 @@
 import { Button, ButtonGroup } from "@nextui-org/react";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 
-interface StudyMenuProps {
+interface StudyButtonsProps {
   index: number;
   setIndex: (index: number) => void;
   length: number;
 }
 
-const StudyMenu = (props: StudyMenuProps) => {
+const StudyButtons = (props: StudyButtonsProps) => {
   const incrementIndex = () => {
     if (props.index < props.length - 1) {
       props.setIndex(props.index + 1);
@@ -21,25 +21,26 @@ const StudyMenu = (props: StudyMenuProps) => {
   };
 
   return (
-    <div className="flex flex-grow pb-10">
-      <ButtonGroup className="flex-grow">
+    <div className="flex flex-grow">
+      <ButtonGroup className="flex-grow space-x-2">
         <Button
-          className="flex-grow h-24"
-          variant="ghost"
+          className="flex-grow h-24 bg-white dark:bg-[#18181B] shadow-sm"
+          variant="light"
+          color="default"
           onClick={() => decrementIndex()}
         >
-          <BsArrowLeft className="w-10 h-10" />
+          <BsArrowLeft className="w-10 h-10 " />
         </Button>
         <Button
-          className="flex-grow h-24"
-          variant="ghost"
+          className="flex-grow h-24 bg-white dark:bg-[#18181B] shadow-sm"
+          variant="light"
           onClick={() => incrementIndex()}
         >
-          <BsArrowRight className="w-10 h-10" />
+          <BsArrowRight className="w-10 h-10 " />
         </Button>
       </ButtonGroup>
     </div>
   );
 };
 
-export default StudyMenu;
+export default StudyButtons;
