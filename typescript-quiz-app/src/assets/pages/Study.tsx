@@ -2,8 +2,9 @@ import { Progress } from "@nextui-org/react";
 import StudyButtons from "../components/StudyButtons";
 import StudyCard from "../components/StudyCard";
 import StudyInfo from "../components/StudyInfo";
+import StudyCardPreview from "../components/StudyCardPreview";
 import { Flashcard } from "../globalTypes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import arrayShuffle from "array-shuffle";
 
 const flashcards: Flashcard[] = [
@@ -72,18 +73,46 @@ const flashcards: Flashcard[] = [
 
 const Study = () => {
   const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
-  const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck
+  const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
   const [index, setIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
   const [isFrontFirst, setIsFrontFirst] = useState(true);
   const [isShuffled, setIsShuffled] = useState(false);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
 
+  useEffect(() => {
+    shuffleDeck(!isShuffled);
+  }, [isStarredOnly]);
+
+  useEffect(() => {
+    if (isFrontFirst && isFlipped) {
+      flipCard();
+    } else if (!isFrontFirst && !isFlipped) {
+      flipCard();
+    }
+  }, [index]);
+
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
-      setCurrentDeck(originalDeck);
+      if (isStarredOnly) {
+        setCurrentDeck(
+          originalDeck.filter((flashcard) => flashcard.isStarred === true)
+        );
+      } else {
+        setCurrentDeck(originalDeck);
+      }
       setIsShuffled(false);
     } else {
-      setCurrentDeck(arrayShuffle(originalDeck));
+      if (isStarredOnly) {
+        setCurrentDeck(
+          arrayShuffle(
+            originalDeck.filter((flashcard) => flashcard.isStarred === true)
+          )
+        );
+      } else {
+        setCurrentDeck(arrayShuffle(originalDeck));
+      }
+
       setIsShuffled(true);
     }
   };
@@ -94,6 +123,22 @@ const Study = () => {
     } else {
       setIsStarredOnly(false);
     }
+
+    setIndex(0);
+  };
+
+  const changeInitialCardSide = (val: string) => {
+    if (val === "front") {
+      setIsFrontFirst(true);
+    } else {
+      setIsFrontFirst(false);
+    }
+
+    setIndex(0);
+  };
+
+  const flipCard = () => {
+    setIsFlipped(!isFlipped);
   };
 
   return (
@@ -102,9 +147,8 @@ const Study = () => {
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <p className="font-bold text-2xl">Rome Flashcards</p>
           <p className="font-semibold text-sm">
-            {index + 1} / {flashcards.length}
+            {index + 1} / {currentDeck.length}
           </p>
-          <p>{currentDeck[0].front}</p>
           <Progress
             aria-label="Loading..."
             value={((index + 1) / currentDeck.length) * 100}
@@ -113,9 +157,14 @@ const Study = () => {
           />
           <StudyCard
             flashcard={currentDeck[index]}
+            isFlipped={isFlipped}
             isShuffled={isShuffled}
             shuffleDeck={shuffleDeck}
             changeStarredSelected={changeStarredSelected}
+            isStarredOnly={isStarredOnly}
+            isFrontFirst={isFrontFirst}
+            flipCard={flipCard}
+            changeInitialCardSide={changeInitialCardSide}
           />
           <StudyButtons
             index={index}
@@ -123,6 +172,12 @@ const Study = () => {
             length={currentDeck.length}
           />
           <StudyInfo />
+          <p className="text-left font-semibold pt-4">
+            All cards ({originalDeck.length})
+          </p>
+          {originalDeck.map((flashcard) => (
+            <StudyCardPreview key={flashcard.cardId} flashcard={flashcard} />
+          ))}
           <div className="pt-10"></div>
         </div>
       </div>

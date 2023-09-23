@@ -1,6 +1,7 @@
 import { Button, Switch } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import SignInModal from "./SignInModal";
+import SignUpModal from "./SignUpModal";
 import { useTheme } from "next-themes";
 import { FaBars } from "react-icons/fa6";
 
@@ -30,7 +31,7 @@ const NavigationMenu = () => {
             <p className="text-sm px-4 py-3 font-semibold">Sets</p>
           </Link>
 
-          <Link to="/">
+          <Link to="/create">
             <button className="text-sm px-4 py-3 font-semibold">Create</button>
           </Link>
         </div>
@@ -44,13 +45,7 @@ const NavigationMenu = () => {
           />
           <SignInModal />
 
-          <Button
-            color="primary"
-            className="font-semibold rounded-md px-5"
-            size="md"
-          >
-            Sign up
-          </Button>
+          <SignUpModal />
         </div>
       </div>
     </div>

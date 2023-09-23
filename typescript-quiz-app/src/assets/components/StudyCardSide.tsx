@@ -13,25 +13,29 @@ import {
 } from "@nextui-org/react";
 import { FaStar, FaVolumeUp } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import { Flashcard } from "../globalTypes";
 
 interface StudyCardSideProps {
   isFlipped: boolean;
-  setIsFlipped: (isFlipped: boolean) => void;
-  text: string;
+  flashcard: Flashcard;
   isShuffled: boolean;
   shuffleDeck: (bool: boolean) => void;
   changeStarredSelected: (val: string) => void;
-  isStarred: boolean;
+  isStarredOnly: boolean;
+  isFrontFirst: boolean;
+  flipCard: () => void;
+  changeInitialCardSide: (val: string) => void;
+  isFront: boolean;
 }
 const StudyCardSide = (props: StudyCardSideProps) => {
   return (
     <Card className="rounded-lg">
       <CardHeader className="flex gap-3 justify-between px-4 py-5">
-        <p className="text-xs p-2">Front</p>
+        <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
         <button className="icon-btn">
           <FaStar
             className={
-              props.isStarred
+              props.flashcard.isStarred
                 ? "w-5 h-5 text-yellow-500"
                 : "w-5 h-5 text-gray-500"
             }
@@ -40,9 +44,11 @@ const StudyCardSide = (props: StudyCardSideProps) => {
       </CardHeader>
       <CardBody
         className="flex justify-center items-center h-[280px] cursor-pointer"
-        onClick={() => props.setIsFlipped(!props.isFlipped)}
+        onClick={() => props.flipCard()}
       >
-        <p className="text-lg">{props.text}</p>
+        <p className="text-lg">
+          {props.isFront ? props.flashcard.front : props.flashcard.back}
+        </p>
       </CardBody>
       <CardFooter className="flex gap-3 justify-between px-4 py-5">
         <button className="icon-btn">
@@ -56,7 +62,14 @@ const StudyCardSide = (props: StudyCardSideProps) => {
           </PopoverTrigger>
           <PopoverContent>
             <div className="px-1 py-2 space-y-4">
-              <RadioGroup label="Initial Side" orientation="horizontal">
+              <RadioGroup
+                label="Initial Side"
+                orientation="horizontal"
+                defaultValue={props.isFrontFirst ? "front" : "back"}
+                onChange={(event) =>
+                  props.changeInitialCardSide(event.target.value)
+                }
+              >
                 <Radio value="front">Front</Radio>
                 <Radio value="back">Back</Radio>
               </RadioGroup>
@@ -67,6 +80,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
                 onChange={(event) =>
                   props.changeStarredSelected(event.target.value)
                 }
+                defaultValue={props.isStarredOnly ? "starred" : "all"}
               >
                 <Radio value="all">All</Radio>
                 <Radio value="starred">Starred Only</Radio>

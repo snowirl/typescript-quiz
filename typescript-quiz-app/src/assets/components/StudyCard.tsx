@@ -8,34 +8,44 @@ interface StudyCardProps {
   shuffleDeck: (bool: boolean) => void;
   isShuffled: boolean;
   changeStarredSelected: (val: string) => void;
+  isStarredOnly: boolean;
+  isFlipped: boolean;
+  isFrontFirst: boolean;
+  flipCard: () => void;
+  changeInitialCardSide: (val: string) => void;
 }
 
 const StudyCard = (props: StudyCardProps) => {
-  const [isFlipped, setIsFlipped] = useState(false);
   return (
     <ReactCardFlip
-      isFlipped={isFlipped}
+      isFlipped={props.isFlipped}
       flipDirection="vertical"
-      flipSpeedBackToFront={0.4}
-      flipSpeedFrontToBack={0.4}
+      flipSpeedBackToFront={0.35}
+      flipSpeedFrontToBack={0.35}
     >
       <StudyCardSide
-        isFlipped={isFlipped}
-        setIsFlipped={setIsFlipped}
-        text={props.flashcard.front}
+        isFlipped={props.isFlipped}
+        flashcard={props.flashcard}
         isShuffled={props.isShuffled}
         shuffleDeck={props.shuffleDeck}
         changeStarredSelected={props.changeStarredSelected}
-        isStarred={props.flashcard.isStarred}
+        isStarredOnly={props.isStarredOnly} // is filtered by starred only
+        isFrontFirst={props.isFrontFirst}
+        flipCard={props.flipCard}
+        changeInitialCardSide={props.changeInitialCardSide}
+        isFront={true}
       />
       <StudyCardSide
-        isFlipped={isFlipped}
-        setIsFlipped={setIsFlipped}
-        text={props.flashcard.back}
+        isFlipped={props.isFlipped}
+        flashcard={props.flashcard}
         isShuffled={props.isShuffled}
         shuffleDeck={props.shuffleDeck}
         changeStarredSelected={props.changeStarredSelected}
-        isStarred={props.flashcard.isStarred}
+        isStarredOnly={props.isStarredOnly}
+        isFrontFirst={props.isFrontFirst}
+        flipCard={props.flipCard}
+        changeInitialCardSide={props.changeInitialCardSide}
+        isFront={false}
       />
     </ReactCardFlip>
   );
