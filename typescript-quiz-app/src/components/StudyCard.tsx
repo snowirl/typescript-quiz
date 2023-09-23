@@ -1,7 +1,7 @@
 import { useState } from "react";
 import StudyCardSide from "./StudyCardSide";
 import ReactCardFlip from "react-card-flip";
-import { Flashcard } from "../globalTypes";
+import { Flashcard } from "../assets/globalTypes";
 
 interface StudyCardProps {
   flashcard: Flashcard;

@@ -3,7 +3,7 @@ import StudyButtons from "../components/StudyButtons";
 import StudyCard from "../components/StudyCard";
 import StudyInfo from "../components/StudyInfo";
 import StudyCardPreview from "../components/StudyCardPreview";
-import { Flashcard } from "../globalTypes";
+import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect } from "react";
 import arrayShuffle from "array-shuffle";
 

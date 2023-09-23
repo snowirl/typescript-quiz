@@ -1,9 +1,9 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./assets/pages/Layout";
-import Home from "./assets/pages/Home";
-import Study from "./assets/pages/Study";
-import Create from "./assets/pages/Create";
+import Layout from "./pages/Layout";
+import Home from "./pages/Home";
+import Study from "./pages/Study";
+import Create from "./pages/Create";
 
 function App() {
   return (

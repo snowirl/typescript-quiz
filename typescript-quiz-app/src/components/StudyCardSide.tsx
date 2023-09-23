@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import { FaStar, FaVolumeUp } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
-import { Flashcard } from "../globalTypes";
+import { Flashcard } from "../assets/globalTypes";
 
 interface StudyCardSideProps {
   isFlipped: boolean;

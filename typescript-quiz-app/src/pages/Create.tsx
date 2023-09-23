@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Flashcard } from "../globalTypes";
+import { Flashcard } from "../assets/globalTypes";
 import { Input } from "@nextui-org/react";
 import CreateCard from "../components/CreateCard";
 

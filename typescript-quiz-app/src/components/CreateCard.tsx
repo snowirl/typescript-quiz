@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
-import { Flashcard } from "../globalTypes";
+import { Flashcard } from "../assets/globalTypes";
 import { FaTrash } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
 import { Textarea } from "@nextui-org/react";
