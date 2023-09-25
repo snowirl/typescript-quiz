@@ -10,9 +10,26 @@ import {
   Checkbox,
   Link,
 } from "@nextui-org/react";
+import { useUserContext } from "../context/userContext";
+import { useRef } from "react";
 
 const SignInModal = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const passRef = useRef<HTMLInputElement | null>(null);
+
+  const { signInUser, error } = useUserContext();
+
+  const handleModalSubmit = () => {
+    const email = emailRef.current?.value;
+    const password = passRef.current?.value;
+
+    if (email && password) {
+      signInUser(email, password);
+    }
+  };
+
   return (
     <>
       <Button
@@ -38,6 +55,7 @@ const SignInModal = () => {
                   labelPlacement="inside"
                   variant="faded"
                   size="sm"
+                  ref={emailRef}
                 />
                 <Input
                   type="password"
@@ -45,6 +63,7 @@ const SignInModal = () => {
                   labelPlacement="inside"
                   variant="faded"
                   size="sm"
+                  ref={passRef}
                 />
                 <div className="flex justify-between text-xs">
                   <Checkbox>Remember me</Checkbox>
@@ -59,12 +78,19 @@ const SignInModal = () => {
                     <Button
                       color="primary"
                       variant="solid"
-                      onPress={onClose}
                       className="w-full rounded-md font-semibold"
+                      onPress={() => handleModalSubmit()}
                     >
                       Log in
                     </Button>
                   </div>
+                  {error ? (
+                    <div className="bg-rose-600 py-4 rounded-lg text-center">
+                      <p className="font-semibold px-2 text-white text-sm">
+                        {error}
+                      </p>
+                    </div>
+                  ) : null}
                   <div className="justify-center text-center items-center">
                     <Link href="#" underline="hover">
                       Don't have an account?

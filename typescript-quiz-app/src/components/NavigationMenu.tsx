@@ -1,12 +1,15 @@
-import { Button, Switch } from "@nextui-org/react";
+import { Switch } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import { useTheme } from "next-themes";
 import { FaBars } from "react-icons/fa6";
+import { useUserContext } from "../context/userContext";
+import AvatarContainer from "./AvatarContainer";
 
 const NavigationMenu = () => {
   const { theme, setTheme } = useTheme();
+  const { user } = useUserContext();
 
   const changeTheme = () => {
     if (theme === "dark") {
@@ -27,8 +30,11 @@ const NavigationMenu = () => {
           <Link to="/">
             <button className="text-sm px-4 py-3 font-semibold">Home</button>
           </Link>
-          <Link to="study">
+          <Link to="sets">
             <p className="text-sm px-4 py-3 font-semibold">Sets</p>
+          </Link>
+          <Link to="study">
+            <p className="text-sm px-4 py-3 font-semibold">Study</p>
           </Link>
 
           <Link to="/create">
@@ -43,9 +49,14 @@ const NavigationMenu = () => {
             onClick={() => changeTheme()}
             isSelected={theme === "dark" ? true : false}
           />
-          <SignInModal />
-
-          <SignUpModal />
+          {user ? (
+            <AvatarContainer />
+          ) : (
+            <div className="space-x-2">
+              <SignInModal />
+              <SignUpModal />
+            </div>
+          )}
         </div>
       </div>
     </div>

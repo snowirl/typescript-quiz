@@ -1,6 +1,7 @@
 export interface Flashcard {
   front: string;
   back: string;
-  cardId: number;
+  cardId: string;
   isStarred: boolean;
+  [key: string]: any; // This allows any string key to be used to access values
 }

@@ -6,6 +6,8 @@ import StudyCardPreview from "../components/StudyCardPreview";
 import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect } from "react";
 import arrayShuffle from "array-shuffle";
+import { BsFillHeartFill } from "react-icons/bs";
+import { motion } from "framer-motion";
 
 const flashcards: Flashcard[] = [
   {
@@ -76,9 +78,11 @@ const Study = () => {
   const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [flipSpeed, setFlipSpeed] = useState(0.35);
   const [isFrontFirst, setIsFrontFirst] = useState(true);
   const [isShuffled, setIsShuffled] = useState(false);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     shuffleDeck(!isShuffled);
@@ -87,8 +91,10 @@ const Study = () => {
   useEffect(() => {
     if (isFrontFirst && isFlipped) {
       flipCard();
+      setFlipSpeed(0);
     } else if (!isFrontFirst && !isFlipped) {
       flipCard();
+      setFlipSpeed(0);
     }
   }, [index]);
 
@@ -139,6 +145,9 @@ const Study = () => {
 
   const flipCard = () => {
     setIsFlipped(!isFlipped);
+    setTimeout(() => {
+      setFlipSpeed(0.35);
+    }, 300);
   };
 
   return (
@@ -146,26 +155,46 @@ const Study = () => {
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <p className="font-bold text-2xl">Rome Flashcards</p>
-          <p className="font-semibold text-sm">
-            {index + 1} / {currentDeck.length}
-          </p>
+          <div className="flex justify-between relative">
+            <div></div>
+            <div>
+              <p className="font-semibold text-sm">
+                {index + 1} / {currentDeck.length}
+              </p>
+            </div>
+            <div></div>
+
+            <div className="absolute -top-2 right-0">
+              <button className="icon-btn">
+                <BsFillHeartFill className="w-5 h-5 text-rose-500" />
+              </button>
+            </div>
+          </div>
+
           <Progress
             aria-label="Loading..."
             value={((index + 1) / currentDeck.length) * 100}
             className=""
             size="sm"
           />
-          <StudyCard
-            flashcard={currentDeck[index]}
-            isFlipped={isFlipped}
-            isShuffled={isShuffled}
-            shuffleDeck={shuffleDeck}
-            changeStarredSelected={changeStarredSelected}
-            isStarredOnly={isStarredOnly}
-            isFrontFirst={isFrontFirst}
-            flipCard={flipCard}
-            changeInitialCardSide={changeInitialCardSide}
-          />
+          <motion.div
+            initial={{ opacity: 1 }}
+            transition={{ duration: 0.15, type: "tween" }}
+            // animate={controls}
+          >
+            <StudyCard
+              flashcard={currentDeck[index]}
+              isFlipped={isFlipped}
+              isShuffled={isShuffled}
+              shuffleDeck={shuffleDeck}
+              changeStarredSelected={changeStarredSelected}
+              isStarredOnly={isStarredOnly}
+              isFrontFirst={isFrontFirst}
+              flipCard={flipCard}
+              changeInitialCardSide={changeInitialCardSide}
+              flipSpeed={flipSpeed}
+            />
+          </motion.div>
           <StudyButtons
             index={index}
             setIndex={setIndex}

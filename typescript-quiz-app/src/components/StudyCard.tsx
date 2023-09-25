@@ -1,7 +1,7 @@
-import { useState } from "react";
 import StudyCardSide from "./StudyCardSide";
 import ReactCardFlip from "react-card-flip";
 import { Flashcard } from "../assets/globalTypes";
+import { motion } from "framer-motion";
 
 interface StudyCardProps {
   flashcard: Flashcard;
@@ -13,6 +13,7 @@ interface StudyCardProps {
   isFrontFirst: boolean;
   flipCard: () => void;
   changeInitialCardSide: (val: string) => void;
+  flipSpeed: number;
 }
 
 const StudyCard = (props: StudyCardProps) => {
@@ -20,8 +21,8 @@ const StudyCard = (props: StudyCardProps) => {
     <ReactCardFlip
       isFlipped={props.isFlipped}
       flipDirection="vertical"
-      flipSpeedBackToFront={0.35}
-      flipSpeedFrontToBack={0.35}
+      flipSpeedBackToFront={props.flipSpeed}
+      flipSpeedFrontToBack={props.flipSpeed}
     >
       <StudyCardSide
         isFlipped={props.isFlipped}

@@ -2,11 +2,15 @@ import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
 import { Flashcard } from "../assets/globalTypes";
 import { FaTrash } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
-import { Textarea } from "@nextui-org/react";
 
 interface CreateCardProps {
   flashcard: Flashcard;
   index: number;
+  handleCardDelete: (val: number) => void;
+  handleCardChange: (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    index: number
+  ) => void;
 }
 
 const CreateCard = (props: CreateCardProps) => {
@@ -15,21 +19,35 @@ const CreateCard = (props: CreateCardProps) => {
       <CardHeader>
         <div className="flex justify-between flex-grow items-center px-2 py-1">
           <p className="text-sm font-semibold">{props.index + 1}</p>
-          <button className="icon-btn">
+          <button
+            className="icon-btn"
+            onClick={() => props.handleCardDelete(props.index)}
+          >
             <FaTrash className="w-4 h-4" />
           </button>
         </div>
       </CardHeader>
       <CardBody>
         <div className="flex space-x-2">
-          <div className="flex-1 flex-grow">
-            <TextareaAutosize className="w-full resize-none bg-transparent  border-b-2 border-black outline-none focus:border-blue-500 duration-150 overflow-hidden" />
+          <div className="flex-1 flex-grow mr-6">
+            <TextareaAutosize
+              className="w-full resize-none bg-transparent  border-b-2 border-black outline-none focus:border-blue-500 duration-150 overflow-hidden"
+              value={props.flashcard.front}
+              onChange={(e) => props.handleCardChange(e, props.index)}
+              name="front"
+            />
           </div>
-          <div className="flex-1 flex-grow">
-            <TextareaAutosize className="w-full resize-none bg-transparent  border-b-2 border-black outline-none focus:border-blue-500 duration-150 overflow-hidden" />
+          <div className="flex-1 flex-grow ml-6">
+            <TextareaAutosize
+              className="w-full resize-none bg-transparent  border-b-2 border-black outline-none focus:border-blue-500 duration-150 overflow-hidden"
+              value={props.flashcard.back}
+              onChange={(e) => props.handleCardChange(e, props.index)}
+              name="back"
+            />
           </div>
         </div>
       </CardBody>
+      <CardFooter></CardFooter>
     </Card>
   );
 };
