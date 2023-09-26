@@ -15,7 +15,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/study" element={<Study />} />
           <Route path="/sets" element={<Sets />} />
-          <Route path="/create" element={<Create />} />
+          <Route path="/create/:id" element={<Create />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

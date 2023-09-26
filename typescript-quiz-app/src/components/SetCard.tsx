@@ -5,8 +5,8 @@ const SetCard = () => {
   return (
     <div>
       <Card>
-        <CardBody>
-          <div className="flex justify-end w-full">
+        <CardBody className="py-0">
+          <div className="flex justify-end w-full pt-2">
             <button className="icon-btn">
               <FaEdit className="text-blue-600" />
             </button>
@@ -14,7 +14,7 @@ const SetCard = () => {
               <FaTrash className="text-rose-600" />
             </button>
           </div>
-          <p className="text-center font-bold text-xl">Rome Flashcards</p>
+          <p className="text-center font-bold text-lg">Rome Flashcards</p>
         </CardBody>
         <CardFooter></CardFooter>
       </Card>

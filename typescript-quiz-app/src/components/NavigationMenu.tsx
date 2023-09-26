@@ -37,7 +37,7 @@ const NavigationMenu = () => {
             <p className="text-sm px-4 py-3 font-semibold">Study</p>
           </Link>
 
-          <Link to="/create">
+          <Link to="/create/new">
             <button className="text-sm px-4 py-3 font-semibold">Create</button>
           </Link>
         </div>
