@@ -1,4 +1,4 @@
-import { Progress } from "@nextui-org/react";
+import { Progress, Spinner } from "@nextui-org/react";
 import StudyButtons from "../components/StudyButtons";
 import StudyCard from "../components/StudyCard";
 import StudyInfo from "../components/StudyInfo";
@@ -8,6 +8,25 @@ import { useState, useEffect } from "react";
 import arrayShuffle from "array-shuffle";
 import { BsFillHeartFill } from "react-icons/bs";
 import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
+import {
+  query,
+  where,
+  collectionGroup,
+  getDocs,
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  collection,
+  orderBy,
+  addDoc,
+  serverTimestamp,
+  deleteDoc,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { DocumentData } from "firebase/firestore";
 
 const flashcards: Flashcard[] = [
   {
@@ -74,6 +93,7 @@ const flashcards: Flashcard[] = [
 ];
 
 const Study = () => {
+  const [deckData, setDeckData] = useState<DocumentData | null>(null);
   const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
   const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
   const [index, setIndex] = useState(0);
@@ -82,7 +102,68 @@ const Study = () => {
   const [isFrontFirst, setIsFrontFirst] = useState(true);
   const [isShuffled, setIsShuffled] = useState(false);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false); // if card is animating
+  const [isLoading, setIsLoading] = useState(true);
+  const [starredList, setStarredList] = useState([]);
+
+  let { id } = useParams();
+  // const pageID: string = id ?? "";
+  // const userID: string = auth.currentUser?.uid ?? "Error";
+
+  useEffect(() => {
+    initializeDeck();
+    // initializeActivity();
+  }, []);
+
+  const initializeDeck = async () => {
+    setIsLoading(true);
+
+    const q = query(collectionGroup(db, "decks"), where("id", "==", id));
+
+    try {
+      const docRef = await getDocs(q);
+
+      setDeckData(docRef.docs[0].data());
+
+      console.log(docRef.docs[0].data());
+
+      setOriginalDeck(docRef.docs[0].data().cards);
+      setCurrentDeck(docRef.docs[0].data().cards);
+    } catch (e) {
+      console.log("error occurred: " + e);
+    }
+    setIsLoading(false);
+  };
+
+  const initializeActivity = async () => {
+    const q = doc(db, "users", userID, "activity", pageID);
+    try {
+      const docRef = await getDoc(q);
+      // setStarredList(docRef.data().starred);
+      // setActivityData(docRef.data());
+      // setFavorited(docRef.data().favorited);
+    } catch (e) {
+      console.log("error occurred: " + e);
+    }
+  };
+
+  const handleSaveData = async () => {
+    try {
+      await setDoc(doc(db, "users", userID, "activity", pageID), {
+        // docId: id,
+        // owner: deckData?.deck.owner,
+        // starred: starredList,
+        // favorited: deckData?.deck.is,
+        timestamp: serverTimestamp(),
+      });
+
+      console.log("Data saved.");
+    } catch (e) {
+      console.log("error occurred: " + e);
+    }
+
+    // setDoSaveData(false);
+  };
 
   useEffect(() => {
     shuffleDeck(!isShuffled);
@@ -151,64 +232,71 @@ const Study = () => {
   };
 
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-[#0f0f11]">
+    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-[#0f0f11] min-h-screen">
       <div className="flex justify-center">
-        <div className="max-w-[800px] flex-grow space-y-4 px-4">
-          <p className="font-bold text-2xl">Rome Flashcards</p>
-          <div className="flex justify-between relative">
-            <div></div>
-            <div>
-              <p className="font-semibold text-sm">
-                {index + 1} / {currentDeck.length}
-              </p>
-            </div>
-            <div></div>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className="max-w-[800px] flex-grow space-y-4 px-4">
+            <p className="font-bold text-2xl">{deckData?.title}</p>
+            <div className="flex justify-between relative">
+              <div></div>
+              <div>
+                <p className="font-semibold text-sm">
+                  {index + 1} / {currentDeck.length}
+                </p>
+              </div>
+              <div></div>
 
-            <div className="absolute -top-2 right-0">
-              <button className="icon-btn">
-                <BsFillHeartFill className="w-5 h-5 text-rose-500" />
-              </button>
+              <div className="absolute -top-2 right-0">
+                <button className="icon-btn">
+                  <BsFillHeartFill className="w-5 h-5 text-rose-500" />
+                </button>
+              </div>
             </div>
-          </div>
 
-          <Progress
-            aria-label="Loading..."
-            value={((index + 1) / currentDeck.length) * 100}
-            className=""
-            size="sm"
-          />
-          <motion.div
-            initial={{ opacity: 1 }}
-            transition={{ duration: 0.15, type: "tween" }}
-            // animate={controls}
-          >
-            <StudyCard
-              flashcard={currentDeck[index]}
-              isFlipped={isFlipped}
-              isShuffled={isShuffled}
-              shuffleDeck={shuffleDeck}
-              changeStarredSelected={changeStarredSelected}
-              isStarredOnly={isStarredOnly}
-              isFrontFirst={isFrontFirst}
-              flipCard={flipCard}
-              changeInitialCardSide={changeInitialCardSide}
-              flipSpeed={flipSpeed}
+            <Progress
+              aria-label="Loading..."
+              value={((index + 1) / currentDeck.length) * 100}
+              className=""
+              size="sm"
             />
-          </motion.div>
-          <StudyButtons
-            index={index}
-            setIndex={setIndex}
-            length={currentDeck.length}
-          />
-          <StudyInfo />
-          <p className="text-left font-semibold pt-4">
-            All cards ({originalDeck.length})
-          </p>
-          {originalDeck.map((flashcard) => (
-            <StudyCardPreview key={flashcard.cardId} flashcard={flashcard} />
-          ))}
-          <div className="pt-10"></div>
-        </div>
+            <motion.div
+              initial={{ opacity: 1 }}
+              transition={{ duration: 0.15, type: "tween" }}
+              // animate={controls}
+            >
+              <StudyCard
+                flashcard={currentDeck[index]}
+                isFlipped={isFlipped}
+                isShuffled={isShuffled}
+                shuffleDeck={shuffleDeck}
+                changeStarredSelected={changeStarredSelected}
+                isStarredOnly={isStarredOnly}
+                isFrontFirst={isFrontFirst}
+                flipCard={flipCard}
+                changeInitialCardSide={changeInitialCardSide}
+                flipSpeed={flipSpeed}
+              />
+            </motion.div>
+            <StudyButtons
+              index={index}
+              setIndex={setIndex}
+              length={currentDeck.length}
+            />
+            <StudyInfo
+              username={deckData?.username}
+              description={deckData?.description}
+            />
+            <p className="text-left font-semibold pt-4">
+              All cards ({originalDeck.length})
+            </p>
+            {originalDeck.map((flashcard) => (
+              <StudyCardPreview key={flashcard.cardId} flashcard={flashcard} />
+            ))}
+            <div className="pt-10"></div>
+          </div>
+        )}
       </div>
     </div>
   );

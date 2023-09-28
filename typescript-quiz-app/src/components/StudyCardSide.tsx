@@ -30,7 +30,10 @@ interface StudyCardSideProps {
 const StudyCardSide = (props: StudyCardSideProps) => {
   return (
     <Card className="rounded-lg">
-      <CardHeader className="flex gap-3 justify-between px-4 py-5">
+      <CardHeader
+        className="flex gap-3 justify-between px-4 py-5 cursor-pointer"
+        onClick={() => props.flipCard()}
+      >
         <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
         <button className="icon-btn">
           <FaStar

@@ -8,14 +8,19 @@ import {
   Button,
 } from "@nextui-org/react";
 
-const StudyInfo = () => {
+interface StudyInfoProps {
+  username: string;
+  description: string;
+}
+
+const StudyInfo = (props: StudyInfoProps) => {
   return (
     <Card className="rounded-lg">
       <CardHeader>
         <div className="flex justify-around flex-grow px-2">
           <div className="flex-grow text-left">
             <p className="text-sm">Created by</p>
-            <p className="font-bold">Spencer</p>
+            <p className="font-bold">{props.username}</p>
           </div>
           <div className="flex-grow flex justify-end">
             <Dropdown>
@@ -44,17 +49,7 @@ const StudyInfo = () => {
         </div>
       </CardHeader>
       <CardBody>
-        <p className="pt-2 text-sm">
-          As a recovering avoidant, I can tell you that I had been totally
-          capable of romantic commitment and was always in long-term
-          relationships that lasted from 2-8 years. The issue with avoidants
-          isn't that they don't love their partners. Still, when the heat gets
-          turned up and they feel anxiety, their default coping mechanism is to
-          avoid and find alone time away from the source of anxiety (which a lot
-          of time is, unfortunately, their partner). More clingy, naggy demands
-          will make them retreat even more. Let them be to go to their cave and
-          find stability, then they'll come out once they clear their head.
-        </p>
+        <p className="pt-2 text-sm">{props.description}</p>
       </CardBody>
     </Card>
   );
