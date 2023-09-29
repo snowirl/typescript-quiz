@@ -27,6 +27,19 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { DocumentData } from "firebase/firestore";
+import { useUserContext } from "../context/userContext";
+import { useRef } from "react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Button,
+} from "@nextui-org/react";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 const flashcards: Flashcard[] = [
   {
@@ -105,15 +118,52 @@ const Study = () => {
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
   const [isLoading, setIsLoading] = useState(true);
   const [starredList, setStarredList] = useState<string[] | null>(null);
-
+  const [shouldSaveData, setShouldSaveData] = useState(true);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [profilePictureURL, setProfilePictureURL] = useState("");
   let { id } = useParams();
   const pageID: string = id ?? "";
-  const userID: string = auth.currentUser?.uid ?? "Error";
+  let userID: string = auth.currentUser?.uid ?? "Error";
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure(); // for locked modal
+
+  const isFavoritedRef = useRef(isFavorited); // to get the most updated version // This took forever to figure out, dont brek
+  const starredListRef = useRef(starredList);
 
   useEffect(() => {
     initializeDeckInfo();
-    // initializeActivity();
   }, []);
+
+  useEffect(() => {
+    if (user === null) {
+      return;
+    }
+
+    userID = auth.currentUser?.uid ?? "Error"; // make sure isnt error, also [user] so it isnt null
+    initializeActivity();
+
+    const intervalId = setInterval(() => {
+      // Use the values from the refs, which are always up-to-date
+
+      // Your logic here using the current values
+      checkAndSaveData();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [user]);
+
+  useEffect(() => {
+    isFavoritedRef.current = isFavorited;
+    starredListRef.current = starredList;
+  }, [isFavorited, starredList]);
+
+  useEffect(() => {
+    if (deckData !== null) {
+      initializeDeck();
+      getImageByUserId(deckData.owner);
+    }
+  }, [deckData]);
 
   const initializeDeckInfo = async () => {
     setIsLoading(true);
@@ -130,11 +180,15 @@ const Study = () => {
       console.log("error occurred: " + e);
       setIsLoading(false);
     }
-
-    initializeDeck();
   };
 
   const initializeDeck = async () => {
+    if (deckData?.private && deckData.owner !== userID) {
+      console.log("ERROR... DECK IS PRIVATE!");
+      onOpen();
+      setIsLoading(false);
+      return;
+    }
     // different function because cards are in a different place for preview purposes
     const q = query(collectionGroup(db, "cards"), where("id", "==", id));
 
@@ -157,16 +211,16 @@ const Study = () => {
     const q = doc(db, "users", userID, "activity", pageID);
     try {
       const docRef = await getDoc(q);
-      // setStarredList(docRef.data().starred);
-      // setActivityData(docRef.data());
-      // setFavorited(docRef.data().favorited);
+      setStarredList(docRef.data()?.starred);
+      setIsFavorited(docRef.data()?.favorited);
+      console.log(docRef.data());
     } catch (e) {
       console.log("error occurred: " + e);
     }
   };
 
   const handleStarCard = (flashcard: Flashcard) => {
-    if (starredList !== null) {
+    if (starredList !== undefined && starredList !== null) {
       if (starredList.indexOf(flashcard.cardId) > -1) {
         let index = starredList.indexOf(flashcard.cardId);
         console.log("Card already starred. Removing card.");
@@ -182,26 +236,30 @@ const Study = () => {
       console.log("starred list is null");
     }
 
-    // setDoSaveData(true);
-    // handleStarredCardList();
+    setShouldSaveData(true);
   };
 
   const handleSaveData = async () => {
     try {
-      await setDoc(doc(db, "users", userID, "activity", pageID), {
-        // docId: id,
-        // owner: deckData?.deck.owner,
-        // starred: starredList,
-        // favorited: deckData?.deck.is,
-        timestamp: serverTimestamp(),
-      });
+      await setDoc(
+        doc(db, "users", userID, "activity", pageID),
+        {
+          docId: pageID,
+          favorited: isFavoritedRef.current,
+          starred: starredListRef.current ?? [],
+          timestamp: serverTimestamp(),
+        },
+        { merge: true }
+      );
 
       console.log("Data saved.");
     } catch (e) {
       console.log("error occurred: " + e);
+      return;
     }
 
-    // setDoSaveData(false);
+    console.log("Saved.");
+    setShouldSaveData(false);
   };
 
   useEffect(() => {
@@ -217,7 +275,6 @@ const Study = () => {
       setFlipSpeed(0);
     }
   }, [index]);
-
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
       if (isStarredOnly && starredList !== null) {
@@ -275,6 +332,49 @@ const Study = () => {
     }, 300);
   };
 
+  const checkAndSaveData = () => {
+    setShouldSaveData((prevShouldSaveData) => {
+      if (prevShouldSaveData) {
+        console.log("Saving data...");
+        handleSaveData();
+      } else {
+        console.log("nothing has changed, do not need to save.");
+      }
+
+      return prevShouldSaveData; // Return the previous value
+    });
+  };
+
+  const handleFavorite = () => {
+    setIsFavorited((prev) => !prev);
+    setShouldSaveData(true);
+  };
+
+  const getImageByUserId = async (userId: string) => {
+    const storage = getStorage();
+    const jpgImagePath = `/profilePictures/${userId}`;
+    const pngImagePath = `profilePictures/${userId}`;
+
+    try {
+      // Check if the image is a JPG
+      const jpgImageRef = ref(storage, jpgImagePath);
+      const jpgDownloadUrl = await getDownloadURL(jpgImageRef);
+      setProfilePictureURL(jpgDownloadUrl);
+    } catch (jpgError) {
+      console.log(jpgError);
+      // If JPG fetch fails, check if the image is a PNG
+      try {
+        const pngImageRef = ref(storage, pngImagePath);
+        const pngDownloadUrl = await getDownloadURL(pngImageRef);
+        setProfilePictureURL(pngDownloadUrl);
+      } catch (pngError) {
+        // Handle the case when no image is found for the given user ID
+        console.log(pngError);
+        return null;
+      }
+    }
+  };
+
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       <div className="flex justify-center">
@@ -293,8 +393,14 @@ const Study = () => {
               <div></div>
 
               <div className="absolute -top-2 right-0">
-                <button className="icon-btn">
-                  <BsFillHeartFill className="w-5 h-5 text-rose-500" />
+                <button className="icon-btn" onClick={() => handleFavorite()}>
+                  <BsFillHeartFill
+                    className={
+                      isFavorited
+                        ? "w-5 h-5 text-rose-500"
+                        : "w-5 h-5 text-gray-500"
+                    }
+                  />
                 </button>
               </div>
             </div>
@@ -335,6 +441,7 @@ const Study = () => {
             <StudyInfo
               username={deckData?.username}
               description={deckData?.description}
+              profilePictureURL={profilePictureURL}
             />
             <p className="text-left font-semibold pt-4">
               All cards ({originalDeck.length})
@@ -346,6 +453,33 @@ const Study = () => {
           </div>
         )}
       </div>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        isDismissable={false}
+        hideCloseButton={true}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
+                Private Flashcard Set
+              </ModalHeader>
+              <ModalBody>
+                <p className="text-black dark:text-gray-200">
+                  This flashcard set is private and the owner must change it to
+                  public for access.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onPress={() => navigate("/")}>
+                  Go back
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

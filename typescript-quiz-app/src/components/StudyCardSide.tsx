@@ -10,6 +10,7 @@ import {
   Radio,
   Switch,
   Divider,
+  Image,
 } from "@nextui-org/react";
 import { FaStar, FaVolumeUp } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
@@ -54,6 +55,16 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         <p className="text-2xl">
           {props.isFront ? props.flashcard.front : props.flashcard.back}
         </p>
+        <Image
+          className="mt-4 "
+          width={250}
+          alt="frontImage"
+          src={
+            props.isFront
+              ? props.flashcard.frontImage
+              : props.flashcard.backImage
+          }
+        />
       </CardBody>
       <CardFooter className="flex gap-3 justify-between px-4 py-5">
         <button className="icon-btn">

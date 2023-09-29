@@ -4,10 +4,14 @@ import {
   CardBody,
   CardFooter,
   Tooltip,
+  Image,
+  Button,
 } from "@nextui-org/react";
 import { Flashcard } from "../assets/globalTypes";
-import { FaTrash } from "react-icons/fa6";
+import { FaTrash, FaImage } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useRef, ChangeEvent, useState, useEffect } from "react";
 
 interface CreateCardProps {
   flashcard: Flashcard;
@@ -17,9 +21,76 @@ interface CreateCardProps {
     e: React.ChangeEvent<HTMLTextAreaElement>,
     index: number
   ) => void;
+  handleCardImageChange: (url: string, side: string, val: number) => void;
 }
 
 const CreateCard = (props: CreateCardProps) => {
+  const fileInputFrontRef = useRef<HTMLInputElement>(null);
+  const fileInputBackRef = useRef<HTMLInputElement>(null);
+
+  const handleButtonClick = (side: string) => {
+    // Trigger the file input when the button is clicked
+    if (side === "front") {
+      if (fileInputFrontRef.current) {
+        fileInputFrontRef.current.click();
+      }
+    } else {
+      if (fileInputBackRef.current) {
+        fileInputBackRef.current.click();
+      }
+    }
+  };
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    side: string
+  ) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      handleImageUpload(event, side);
+    }
+  };
+
+  const handleImageUpload = (
+    event: ChangeEvent<HTMLInputElement>,
+    side: string
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      console.log("No file selected.");
+      return;
+    }
+    const storage = getStorage();
+
+    const timestamp = Date.now().toString(36); // Convert current timestamp to base36 string
+    const randomChars = Math.random().toString(36).substring(2, 8); // Generate a random string
+
+    const randomID = `${timestamp}_${randomChars}`;
+
+    const storageRef = ref(storage, `deckPictures/${randomID}`);
+
+    let newDownloadURL = "";
+
+    uploadBytes(storageRef, file)
+      .then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          newDownloadURL = downloadURL;
+          props.handleCardImageChange(
+            newDownloadURL.toString(),
+            side,
+            props.index
+          );
+        });
+      })
+      .catch((error) => {
+        return console.error("Error uploading the file:", error);
+        // Handle the error, e.g., show an error message to the user
+      });
+  };
+
   return (
     <Card className="rounded-lg">
       <CardHeader>
@@ -41,22 +112,74 @@ const CreateCard = (props: CreateCardProps) => {
         </div>
       </CardHeader>
       <CardBody>
-        <div className="flex space-x-2">
-          <div className="flex-1 flex-grow mr-6">
+        <div className="flex space-x-10 mx-6">
+          <div className="flex-1 flex-grow ">
             <TextareaAutosize
-              className="w-full resize-none bg-transparent  border-b-2 border-black outline-none focus:border-blue-500 duration-150 overflow-hidden"
+              className="w-full resize-none bg-transparent  border-b-2 border-black outline-none dark:border-zinc-600 dark:focus:border-primary focus:border-primary duration-150 overflow-hidden"
               value={props.flashcard.front}
               onChange={(e) => props.handleCardChange(e, props.index)}
               name="front"
             />
+            <div>
+              <p>Front</p>
+              <div className="flex justify-between pt-2">
+                <Button
+                  isIconOnly
+                  color="primary"
+                  aria-label="Image"
+                  onClick={() => handleButtonClick("front")}
+                >
+                  <FaImage />
+                </Button>
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  style={{ display: "none" }}
+                  ref={fileInputFrontRef}
+                  onChange={(e) => handleFileChange(e, "front")}
+                />
+                <Image
+                  className=""
+                  width={150}
+                  alt="frontImage"
+                  src={props.flashcard.frontImage}
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex-1 flex-grow ml-6">
+          <div className="flex-1 flex-grow">
             <TextareaAutosize
-              className="w-full resize-none bg-transparent  border-b-2 border-black outline-none focus:border-blue-500 duration-150 overflow-hidden"
+              className="w-full resize-none bg-transparent dark:border-zinc-600 dark:focus:border-primary  border-b-2 border-black outline-none focus:border-primary duration-150 overflow-hidden"
               value={props.flashcard.back}
               onChange={(e) => props.handleCardChange(e, props.index)}
               name="back"
             />
+            <div>
+              <p>Front</p>
+              <div className="flex justify-between pt-2">
+                <Button
+                  isIconOnly
+                  color="primary"
+                  aria-label="Image"
+                  onClick={() => handleButtonClick("back")}
+                >
+                  <FaImage />
+                </Button>
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  style={{ display: "none" }}
+                  ref={fileInputBackRef}
+                  onChange={(e) => handleFileChange(e, "back")}
+                />
+                <Image
+                  className=""
+                  width={150}
+                  alt="backImage"
+                  src={props.flashcard.backImage}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </CardBody>

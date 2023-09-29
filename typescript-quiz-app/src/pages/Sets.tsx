@@ -8,6 +8,7 @@ import {
 } from "@nextui-org/react";
 import SetCard from "../components/SetCard";
 import SetsCreatedSets from "../components/SetsCreatedSets";
+import SetsRecentSets from "../components/SetsRecentSets";
 import { useState } from "react";
 
 const Sets = () => {
@@ -20,10 +21,11 @@ const Sets = () => {
           <Tabs aria-label="Options" variant="underlined">
             <Tab key="recents" title="Recents">
               <div className="space-y-4">
-                <SetCard />
-                <SetCard />
-                <SetCard />
-                <SetCard />
+                <div className=" justify-center flex">
+                  <div className="flex-grow max-w-[625px]">
+                    <SetsRecentSets />
+                  </div>
+                </div>
               </div>
             </Tab>
             <Tab key="favorites" title="Favorites">

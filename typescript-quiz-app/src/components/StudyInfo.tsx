@@ -6,11 +6,13 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Avatar,
 } from "@nextui-org/react";
 
 interface StudyInfoProps {
   username: string;
   description: string;
+  profilePictureURL: string;
 }
 
 const StudyInfo = (props: StudyInfoProps) => {
@@ -19,13 +21,19 @@ const StudyInfo = (props: StudyInfoProps) => {
       <CardHeader>
         <div className="flex justify-around flex-grow px-2">
           <div className="flex-grow text-left">
-            <p className="text-sm">Created by</p>
-            <p className="font-bold">{props.username}</p>
+            <div className="flex space-x-2 items-center">
+              <Avatar
+                showFallback
+                src={props.profilePictureURL}
+                className="cursor-pointer"
+              />
+              <p className="font-semibold">{props.username}</p>
+            </div>
           </div>
           <div className="flex-grow flex justify-end">
             <Dropdown>
               <DropdownTrigger>
-                <button className="icon-btn  py-0 px-1.5">
+                <button className="icon-btn  py-0 px-1">
                   <IoEllipsisHorizontalSharp className="w-8 h-6" />
                 </button>
               </DropdownTrigger>
@@ -49,7 +57,7 @@ const StudyInfo = (props: StudyInfoProps) => {
         </div>
       </CardHeader>
       <CardBody>
-        <p className="pt-2 text-sm">{props.description}</p>
+        <p className="text-sm">{props.description}</p>
       </CardBody>
     </Card>
   );

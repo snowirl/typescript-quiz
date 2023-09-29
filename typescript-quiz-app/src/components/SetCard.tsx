@@ -38,6 +38,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 interface SetCardProps {
   deckId?: string;
@@ -46,6 +47,7 @@ interface SetCardProps {
 const SetCard = (props: SetCardProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [deck, setDeck] = useState<DocumentData | null>(null);
+  const [profilePictureURL, setProfilePictureURL] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid ?? "Error";
@@ -54,6 +56,14 @@ const SetCard = (props: SetCardProps) => {
   useEffect(() => {
     initializeDeck();
   }, [deckId]);
+
+  useEffect(() => {
+    if (deck == null) {
+      return;
+    }
+
+    getImageByUserId(deck?.owner); // get user pfp
+  }, [isLoading]);
 
   const initializeDeck = async () => {
     setIsLoading(true);
@@ -70,11 +80,46 @@ const SetCard = (props: SetCardProps) => {
     setIsLoading(false);
   };
 
+  const getImageByUserId = async (userId: string) => {
+    const storage = getStorage();
+    const jpgImagePath = `/profilePictures/${userId}`;
+    const pngImagePath = `profilePictures/${userId}`;
+
+    try {
+      // Check if the image is a JPG
+      const jpgImageRef = ref(storage, jpgImagePath);
+      const jpgDownloadUrl = await getDownloadURL(jpgImageRef);
+      setProfilePictureURL(jpgDownloadUrl);
+    } catch (jpgError) {
+      console.log(jpgError);
+      // If JPG fetch fails, check if the image is a PNG
+      try {
+        const pngImageRef = ref(storage, pngImagePath);
+        const pngDownloadUrl = await getDownloadURL(pngImageRef);
+        setProfilePictureURL(pngDownloadUrl);
+      } catch (pngError) {
+        // Handle the case when no image is found for the given user ID
+        console.log(pngError);
+        return null;
+      }
+    }
+  };
+
   const deleteSet = async () => {
     const setRef = doc(db, "users", userId, "decks", deckId);
 
     try {
       await deleteDoc(setRef);
+    } catch (e) {
+      onClose();
+      console.log("Error:  " + e);
+      return;
+    }
+
+    const cardRef = doc(db, "users", userId, "cards", deckId);
+
+    try {
+      await deleteDoc(cardRef);
     } catch (e) {
       onClose();
       console.log("Error:  " + e);
@@ -95,14 +140,19 @@ const SetCard = (props: SetCardProps) => {
                 name={deck?.username}
                 // description="Product Designer"
                 avatarProps={{
-                  src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+                  src: profilePictureURL,
                   size: "md",
                 }}
               />
             </div>
 
-            <div className="flex-grow-1">
-              <button className="icon-btn">
+            <div
+              className={deck?.owner === auth.currentUser?.uid ? "" : "hidden"}
+            >
+              <button
+                className="icon-btn"
+                onClick={() => navigate(`/create/${deck?.id}`)}
+              >
                 <FaEdit className="text-blue-600" />
               </button>
               <button className="icon-btn" onClick={() => onOpen()}>

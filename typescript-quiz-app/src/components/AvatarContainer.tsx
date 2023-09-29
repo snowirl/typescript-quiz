@@ -20,7 +20,7 @@ const AvatarContainer = () => {
           <DropdownTrigger>
             <Avatar
               showFallback
-              src="https://images.unsplash.com/broken"
+              src={auth.currentUser?.photoURL ?? ""}
               className="cursor-pointer"
             />
           </DropdownTrigger>
