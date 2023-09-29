@@ -86,11 +86,11 @@ const Create = () => {
         const docRef = await addDoc(collection(db, "users", userID, "decks"), {
           title: title,
           description: description,
-          cards: flashcardList,
           created: serverTimestamp(),
           private: isPrivate,
           owner: userID,
           username: displayName,
+          cardsLength: flashcardList.length,
         });
         console.log("Document written with ID: ", docRef.id);
         docId = docRef.id;
@@ -123,11 +123,11 @@ const Create = () => {
           {
             title: title,
             description: description,
-            cards: flashcardList,
             created: serverTimestamp(),
             private: isPrivate,
             owner: userID,
             username: displayName,
+            cardsLength: flashcardList.length,
           },
           { merge: true }
         );
@@ -137,17 +137,21 @@ const Create = () => {
       }
     }
 
-    // try {
-    //   // for putting the cards in a subcollection
-    //   console.log(" new doc id " + docId);
+    try {
+      // for putting the cards in a subcollection to save data..
+      console.log(" new doc id " + docId);
 
-    //   const docRef = await setDoc(doc(db, "users", userID, "cards", docId), {
-    //     cards: flashcardList,
-    //   });
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
-    //   setIsCreating(false);
-    // }
+      const docRef = await setDoc(
+        doc(db, "users", userID, "decks", docId, "cards", docId),
+        {
+          id: docId,
+          cards: flashcardList,
+        }
+      );
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      setIsCreating(false);
+    }
 
     // gives doc the ID of the set
     navigate(`/study/${docId}`);
@@ -155,7 +159,7 @@ const Create = () => {
   };
 
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-[#0f0f11] min-h-screen pt-6">
+    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <div className="flex justify-between items-center">
@@ -172,10 +176,14 @@ const Create = () => {
 
           <Input
             size="lg"
-            type="email"
+            type="text"
             label="Set name"
-            variant="bordered"
-            className="bg-white rounded-xl"
+            variant="faded"
+            classNames={{
+              input: ["bg-white dark:bg-black"],
+
+              inputWrapper: ["bg-white dark:bg-black"],
+            }}
             onChange={(e) => setTitle(e.target.value)}
           />
           <div className="flex justify-start">
@@ -184,7 +192,7 @@ const Create = () => {
           <TextareaAutosize
             placeholder="Description for your set"
             minRows={4}
-            className="w-full resize-none rounded-xl p-4 shadow-sm border-gray-200 border-2 focus:border-black duration-250"
+            className="w-full resize-none rounded-xl p-4 shadow-sm border-gray-200 dark:border-zinc-800 border-2 focus:border-black duration-250 dark:bg-dark-1"
             onChange={(e) => setDescription(e.target.value)}
           />
 

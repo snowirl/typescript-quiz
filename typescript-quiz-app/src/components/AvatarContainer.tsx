@@ -7,9 +7,11 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 
 const AvatarContainer = () => {
   const { logOutUser } = useUserContext();
+  const navigate = useNavigate();
   return (
     <div>
       <div className="flex justify-center items-center space-x-2">
@@ -26,10 +28,16 @@ const AvatarContainer = () => {
             aria-label="Static Actions"
             className="text-black dark:text-gray-100 font-bold text-lg"
           >
-            <DropdownItem key="new" className="font-semibold">
+            <DropdownItem
+              key="new"
+              className="font-semibold"
+              onClick={() => navigate(`/profile/${auth.currentUser?.uid}`)}
+            >
               Profile
             </DropdownItem>
-            <DropdownItem key="copy">Settings</DropdownItem>
+            <DropdownItem key="copy" onClick={() => navigate("/settings")}>
+              Settings
+            </DropdownItem>
             <DropdownItem
               key="delete"
               className="text-danger"

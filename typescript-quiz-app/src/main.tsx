@@ -7,13 +7,11 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { UserContextProvider } from "./context/userContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <NextUIProvider>
-      <NextThemesProvider attribute="class" defaultTheme="light">
-        <UserContextProvider>
-          <App />
-        </UserContextProvider>
-      </NextThemesProvider>
-    </NextUIProvider>
-  </React.StrictMode>
+  <NextUIProvider>
+    <NextThemesProvider attribute="class" defaultTheme="light">
+      <UserContextProvider>
+        <App />
+      </UserContextProvider>
+    </NextThemesProvider>
+  </NextUIProvider>
 );

@@ -104,18 +104,18 @@ const Study = () => {
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
   const [isLoading, setIsLoading] = useState(true);
-  const [starredList, setStarredList] = useState([]);
+  const [starredList, setStarredList] = useState<string[] | null>(null);
 
   let { id } = useParams();
-  // const pageID: string = id ?? "";
-  // const userID: string = auth.currentUser?.uid ?? "Error";
+  const pageID: string = id ?? "";
+  const userID: string = auth.currentUser?.uid ?? "Error";
 
   useEffect(() => {
-    initializeDeck();
+    initializeDeckInfo();
     // initializeActivity();
   }, []);
 
-  const initializeDeck = async () => {
+  const initializeDeckInfo = async () => {
     setIsLoading(true);
 
     const q = query(collectionGroup(db, "decks"), where("id", "==", id));
@@ -126,12 +126,30 @@ const Study = () => {
       setDeckData(docRef.docs[0].data());
 
       console.log(docRef.docs[0].data());
+    } catch (e) {
+      console.log("error occurred: " + e);
+      setIsLoading(false);
+    }
+
+    initializeDeck();
+  };
+
+  const initializeDeck = async () => {
+    // different function because cards are in a different place for preview purposes
+    const q = query(collectionGroup(db, "cards"), where("id", "==", id));
+
+    try {
+      const docRef = await getDocs(q);
+
+      console.log(docRef.docs[0].data());
 
       setOriginalDeck(docRef.docs[0].data().cards);
       setCurrentDeck(docRef.docs[0].data().cards);
     } catch (e) {
       console.log("error occurred: " + e);
+      setIsLoading(false);
     }
+
     setIsLoading(false);
   };
 
@@ -145,6 +163,27 @@ const Study = () => {
     } catch (e) {
       console.log("error occurred: " + e);
     }
+  };
+
+  const handleStarCard = (flashcard: Flashcard) => {
+    if (starredList !== null) {
+      if (starredList.indexOf(flashcard.cardId) > -1) {
+        let index = starredList.indexOf(flashcard.cardId);
+        console.log("Card already starred. Removing card.");
+        setStarredList([
+          ...starredList.slice(0, index),
+          ...starredList.slice(index + 1),
+        ]);
+      } else {
+        setStarredList([...starredList, flashcard.cardId]); // add card
+      }
+    } else {
+      setStarredList([flashcard.cardId]);
+      console.log("starred list is null");
+    }
+
+    // setDoSaveData(true);
+    // handleStarredCardList();
   };
 
   const handleSaveData = async () => {
@@ -181,19 +220,24 @@ const Study = () => {
 
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
-      if (isStarredOnly) {
+      if (isStarredOnly && starredList !== null) {
         setCurrentDeck(
-          originalDeck.filter((flashcard) => flashcard.isStarred === true)
+          originalDeck.filter((flashcard) =>
+            starredList?.includes(flashcard.cardId)
+          )
+          // const starredCards = cardList.filter(card => starredList.includes(card.cardId));
         );
       } else {
         setCurrentDeck(originalDeck);
       }
       setIsShuffled(false);
     } else {
-      if (isStarredOnly) {
+      if (isStarredOnly && starredList !== null) {
         setCurrentDeck(
           arrayShuffle(
-            originalDeck.filter((flashcard) => flashcard.isStarred === true)
+            originalDeck.filter((flashcard) =>
+              starredList?.includes(flashcard.cardId)
+            )
           )
         );
       } else {
@@ -232,7 +276,7 @@ const Study = () => {
   };
 
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-[#0f0f11] min-h-screen">
+    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       <div className="flex justify-center">
         {isLoading ? (
           <Spinner />
@@ -277,6 +321,10 @@ const Study = () => {
                 flipCard={flipCard}
                 changeInitialCardSide={changeInitialCardSide}
                 flipSpeed={flipSpeed}
+                handleStarCard={handleStarCard}
+                isStarred={
+                  starredList?.includes(currentDeck[index].cardId) ?? false
+                }
               />
             </motion.div>
             <StudyButtons

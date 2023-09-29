@@ -1,4 +1,10 @@
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Tooltip,
+} from "@nextui-org/react";
 import { Flashcard } from "../assets/globalTypes";
 import { FaTrash } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
@@ -19,12 +25,19 @@ const CreateCard = (props: CreateCardProps) => {
       <CardHeader>
         <div className="flex justify-between flex-grow items-center px-2 py-1">
           <p className="text-sm font-semibold">{props.index + 1}</p>
-          <button
-            className="icon-btn"
-            onClick={() => props.handleCardDelete(props.index)}
+          <Tooltip
+            content="Delete"
+            showArrow
+            delay={1000}
+            className="text-black dark:text-white"
           >
-            <FaTrash className="w-4 h-4" />
-          </button>
+            <button
+              className="icon-btn hover:text-rose-600"
+              onClick={() => props.handleCardDelete(props.index)}
+            >
+              <FaTrash className="w-4 h-4 " />
+            </button>
+          </Tooltip>
         </div>
       </CardHeader>
       <CardBody>

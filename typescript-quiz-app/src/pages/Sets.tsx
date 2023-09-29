@@ -1,9 +1,20 @@
-import { Tabs, Tab, Card, CardBody, CardHeader } from "@nextui-org/react";
+import {
+  Tabs,
+  Tab,
+  Card,
+  CardBody,
+  CardHeader,
+  Pagination,
+} from "@nextui-org/react";
 import SetCard from "../components/SetCard";
+import SetsCreatedSets from "../components/SetsCreatedSets";
+import { useState } from "react";
 
 const Sets = () => {
+  const [totalCount, setTotalCount] = useState(0); // number of docs in the searched array
+  const [pageIndex, setPageIndex] = useState(1); // number of docs in the searched array
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-[#0f0f11] min-h-screen pt-6">
+    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <Tabs aria-label="Options" variant="underlined">
@@ -32,6 +43,13 @@ const Sets = () => {
                   qui officia deserunt mollit anim id est laborum.
                 </CardBody>
               </Card>
+            </Tab>
+            <Tab key="created" title="Created Sets">
+              <div className=" justify-center flex">
+                <div className="flex-grow max-w-[625px]">
+                  <SetsCreatedSets />
+                </div>
+              </div>
             </Tab>
           </Tabs>
         </div>

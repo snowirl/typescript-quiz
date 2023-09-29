@@ -6,6 +6,8 @@ import Study from "./pages/Study";
 import Create from "./pages/Create";
 import Sets from "./pages/Sets";
 import NoPage from "./pages/NoPage";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/study/:id" element={<Study />} />
           <Route path="/sets" element={<Sets />} />
           <Route path="/create/:id" element={<Create />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

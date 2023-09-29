@@ -8,7 +8,17 @@ export default {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        // Add your custom colors here
+        primary: "#00B4A0",
+        secondary: "#ffed4a",
+        dark: {
+          1: "#18181B",
+          2: "#0f0f11",
+        },
+      },
+    },
   },
   darkMode: "class",
   plugins: [nextui()],

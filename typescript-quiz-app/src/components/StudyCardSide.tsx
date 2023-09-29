@@ -26,19 +26,21 @@ interface StudyCardSideProps {
   flipCard: () => void;
   changeInitialCardSide: (val: string) => void;
   isFront: boolean;
+  handleStarCard: (flashcard: Flashcard) => void;
+  isStarred: boolean;
 }
 const StudyCardSide = (props: StudyCardSideProps) => {
   return (
     <Card className="rounded-lg">
-      <CardHeader
-        className="flex gap-3 justify-between px-4 py-5 cursor-pointer"
-        onClick={() => props.flipCard()}
-      >
+      <CardHeader className="flex gap-3 justify-between px-4 py-5 cursor-pointer">
         <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
-        <button className="icon-btn">
+        <button
+          className="icon-btn"
+          onClick={() => props.handleStarCard(props.flashcard)}
+        >
           <FaStar
             className={
-              props.flashcard.isStarred
+              props.isStarred
                 ? "w-5 h-5 text-yellow-500"
                 : "w-5 h-5 text-gray-500"
             }

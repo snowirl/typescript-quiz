@@ -14,6 +14,8 @@ interface StudyCardProps {
   flipCard: () => void;
   changeInitialCardSide: (val: string) => void;
   flipSpeed: number;
+  handleStarCard: (flashcard: Flashcard) => void;
+  isStarred: boolean;
 }
 
 const StudyCard = (props: StudyCardProps) => {
@@ -35,6 +37,8 @@ const StudyCard = (props: StudyCardProps) => {
         flipCard={props.flipCard}
         changeInitialCardSide={props.changeInitialCardSide}
         isFront={true}
+        handleStarCard={props.handleStarCard}
+        isStarred={props.isStarred}
       />
       <StudyCardSide
         isFlipped={props.isFlipped}
@@ -47,6 +51,8 @@ const StudyCard = (props: StudyCardProps) => {
         flipCard={props.flipCard}
         changeInitialCardSide={props.changeInitialCardSide}
         isFront={false}
+        handleStarCard={props.handleStarCard}
+        isStarred={props.isStarred}
       />
     </ReactCardFlip>
   );
