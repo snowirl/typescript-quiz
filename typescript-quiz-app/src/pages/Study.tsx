@@ -40,6 +40,7 @@ import {
 } from "@nextui-org/react";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import { Tooltip } from "@nextui-org/react";
 
 const flashcards: Flashcard[] = [
   {
@@ -141,7 +142,6 @@ const Study = () => {
     }
 
     userID = auth.currentUser?.uid ?? "Error"; // make sure isnt error, also [user] so it isnt null
-    initializeActivity();
 
     const intervalId = setInterval(() => {
       // Use the values from the refs, which are always up-to-date
@@ -156,12 +156,40 @@ const Study = () => {
   useEffect(() => {
     isFavoritedRef.current = isFavorited;
     starredListRef.current = starredList;
+
+    const activityData = {
+      isFavorited: isFavoritedRef.current,
+      starredList: starredListRef.current,
+    };
+
+    if (deckData?.id && activityData) {
+      localStorage.setItem(
+        `activity/${deckData.id}`,
+        JSON.stringify(activityData)
+      );
+    }
   }, [isFavorited, starredList]);
 
   useEffect(() => {
     if (deckData !== null) {
       initializeDeck();
       getImageByUserId(deckData.owner);
+
+      const activityData = localStorage.getItem(`activity/${deckData?.id}`);
+
+      // console.log(activityData);
+
+      if (activityData === null) {
+        // if we do not have anything in local storage find online
+        // Do something with the value if needed
+        initializeActivity();
+      } else {
+        const parsedActivityData = JSON.parse(activityData);
+        setIsFavorited(parsedActivityData.isFavorited);
+        setStarredList(parsedActivityData.starredList);
+        console.log("GOT LOCAL ACTIVITY.");
+        handleSaveData();
+      }
     }
   }, [deckData]);
 
@@ -175,7 +203,7 @@ const Study = () => {
 
       setDeckData(docRef.docs[0].data());
 
-      console.log(docRef.docs[0].data());
+      // console.log(docRef.docs[0].data());
     } catch (e) {
       console.log("error occurred: " + e);
       setIsLoading(false);
@@ -195,7 +223,7 @@ const Study = () => {
     try {
       const docRef = await getDocs(q);
 
-      console.log(docRef.docs[0].data());
+      // console.log(docRef.docs[0].data());
 
       setOriginalDeck(docRef.docs[0].data().cards);
       setCurrentDeck(docRef.docs[0].data().cards);
@@ -213,7 +241,7 @@ const Study = () => {
       const docRef = await getDoc(q);
       setStarredList(docRef.data()?.starred);
       setIsFavorited(docRef.data()?.favorited);
-      console.log(docRef.data());
+      // console.log(docRef.data());
     } catch (e) {
       console.log("error occurred: " + e);
     }
@@ -240,25 +268,31 @@ const Study = () => {
   };
 
   const handleSaveData = async () => {
+    const activityData = localStorage.getItem(`activity/${deckData?.id}`);
+    let parsedActivityData = null;
+
+    if (activityData !== null) {
+      parsedActivityData = JSON.parse(activityData);
+    }
     try {
       await setDoc(
         doc(db, "users", userID, "activity", pageID),
         {
           docId: pageID,
-          favorited: isFavoritedRef.current,
-          starred: starredListRef.current ?? [],
+          favorited: parsedActivityData.isFavorited ?? isFavoritedRef.current,
+          starred:
+            parsedActivityData.starredList ?? starredListRef.current ?? [],
           timestamp: serverTimestamp(),
         },
         { merge: true }
       );
-
-      console.log("Data saved.");
     } catch (e) {
       console.log("error occurred: " + e);
       return;
     }
 
     console.log("Saved.");
+    localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
   };
 
@@ -277,7 +311,7 @@ const Study = () => {
   }, [index]);
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
-      if (isStarredOnly && starredList !== null) {
+      if (isStarredOnly && starredList !== null && starredList.length > 0) {
         setCurrentDeck(
           originalDeck.filter((flashcard) =>
             starredList?.includes(flashcard.cardId)
@@ -289,7 +323,7 @@ const Study = () => {
       }
       setIsShuffled(false);
     } else {
-      if (isStarredOnly && starredList !== null) {
+      if (isStarredOnly && starredList !== null && starredList.length > 0) {
         setCurrentDeck(
           arrayShuffle(
             originalDeck.filter((flashcard) =>
@@ -393,15 +427,23 @@ const Study = () => {
               <div></div>
 
               <div className="absolute -top-2 right-0">
-                <button className="icon-btn" onClick={() => handleFavorite()}>
-                  <BsFillHeartFill
-                    className={
-                      isFavorited
-                        ? "w-5 h-5 text-rose-500"
-                        : "w-5 h-5 text-gray-500"
-                    }
-                  />
-                </button>
+                <Tooltip
+                  content="Favorite"
+                  className="text-black dark:text-white"
+                >
+                  <button
+                    className="icon-btn active:scale-95"
+                    onClick={() => handleFavorite()}
+                  >
+                    <BsFillHeartFill
+                      className={
+                        isFavorited
+                          ? "w-5 h-5 text-rose-500"
+                          : "w-5 h-5 text-gray-500"
+                      }
+                    />
+                  </button>
+                </Tooltip>
               </div>
             </div>
 

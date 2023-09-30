@@ -93,8 +93,8 @@ const CreateCard = (props: CreateCardProps) => {
 
   return (
     <Card className="rounded-lg">
-      <CardHeader>
-        <div className="flex justify-between flex-grow items-center px-2 py-1">
+      <CardHeader className="">
+        <div className="flex justify-between flex-grow items-center px-2 py-0">
           <p className="text-sm font-semibold">{props.index + 1}</p>
           <Tooltip
             content="Delete"
@@ -111,20 +111,24 @@ const CreateCard = (props: CreateCardProps) => {
           </Tooltip>
         </div>
       </CardHeader>
-      <CardBody>
+      <CardBody className="pt-1">
         <div className="flex space-x-10 mx-6">
-          <div className="flex-1 flex-grow ">
+          <div className="flex-1 flex-grow h-full">
             <TextareaAutosize
-              className="w-full resize-none bg-transparent  border-b-2 border-black outline-none dark:border-zinc-600 dark:focus:border-primary focus:border-primary duration-150 overflow-hidden"
+              className="textarea"
               value={props.flashcard.front}
               onChange={(e) => props.handleCardChange(e, props.index)}
+              placeholder="Enter front text"
               name="front"
             />
-            <div>
-              <p>Front</p>
-              <div className="flex justify-between pt-2">
+            <div className="pl-0.5">
+              <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
+                Front
+              </p>
+              <div className="flex justify-between pt-1">
                 <Button
                   isIconOnly
+                  size="sm"
                   color="primary"
                   aria-label="Image"
                   onClick={() => handleButtonClick("front")}
@@ -147,18 +151,22 @@ const CreateCard = (props: CreateCardProps) => {
               </div>
             </div>
           </div>
-          <div className="flex-1 flex-grow">
+          <div className="flex-1 flex-grow h-full">
             <TextareaAutosize
-              className="w-full resize-none bg-transparent dark:border-zinc-600 dark:focus:border-primary  border-b-2 border-black outline-none focus:border-primary duration-150 overflow-hidden"
+              className="textarea"
               value={props.flashcard.back}
               onChange={(e) => props.handleCardChange(e, props.index)}
+              placeholder="Enter back text"
               name="back"
             />
-            <div>
-              <p>Front</p>
-              <div className="flex justify-between pt-2">
+            <div className="pl-0.5">
+              <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
+                Back
+              </p>
+              <div className="flex justify-between pt-1">
                 <Button
                   isIconOnly
+                  size="sm"
                   color="primary"
                   aria-label="Image"
                   onClick={() => handleButtonClick("back")}
@@ -183,7 +191,6 @@ const CreateCard = (props: CreateCardProps) => {
           </div>
         </div>
       </CardBody>
-      <CardFooter></CardFooter>
     </Card>
   );
 };

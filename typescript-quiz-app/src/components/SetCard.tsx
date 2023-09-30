@@ -165,7 +165,7 @@ const SetCard = (props: SetCardProps) => {
         <CardHeader className="pb-0">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
-              {isLoading ? (
+              {profilePictureURL === "" ? (
                 <Skeleton circle className="w-10 h-10" enableAnimation />
               ) : (
                 <div className="flex items-center space-x-2">

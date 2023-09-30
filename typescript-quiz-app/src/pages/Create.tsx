@@ -4,7 +4,7 @@ import { Input, Button, Checkbox } from "@nextui-org/react";
 import CreateCard from "../components/CreateCard";
 import TextareaAutosize from "react-textarea-autosize";
 import { uid } from "uid";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaLock, FaL } from "react-icons/fa6";
 import {
   doc,
   getDoc,
@@ -225,30 +225,24 @@ const Create = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
-        <div className="max-w-[800px] flex-grow space-y-4 px-4">
+        <div className="max-w-[800px] flex-grow space-y-3 px-4">
           <Alert isHidden={!hasError} text={errorText} />
           <div className="flex justify-between items-center">
             <p className="text-left font-bold text-xl">Create a new set</p>
             <Button
               color="primary"
-              className="font-semibold rounded-md px-5"
-              size="lg"
+              className="font-semibold px-5"
+              size="md"
               onClick={() => handleCreateSet()}
             >
               Create
             </Button>
           </div>
 
-          <Input
-            size="lg"
+          <input
+            placeholder="Title of your set"
+            className="description h-12"
             type="text"
-            label="Set name"
-            variant="faded"
-            classNames={{
-              input: ["bg-white dark:bg-black"],
-
-              inputWrapper: ["bg-white dark:bg-black"],
-            }}
             onChange={(e) => setTitle(e.target.value)}
             value={title}
           />
@@ -257,13 +251,16 @@ const Create = () => {
               onChange={() => setIsPrivate((priv) => !priv)}
               isSelected={isPrivate}
             >
-              Private
+              <div className="flex justify-center items-center space-x-2">
+                <FaLock />
+                <p>Private</p>
+              </div>
             </Checkbox>
           </div>
           <TextareaAutosize
-            placeholder="Description for your set"
+            placeholder="Description of your set"
             minRows={4}
-            className="w-full resize-none rounded-xl p-4 shadow-sm border-gray-200 dark:border-zinc-800 border-2 focus:border-black duration-250 dark:bg-dark-1"
+            className="description"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
           />
@@ -281,14 +278,15 @@ const Create = () => {
               </div>
             ))}
           </div>
-          <div className="  flex pb-6">
+          <div className="justify-center  flex pt-4 pb-6">
             <Button
               isIconOnly
               color="primary"
-              className="font-semibold rounded-xl w-full h-20 "
+              size="lg"
+              className="font-semibold "
               onClick={() => handleCardAdd()}
             >
-              <FaPlus className="w-8 h-8" />
+              <FaPlus className="w-4 h-4" />
             </Button>
           </div>
         </div>

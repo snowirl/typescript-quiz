@@ -35,7 +35,7 @@ const SignInModal = () => {
       <Button
         color="default"
         variant="light"
-        className="font-semibold rounded-md"
+        className="font-semibold"
         size="md"
         onPress={onOpen}
       >

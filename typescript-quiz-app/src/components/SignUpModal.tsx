@@ -34,7 +34,7 @@ const SignUpModal = () => {
     <>
       <Button
         color="primary"
-        className="font-semibold rounded-md px-5"
+        className="font-semibold px-5"
         size="md"
         onPress={onOpen}
       >
