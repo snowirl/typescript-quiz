@@ -6,7 +6,7 @@ import {
   User,
   Chip,
   Spinner,
-  Skeleton,
+  Avatar,
 } from "@nextui-org/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
@@ -39,6 +39,8 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface SetCardProps {
   deckId?: string;
@@ -63,7 +65,7 @@ const SetCard = (props: SetCardProps) => {
     }
 
     getImageByUserId(deck?.owner); // get user pfp
-  }, [isLoading]);
+  }, [deck]);
 
   const initializeDeck = async () => {
     setIsLoading(true);
@@ -76,8 +78,35 @@ const SetCard = (props: SetCardProps) => {
       setDeck(docRef.docs[0].data());
     } catch (e) {
       console.log("error occurred: " + e);
+      if (
+        e instanceof TypeError &&
+        e.message.includes(
+          "Cannot read properties of undefined (reading 'data')"
+        )
+      ) {
+        // Execute your function when the specific error occurs
+        handleDeleteActivitySet();
+      } else {
+        // Handle other errors
+        console.log(e);
+      }
     }
+
     setIsLoading(false);
+  };
+
+  const handleDeleteActivitySet = async () => {
+    // deletes reents set when there is an undefined error retrieving it, so most likely deleted or privated.
+    const setRef = doc(db, "users", userId, "activity", deckId);
+
+    try {
+      await deleteDoc(setRef);
+    } catch (e) {
+      console.log("Error:  " + e);
+      return;
+    }
+
+    console.log("deleted.");
   };
 
   const getImageByUserId = async (userId: string) => {
@@ -136,44 +165,66 @@ const SetCard = (props: SetCardProps) => {
         <CardHeader className="pb-0">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
-              <User
-                name={deck?.username}
-                // description="Product Designer"
-                avatarProps={{
-                  src: profilePictureURL,
-                  size: "md",
-                }}
-              />
+              {isLoading ? (
+                <Skeleton circle className="w-10 h-10" enableAnimation />
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Avatar src={profilePictureURL} className="" />
+                  <p className="font-semibold">{deck?.username}</p>
+                </div>
+              )}
             </div>
-
-            <div
-              className={deck?.owner === auth.currentUser?.uid ? "" : "hidden"}
-            >
-              <button
-                className="icon-btn"
-                onClick={() => navigate(`/create/${deck?.id}`)}
+            {isLoading ? null : (
+              <div
+                className={
+                  deck?.owner === auth.currentUser?.uid ? "" : "hidden"
+                }
               >
-                <FaEdit className="text-blue-600" />
-              </button>
-              <button className="icon-btn" onClick={() => onOpen()}>
-                <FaTrash className="text-rose-600" />
-              </button>
-            </div>
+                <button
+                  className="icon-btn hover:text-blue-600"
+                  onClick={() => navigate(`/create/${deck?.id}`)}
+                >
+                  <FaEdit />
+                </button>
+
+                <button
+                  className="icon-btn text-rose-600 "
+                  onClick={() => onOpen()}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardBody
-          className="py-0 cursor-pointer"
+          className="py-2 cursor-pointer"
           onClick={() => navigate(`/study/${deck?.id}`)}
         >
           <div className="text-left">
-            <p className="font-bold text-lg">{deck?.title}</p>
-            <p className="text-sm text-zinc-600">{deck?.description}</p>
+            {isLoading ? (
+              <Skeleton className="w-1/3" enableAnimation />
+            ) : (
+              <p className="font-bold text-lg">{deck?.title}</p>
+            )}
+            {isLoading ? (
+              <Skeleton className="w-full" count={2} enableAnimation />
+            ) : (
+              <p
+                className="text-sm text-zinc-600 overflow-ellipsis line-clamp-2
+            "
+              >
+                {deck?.description}
+              </p>
+            )}
           </div>
         </CardBody>
         <CardFooter className="pt-2">
-          <Chip size="sm" className="mt-1">
-            <p className="font-semibold text-xs">{deck?.cardsLength} cards</p>
-          </Chip>
+          {isLoading ? null : (
+            <Chip size="sm" className="mt-1">
+              <p className="font-semibold text-xs">{deck?.cardsLength} cards</p>
+            </Chip>
+          )}
         </CardFooter>
       </Card>
       <Modal isOpen={isOpen} onClose={onClose}>

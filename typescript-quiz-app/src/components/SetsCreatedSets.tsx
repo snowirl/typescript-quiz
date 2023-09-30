@@ -92,22 +92,24 @@ const SetsCreatedSets = () => {
               <SetCard key={index} deckId={deck.id} />
             ))
         : null}
-      <div className="flex justify-center py-4">
-        <ButtonGroup>
-          <Button
-            isDisabled={pageIndex === 0 ? true : false}
-            onClick={() => handleFindSets(-1)}
-          >
-            Previous
-          </Button>
-          <Button
-            isDisabled={(pageIndex + 1) * 5 >= deckCount}
-            onClick={() => handleFindSets(1)}
-          >
-            Next
-          </Button>
-        </ButtonGroup>
-      </div>
+      {isLoading ? null : (
+        <div className="flex justify-center py-4">
+          <ButtonGroup>
+            <Button
+              isDisabled={pageIndex === 0 ? true : false}
+              onClick={() => handleFindSets(-1)}
+            >
+              Previous
+            </Button>
+            <Button
+              isDisabled={(pageIndex + 1) * 5 >= deckCount}
+              onClick={() => handleFindSets(1)}
+            >
+              Next
+            </Button>
+          </ButtonGroup>
+        </div>
+      )}
     </div>
   );
 };

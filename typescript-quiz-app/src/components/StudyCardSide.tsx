@@ -49,10 +49,10 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         </button>
       </CardHeader>
       <CardBody
-        className="flex justify-center items-center h-[280px] cursor-pointer"
+        className="flex flex-col h-[280px] items-center cursor-pointer overflow-y-auto"
         onClick={() => props.flipCard()}
       >
-        <p className="text-2xl">
+        <p className="text-2xl text-center my-auto">
           {props.isFront ? props.flashcard.front : props.flashcard.back}
         </p>
         <Image
