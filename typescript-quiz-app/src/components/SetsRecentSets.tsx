@@ -84,7 +84,7 @@ const SetsRecentSets = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {deckList !== null
         ? deckList
             // .slice(recentsIndex * 5, recentsIndex * 5 + 5)

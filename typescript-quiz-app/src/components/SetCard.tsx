@@ -161,8 +161,8 @@ const SetCard = (props: SetCardProps) => {
   };
   return (
     <div>
-      <Card className="w-full">
-        <CardHeader className="pb-0">
+      <Card className="w-full" shadow="sm">
+        <CardHeader className="pb-0 pt-2">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
               {profilePictureURL === "" ? (
@@ -198,7 +198,7 @@ const SetCard = (props: SetCardProps) => {
           </div>
         </CardHeader>
         <CardBody
-          className="py-2 cursor-pointer"
+          className="pt-1 pb-0 pl-4 cursor-pointer"
           onClick={() => navigate(`/study/${deck?.id}`)}
         >
           <div className="text-left">
@@ -219,7 +219,7 @@ const SetCard = (props: SetCardProps) => {
             )}
           </div>
         </CardBody>
-        <CardFooter className="pt-2">
+        <CardFooter className="pt-1 pb-2">
           {isLoading ? null : (
             <Chip size="sm" className="mt-1">
               <p className="font-semibold text-xs">{deck?.cardsLength} cards</p>

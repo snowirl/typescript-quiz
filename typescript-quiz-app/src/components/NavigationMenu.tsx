@@ -1,4 +1,4 @@
-import { Switch } from "@nextui-org/react";
+import { Switch, Tabs, Tab } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
@@ -8,15 +8,28 @@ import { useUserContext } from "../context/userContext";
 import AvatarContainer from "./AvatarContainer";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
+import { useLocation } from "react-router-dom";
 
 const NavigationMenu = () => {
   const { theme, setTheme } = useTheme();
   const { user } = useUserContext();
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [tabKey, setTabKey] = useState("none");
+
+  useEffect(() => {
+    if (location.pathname.includes("sets")) {
+      setTabKey("sets");
+    } else if (location.pathname === "/") {
+      setTabKey("home");
+    } else {
+      setTabKey("none");
+    }
+  }, [location]);
 
   const changeTheme = () => {
     if (theme === "dark") {
@@ -30,6 +43,15 @@ const NavigationMenu = () => {
     navigate("/create/new");
     setOpen(false);
   };
+
+  const handleTabButton = (key: React.Key) => {
+    if (key === "sets") {
+      navigate("/sets");
+    } else if (key === "home") {
+      navigate("/");
+    }
+  };
+
   return (
     <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-[#0f0f11]">
       <div className="flex justify-between px-4 py-3 mx-auto max-w-[1200px]">
@@ -81,12 +103,19 @@ const NavigationMenu = () => {
         </div>
 
         <div className="space-x-4 items-center hidden md:flex">
-          <Link to="/">
-            <button className="text-sm px-4 py-3 font-semibold">Home</button>
-          </Link>
-          <Link to="sets">
-            <p className="text-sm px-4 py-3 font-semibold">Sets</p>
-          </Link>
+          <Tabs
+            variant="underlined"
+            aria-label="NavMenu"
+            color="primary"
+            className="font-semibold"
+            selectedKey={tabKey}
+            onSelectionChange={(key) => handleTabButton(key)}
+          >
+            <Tab key="none" title="none" className="hidden"></Tab>
+            <Tab key="home" title="Home"></Tab>
+            <Tab key="sets" title="Sets"></Tab>
+          </Tabs>
+
           <Button
             color="primary"
             variant="solid"

@@ -15,7 +15,7 @@ import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
 import { Button, ButtonGroup } from "@nextui-org/react";
 
-const SetsCreatedSets = () => {
+const SetsFavorites = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [deckList, setDeckList] = useState<DocumentData | null>(null);
@@ -26,14 +26,18 @@ const SetsCreatedSets = () => {
 
   useEffect(() => {
     handleFindSets(0);
-    getDeckCount();
+    getFavoritedDeckCount();
   }, []);
 
-  const getDeckCount = async () => {
+  const getFavoritedDeckCount = async () => {
     try {
-      const coll = collection(db, "users", userID, "decks");
-      const snapshot = await getCountFromServer(coll);
-      setDeckCount(snapshot.data().count);
+      const coll = collection(db, "users", userID, "activity");
+
+      // Adding a query to filter activities with isFavorited: true
+      const q = query(coll, where("isFavorited", "==", true));
+
+      const snapshot = await getCountFromServer(q);
+      setDeckCount(snapshot.data().count); // Use snapshot.size to get the count
     } catch (e) {
       console.log(e);
     }
@@ -43,23 +47,30 @@ const SetsCreatedSets = () => {
     // -1 go back one, 0 initialize, 1 next page
     // find your sets
     let list: DocumentData = [];
-    const setsRef = collection(db, "users", userID, "decks");
-    let q = query(setsRef, orderBy("created", "desc"), limit(5));
+    const setsRef = collection(db, "users", userID, "activity");
+    let q = query(setsRef, orderBy("timestamp", "desc"), limit(5));
 
     if (whichWay === -1) {
       q = query(
         setsRef,
-        orderBy("created", "desc"),
+        where("favorited", "==", true),
+        orderBy("timestamp", "desc"),
         limit(5),
         endBefore(lastDeck)
       );
       setPageIndex(pageIndex - 1);
     } else if (whichWay === 0) {
-      q = query(setsRef, orderBy("created", "desc"), limit(5));
+      q = query(
+        setsRef,
+        where("favorited", "==", true),
+        orderBy("timestamp", "desc"),
+        limit(5)
+      );
     } else if (whichWay === 1) {
       q = query(
         setsRef,
-        orderBy("created", "desc"),
+        where("favorited", "==", true),
+        orderBy("timestamp", "desc"),
         limit(5),
         startAfter(lastDeck)
       );
@@ -89,7 +100,7 @@ const SetsCreatedSets = () => {
         ? deckList
             // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
             .map((deck: DocumentData, index: number) => (
-              <SetCard key={index} deckId={deck.id} />
+              <SetCard key={index} deckId={deck.docId} />
             ))
         : null}
       {isLoading ? null : (
@@ -114,4 +125,4 @@ const SetsCreatedSets = () => {
   );
 };
 
-export default SetsCreatedSets;
+export default SetsFavorites;

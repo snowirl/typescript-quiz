@@ -46,62 +46,19 @@ const flashcards: Flashcard[] = [
   {
     front: "What is the capital of Italy?",
     back: "Rome",
-    cardId: 1,
+    cardId: "1",
     isStarred: false,
   },
   {
     front: "In which century was the Colosseum built?",
     back: "1st century AD",
-    cardId: 2,
+    cardId: "2",
     isStarred: true,
   },
   {
     front: "Who was the first Roman Emperor?",
     back: "Augustus (Octavian)",
-    cardId: 3,
-    isStarred: false,
-  },
-  {
-    front: "What river flows through Rome?",
-    back: "Tiber River",
-    cardId: 4,
-    isStarred: true,
-  },
-  {
-    front: "Which famous fountain is located in Rome's Trevi District?",
-    back: "Trevi Fountain",
-    cardId: 5,
-    isStarred: false,
-  },
-  {
-    front: "What is the Vatican City's status in relation to Rome?",
-    back: "It is an independent city-state surrounded by Rome.",
-    cardId: 6,
-    isStarred: true,
-  },
-  {
-    front: "Which ancient Roman road connected Rome to the south of Italy?",
-    back: "Appian Way (Via Appia)",
-    cardId: 7,
-    isStarred: false,
-  },
-  {
-    front: "Who was the Roman goddess of love and beauty?",
-    back: "Venus",
-    cardId: 8,
-    isStarred: false,
-  },
-  {
-    front:
-      "Which famous Roman philosopher was sentenced to death by drinking hemlock?",
-    back: "Socrates",
-    cardId: 9,
-    isStarred: false,
-  },
-  {
-    front: "What is the official language of ancient Rome?",
-    back: "Latin",
-    cardId: 10,
+    cardId: "3",
     isStarred: false,
   },
 ];
