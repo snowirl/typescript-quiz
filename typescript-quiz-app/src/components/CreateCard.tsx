@@ -92,10 +92,10 @@ const CreateCard = (props: CreateCardProps) => {
   };
 
   return (
-    <Card className="rounded-lg">
+    <Card className="rounded-lg" shadow="sm">
       <CardHeader className="">
         <div className="flex justify-between flex-grow items-center px-2 py-0">
-          <p className="text-sm font-semibold">{props.index + 1}</p>
+          <p className="text-base font-semibold">{props.index + 1}</p>
           <Tooltip
             content="Delete"
             showArrow
@@ -103,7 +103,7 @@ const CreateCard = (props: CreateCardProps) => {
             className="text-black dark:text-white"
           >
             <button
-              className="icon-btn hover:text-rose-600"
+              className="p-2 icon-btn hover:text-rose-600"
               onClick={() => props.handleCardDelete(props.index)}
             >
               <FaTrash className="w-4 h-4 " />
@@ -112,7 +112,7 @@ const CreateCard = (props: CreateCardProps) => {
         </div>
       </CardHeader>
       <CardBody className="pt-1">
-        <div className="flex space-x-10 mx-6">
+        <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0">
           <div className="flex-1 flex-grow h-full">
             <TextareaAutosize
               className="textarea"

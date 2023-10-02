@@ -12,29 +12,21 @@ import SetsRecentSets from "../components/SetsRecentSets";
 import { useState } from "react";
 import SetsFolders from "../components/SetsFolders";
 import SetsFavorites from "../components/SetsFavorites";
+import SetsPage from "../components/SetsPage";
+import { Routes, Route, Outlet } from "react-router-dom";
 
 const Sets = () => {
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
-      <div className="flex justify-center">
-        <div className="max-w-[800px] flex-grow space-y-4 px-4">
-          <Tabs aria-label="Options" variant="underlined">
-            <Tab key="recents" title="Recents">
-              <SetsRecentSets />
-            </Tab>
-            <Tab key="favorites" title="Favorites">
-              <SetsFavorites />
-            </Tab>
-            <Tab key="folders" title="Folders">
-              <SetsFolders />
-            </Tab>
-            <Tab key="created" title="Created Sets">
-              <SetsCreatedSets />
-            </Tab>
-          </Tabs>
-        </div>
-      </div>
-    </div>
+    <>
+      <SetsPage />
+      <Routes>
+        <Route path="recents" element={<SetsRecentSets />} />
+        <Route path="favorites" element={<SetsFavorites />} />
+        <Route path="all" element={<SetsCreatedSets />} />
+        <Route path="folders" element={<SetsFolders />} />
+      </Routes>
+      <Outlet />
+    </>
   );
 };
 
