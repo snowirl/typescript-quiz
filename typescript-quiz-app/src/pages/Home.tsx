@@ -1,4 +1,18 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+
 const Home = () => {
+  const [isCardVisible, setIsCardVisible] = useState(true);
+  const [isMovingLeft, setIsMovingLeft] = useState(false);
+
+  const handleCardClick = () => {
+    console.log("clicked");
+    setIsCardVisible(false);
+    setTimeout(() => {
+      setIsCardVisible(true);
+    }, 300);
+  };
+
   return (
     <>
       <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">

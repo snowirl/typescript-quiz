@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import { useTheme } from "next-themes";
-import { FaBars, FaXmark } from "react-icons/fa6";
+import { FaBars, FaXmark, FaMagnifyingGlass } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import AvatarContainer from "./AvatarContainer";
 import { Button } from "@nextui-org/react";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import { useLocation } from "react-router-dom";
+import { Input } from "@nextui-org/react";
 
 const NavigationMenu = () => {
   const { theme, setTheme } = useTheme();
@@ -46,7 +47,7 @@ const NavigationMenu = () => {
 
   const handleTabButton = (key: React.Key) => {
     if (key === "sets") {
-      navigate("/sets");
+      navigate("/sets/recents");
     } else if (key === "home") {
       navigate("/");
     }
@@ -124,6 +125,15 @@ const NavigationMenu = () => {
           >
             Create
           </Button>
+          <div className="flex items-center">
+            <Input
+              variant="bordered"
+              placeholder="Search sets, users"
+              className="bg-white rounded-2xl dark:bg-dark-1 w-auto lg:w-[300px]"
+              type="text"
+              startContent={<FaMagnifyingGlass className="w-5 h-5" />}
+            />
+          </div>
         </div>
         <div></div>
         <div className="space-x-2 flex items-center">

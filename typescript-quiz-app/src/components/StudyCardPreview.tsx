@@ -7,7 +7,7 @@ interface StudyCardPreviewProps {
 
 const StudyCardPreview = (props: StudyCardPreviewProps) => {
   return (
-    <Card className="rounded-lg ">
+    <Card className="rounded-lg " shadow="sm">
       <CardBody>
         <div className="flex">
           <div className="flex-1 px-2">

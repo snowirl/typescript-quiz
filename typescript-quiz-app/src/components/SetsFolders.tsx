@@ -83,21 +83,27 @@ const SetsFolders = () => {
   };
 
   return (
-    <div className="mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 items-center">
-      {folderList !== null
-        ? folderList
-            // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
-            .map((folder: DocumentData, index: number) => (
-              <SetsFolderItem
-                folderName={folder.folderName}
-                folderColor={folder.folderColor}
-                key={index}
-                folderID={folderIDs !== null ? folderIDs[index] : "Error"}
-              />
-            ))
-        : null}
-      <div>
-        <SetsCreateFolder />
+    <div className="bg-gray-100 text-black dark:text-gray-100 min-h-screen dark:bg-dark-2 pt-6">
+      <div className="flex justify-center">
+        <div className="max-w-[800px] flex-grow space-y-4 px-4">
+          <div className="mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 items-center">
+            {folderList !== null
+              ? folderList
+                  // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
+                  .map((folder: DocumentData, index: number) => (
+                    <SetsFolderItem
+                      folderName={folder.folderName}
+                      folderColor={folder.folderColor}
+                      key={index}
+                      folderID={folderIDs !== null ? folderIDs[index] : "Error"}
+                    />
+                  ))
+              : null}
+            <div>
+              <SetsCreateFolder />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ interface StudyInfoProps {
 
 const StudyInfo = (props: StudyInfoProps) => {
   return (
-    <Card className="rounded-lg">
+    <Card className="rounded-lg" shadow="md">
       <CardHeader>
         <div className="flex justify-around flex-grow px-2">
           <div className="flex-grow text-left">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Flashcard } from "../assets/globalTypes";
-import { Input, Button, Checkbox } from "@nextui-org/react";
+import { Button, Checkbox } from "@nextui-org/react";
 import CreateCard from "../components/CreateCard";
 import TextareaAutosize from "react-textarea-autosize";
 import { uid } from "uid";

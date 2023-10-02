@@ -96,31 +96,37 @@ const SetsFavorites = () => {
 
   return (
     <div className="space-y-3">
-      {deckList !== null
-        ? deckList
-            // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
-            .map((deck: DocumentData, index: number) => (
-              <SetCard key={index} deckId={deck.docId} />
-            ))
-        : null}
-      {isLoading ? null : (
-        <div className="flex justify-center py-4">
-          <ButtonGroup>
-            <Button
-              isDisabled={pageIndex === 0 ? true : false}
-              onClick={() => handleFindSets(-1)}
-            >
-              Previous
-            </Button>
-            <Button
-              isDisabled={(pageIndex + 1) * 5 >= deckCount}
-              onClick={() => handleFindSets(1)}
-            >
-              Next
-            </Button>
-          </ButtonGroup>
+      <div className="bg-gray-100 text-black dark:text-gray-100 min-h-screen dark:bg-dark-2 pt-6">
+        <div className="flex justify-center">
+          <div className="max-w-[800px] flex-grow space-y-4 px-4">
+            {deckList !== null
+              ? deckList
+                  // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
+                  .map((deck: DocumentData, index: number) => (
+                    <SetCard key={index} deckId={deck.docId} />
+                  ))
+              : null}
+            {isLoading ? null : (
+              <div className="flex justify-center py-4">
+                <ButtonGroup>
+                  <Button
+                    isDisabled={pageIndex === 0 ? true : false}
+                    onClick={() => handleFindSets(-1)}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    isDisabled={(pageIndex + 1) * 5 >= deckCount}
+                    onClick={() => handleFindSets(1)}
+                  >
+                    Next
+                  </Button>
+                </ButtonGroup>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

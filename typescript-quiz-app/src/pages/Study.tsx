@@ -7,7 +7,7 @@ import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect } from "react";
 import arrayShuffle from "array-shuffle";
 import { BsFillHeartFill } from "react-icons/bs";
-import { motion } from "framer-motion";
+import { animate, motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import {
   query,
@@ -67,18 +67,22 @@ const Study = () => {
   const [deckData, setDeckData] = useState<DocumentData | null>(null);
   const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
   const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
+  const [currentCard, setCurrentCard] = useState(flashcards[0]); // currently using card
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [flipSpeed, setFlipSpeed] = useState(0.35);
   const [isFrontFirst, setIsFrontFirst] = useState(true);
   const [isShuffled, setIsShuffled] = useState(false);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false); // if card is animating
   const [isLoading, setIsLoading] = useState(true);
   const [starredList, setStarredList] = useState<string[] | null>(null);
   const [shouldSaveData, setShouldSaveData] = useState(true);
   const [isFavorited, setIsFavorited] = useState(false);
   const [profilePictureURL, setProfilePictureURL] = useState("");
+  const [isCardVisible, setIsCardVisible] = useState(true);
+  const [isMovingLeft, setIsMovingLeft] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false); // if card is animating
+
   let { id } = useParams();
   const pageID: string = id ?? "";
   let userID: string = auth.currentUser?.uid ?? "Error";
@@ -150,6 +154,11 @@ const Study = () => {
     }
   }, [deckData]);
 
+  useEffect(() => {
+    setCurrentCard(currentDeck[0]);
+    setIndex(0);
+  }, [currentDeck]);
+
   const initializeDeckInfo = async () => {
     setIsLoading(true);
 
@@ -184,6 +193,7 @@ const Study = () => {
 
       setOriginalDeck(docRef.docs[0].data().cards);
       setCurrentDeck(docRef.docs[0].data().cards);
+      setCurrentCard(docRef.docs[0].data().cards[index]);
     } catch (e) {
       console.log("error occurred: " + e);
       setIsLoading(false);
@@ -258,14 +268,50 @@ const Study = () => {
   }, [isStarredOnly]);
 
   useEffect(() => {
-    if (isFrontFirst && isFlipped) {
-      flipCard();
-      setFlipSpeed(0);
-    } else if (!isFrontFirst && !isFlipped) {
-      flipCard();
-      setFlipSpeed(0);
+    if (deckData === null) {
+      return;
     }
+    setTimeout(() => {
+      setCurrentCard(currentDeck[index]);
+    }, 300);
   }, [index]);
+
+  const incrementIndex = () => {
+    if (index < currentDeck.length - 1) {
+      setIndex((prevIndex) => prevIndex + 1);
+      animateCard(true);
+    }
+  };
+
+  const decrementIndex = () => {
+    if (index > 0) {
+      setIndex((prevIndex) => prevIndex - 1);
+      animateCard(false);
+    }
+  };
+
+  const animateCard = (isGoingUp: boolean) => {
+    if (isAnimating) {
+      return;
+    }
+
+    setIsAnimating(true);
+    setIsCardVisible(false);
+    setIsMovingLeft(!isGoingUp);
+    setTimeout(() => {
+      if (isFrontFirst && isFlipped) {
+        setFlipSpeed(0);
+        flipCard();
+      } else if (!isFrontFirst && !isFlipped) {
+        setFlipSpeed(0);
+        flipCard();
+      }
+
+      setIsCardVisible(true);
+      // setCurrentCard(currentDeck[index]); // wait til we are visible to set card to index
+      setIsAnimating(false);
+    }, 300);
+  };
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
       if (isStarredOnly && starredList !== null && starredList.length > 0) {
@@ -309,18 +355,24 @@ const Study = () => {
   const changeInitialCardSide = (val: string) => {
     if (val === "front") {
       setIsFrontFirst(true);
+
+      if (isFlipped) {
+        setIsFlipped(false);
+      }
     } else {
       setIsFrontFirst(false);
-    }
 
-    setIndex(0);
+      if (!isFlipped) {
+        setIsFlipped(true);
+      }
+    }
   };
 
   const flipCard = () => {
     setIsFlipped(!isFlipped);
     setTimeout(() => {
       setFlipSpeed(0.35);
-    }, 300);
+    }, 150);
   };
 
   const checkAndSaveData = () => {
@@ -411,12 +463,22 @@ const Study = () => {
               size="sm"
             />
             <motion.div
-              initial={{ opacity: 1 }}
-              transition={{ duration: 0.15, type: "tween" }}
-              // animate={controls}
+              initial={{ x: 0 }}
+              // onClick={handleCardClick}
+              animate={{
+                opacity: isCardVisible ? 1 : 0,
+                x: !isCardVisible ? (isMovingLeft ? -55 : 55) : 0,
+                rotateZ: !isCardVisible ? (isMovingLeft ? -1 : 1) : 0,
+              }}
+              transition={{
+                duration: 0.15,
+                type: "spring",
+                stiffness: 500,
+                damping: 38,
+              }}
             >
               <StudyCard
-                flashcard={currentDeck[index]}
+                flashcard={currentCard}
                 isFlipped={isFlipped}
                 isShuffled={isShuffled}
                 shuffleDeck={shuffleDeck}
@@ -427,15 +489,16 @@ const Study = () => {
                 changeInitialCardSide={changeInitialCardSide}
                 flipSpeed={flipSpeed}
                 handleStarCard={handleStarCard}
-                isStarred={
-                  starredList?.includes(currentDeck[index].cardId) ?? false
-                }
+                isStarred={starredList?.includes(currentCard.cardId) ?? false}
               />
             </motion.div>
             <StudyButtons
               index={index}
               setIndex={setIndex}
               length={currentDeck.length}
+              incrementIndex={() => incrementIndex()}
+              decrementIndex={() => decrementIndex()}
+              deckId={id ?? "undefined"}
             />
             <StudyInfo
               username={deckData?.username}

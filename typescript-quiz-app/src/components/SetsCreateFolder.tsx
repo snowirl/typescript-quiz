@@ -81,8 +81,9 @@ const SetsCreateFolder = () => {
                 />
                 <p className="text-sm font-semibold">Color</p>
                 <div className="flex flex-wrap justify-start">
-                  {colors.map((color) => (
+                  {colors.map((color, num) => (
                     <button
+                      key={num}
                       onClick={() => setColorSelected(color)}
                       className={`bg-${color}-500 h-6 w-6 rounded-full mx-1 mb-1 ${
                         colorSelected === color
