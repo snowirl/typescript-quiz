@@ -62,13 +62,15 @@ const SetsCreateFolder = () => {
   };
   return (
     <div>
-      <Button onPress={onOpen}>Create folder</Button>
+      <Button onPress={onOpen} color="primary" className="font-semibold">
+        Create new folder
+      </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
         <ModalContent className="text-black dark:text-gray-100">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Create folder
+                Create new folder
               </ModalHeader>
               <ModalBody>
                 {/* <p className="text-sm font-semibold">Folder name</p> */}
@@ -102,7 +104,7 @@ const SetsCreateFolder = () => {
                   color="primary"
                   onPress={() => createNewFolder(onClose)}
                 >
-                  Create folder
+                  Create
                 </Button>
               </ModalFooter>
             </>
