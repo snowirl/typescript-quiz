@@ -41,6 +41,7 @@ import {
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@nextui-org/react";
+import { useAnimationControls } from "framer-motion";
 
 const flashcards: Flashcard[] = [
   {
@@ -79,9 +80,8 @@ const Study = () => {
   const [shouldSaveData, setShouldSaveData] = useState(true);
   const [isFavorited, setIsFavorited] = useState(false);
   const [profilePictureURL, setProfilePictureURL] = useState("");
-  const [isCardVisible, setIsCardVisible] = useState(true);
-  const [isMovingLeft, setIsMovingLeft] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
+  const controls = useAnimationControls(); // for card animation
 
   let { id } = useParams();
   const pageID: string = id ?? "";
@@ -109,7 +109,7 @@ const Study = () => {
 
       // Your logic here using the current values
       checkAndSaveData();
-    }, 30000);
+    }, 20000);
 
     return () => clearInterval(intervalId);
   }, [user]);
@@ -294,10 +294,8 @@ const Study = () => {
     if (isAnimating) {
       return;
     }
-
+    sequence(isGoingUp);
     setIsAnimating(true);
-    setIsCardVisible(false);
-    setIsMovingLeft(!isGoingUp);
     setTimeout(() => {
       if (isFrontFirst && isFlipped) {
         setFlipSpeed(0);
@@ -306,12 +304,33 @@ const Study = () => {
         setFlipSpeed(0);
         flipCard();
       }
-
-      setIsCardVisible(true);
-      // setCurrentCard(currentDeck[index]); // wait til we are visible to set card to index
       setIsAnimating(false);
     }, 300);
   };
+
+  async function sequence(isUp: boolean) {
+    await controls.start({
+      opacity: 0,
+      x: isUp ? 25 : -25,
+      rotateZ: isUp ? 0.2 : -0.2,
+      y: -5,
+      transition: { duration: 0.15 },
+    });
+    await controls.start({
+      opacity: 0,
+      rotateZ: isUp ? -0.2 : 0.2,
+      x: isUp ? -25 : 25,
+      transition: { duration: 0.15 },
+    });
+    await controls.start({
+      opacity: 1,
+      x: 0,
+      rotateZ: 0,
+      y: 0,
+      transition: { duration: 0.15 },
+    });
+  }
+
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
       if (isStarredOnly && starredList !== null && starredList.length > 0) {
@@ -465,11 +484,10 @@ const Study = () => {
             <motion.div
               initial={{ x: 0 }}
               // onClick={handleCardClick}
-              animate={{
-                opacity: isCardVisible ? 1 : 0,
-                x: !isCardVisible ? (isMovingLeft ? -55 : 55) : 0,
-                rotateZ: !isCardVisible ? (isMovingLeft ? -1 : 1) : 0,
-              }}
+              animate={controls}
+              // opacity: isCardVisible ? 1 : 0,
+              //   x: !isCardVisible ? (isMovingLeft ? -55 : 55) : 0,
+              //   rotateZ: !isCardVisible ? (isMovingLeft ? -1 : 1) : 0,
               transition={{
                 duration: 0.15,
                 type: "spring",

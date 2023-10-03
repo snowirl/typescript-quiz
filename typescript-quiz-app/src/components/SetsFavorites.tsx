@@ -10,6 +10,9 @@ import {
   DocumentData,
   endBefore,
   where,
+  getDocFromCache,
+  getDocsFromCache,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
@@ -49,6 +52,25 @@ const SetsFavorites = () => {
     let list: DocumentData = [];
     const setsRef = collection(db, "users", userID, "activity");
     let q = query(setsRef, orderBy("timestamp", "desc"), limit(5));
+
+    // cache FUNCTION
+    // try {
+    //   const snapshot = await getDocsFromCache(setsRef);
+
+    //   const cachedDocs: DocumentSnapshot[] = snapshot.docs.filter(
+    //     (doc) => doc.exists() && getDocFromCache
+    //   );
+
+    //   if (cachedDocs.length > 0) {
+    //     console.log("IMA CLEAR THE CACHE.");
+    //     snapshot.forEach((doc) => {
+    //       list.push(doc.data());
+    //     });
+    //     // You can clear the cache or perform additional actions here
+    //   }
+    // } catch (error) {
+    //   console.error("Error while checking and clearing cache:", error);
+    // }
 
     if (whichWay === -1) {
       q = query(
