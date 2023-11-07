@@ -13,6 +13,7 @@ import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import { useLocation } from "react-router-dom";
 import { Input } from "@nextui-org/react";
+import logo from "../assets/logo2.png";
 
 const NavigationMenu = () => {
   const { theme, setTheme } = useTheme();
@@ -104,6 +105,7 @@ const NavigationMenu = () => {
         </div>
 
         <div className="space-x-4 items-center hidden md:flex">
+          <img src={logo} alt="Logo" className="w-12 h-12 rounded-full" />
           <Tabs
             variant="underlined"
             aria-label="NavMenu"

@@ -11,7 +11,7 @@ export default {
     extend: {
       colors: {
         // Add your custom colors here
-        primary: "#00B4A0",
+        primary: "#008E97",
         secondary: "#ffed4a",
         dark: {
           1: "#18181B",
