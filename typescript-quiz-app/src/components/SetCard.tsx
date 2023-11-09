@@ -3,9 +3,7 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  User,
   Chip,
-  Spinner,
   Avatar,
 } from "@nextui-org/react";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -16,15 +14,7 @@ import {
   where,
   collectionGroup,
   getDocs,
-  setDoc,
   doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  collection,
-  orderBy,
-  addDoc,
-  serverTimestamp,
   deleteDoc,
   DocumentData,
 } from "firebase/firestore";

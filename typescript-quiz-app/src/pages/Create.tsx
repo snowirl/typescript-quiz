@@ -4,7 +4,7 @@ import { Button, Checkbox } from "@nextui-org/react";
 import CreateCard from "../components/CreateCard";
 import TextareaAutosize from "react-textarea-autosize";
 import { uid } from "uid";
-import { FaPlus, FaLock, FaL } from "react-icons/fa6";
+import { FaPlus, FaLock } from "react-icons/fa6";
 import {
   doc,
   getDoc,
@@ -121,7 +121,7 @@ const Create = () => {
       // Creates Set for User in DB
 
       try {
-        const docRef = await setDoc(
+        await setDoc(
           doc(db, "users", userID, "decks", docId),
           {
             id: docId,
@@ -138,7 +138,7 @@ const Create = () => {
     } else {
       // here is the part for editing a set...
       try {
-        const docRef = await setDoc(
+        await setDoc(
           doc(db, "users", userID, "decks", docId),
           {
             title: title,
@@ -162,13 +162,10 @@ const Create = () => {
     try {
       // for putting the cards in a subcollection to save data..
 
-      const docRef = await setDoc(
-        doc(db, "users", userID, "decks", docId, "cards", docId),
-        {
-          id: docId,
-          cards: flashcardList,
-        }
-      );
+      await setDoc(doc(db, "users", userID, "decks", docId, "cards", docId), {
+        id: docId,
+        cards: flashcardList,
+      });
     } catch (e) {
       setHasError(true);
       console.error("Error adding document: ", e);

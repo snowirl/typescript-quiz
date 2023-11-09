@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 import LearnAnswers from "../components/QuizAnswers";
 import { Progress } from "@nextui-org/react";
 import { useState, useEffect } from "react";
@@ -26,44 +26,25 @@ import { Flashcard } from "../assets/globalTypes";
 import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
 
-const flashcards: Flashcard[] = [
-  {
-    front: "What is the capital of Italy?",
-    back: "Rome",
-    cardId: "1",
-  },
-  {
-    front: "In which century was the Colosseum built?",
-    back: "1st century AD",
-    cardId: "2",
-  },
-  {
-    front: "Who was the first Roman Emperor?",
-    back: "Augustus (Octavian)",
-    cardId: "3",
-  },
-];
-
 const Quiz = () => {
-  const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isQuestionFirst, setIsQuestionFirst] = useState(true);
-  const [isShuffled, setIsShuffled] = useState(true);
+  const [isQuestionFirst, _setIsQuestionFirst] = useState(true);
+  // const [isShuffled, setIsShuffled] = useState(true);
   const [deckData, setDeckData] = useState<DocumentData | null>(null);
   const [originalDeck, setOriginalDeck] = useState<Flashcard[] | null>(null);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null); // currently using card
   const [cardsLeft, setCardsLeft] = useState<Flashcard[] | null>(null); // cards left to learn
   const [boxOne, setBoxOne] = useState<Flashcard[] | null>(null);
   const [boxOnePending, setBoxOnePending] = useState<Flashcard[] | null>(null);
-  const [boxTwo, setBoxTwo] = useState<Flashcard[] | null>(null);
+  // const [boxTwo, setBoxTwo] = useState<Flashcard[] | null>(null);
   const [boxTwoPending, setBoxTwoPending] = useState<Flashcard[] | null>(null);
-  const [boxThree, setBoxThree] = useState<Flashcard[] | null>(null);
-  const [boxThreePending, setBoxThreePending] = useState<Flashcard[] | null>(
-    null
-  );
-  const boxOrder = [1, 1, 2, 1, 1, 2, 1, 1, 3];
-  const [boxIndex, setBoxIndex] = useState(0);
-  const [currentBox, setCurrentBox] = useState(0);
+  // const [boxThree, setBoxThree] = useState<Flashcard[] | null>(null);
+  // const [boxThreePending, setBoxThreePending] = useState<Flashcard[] | null>(
+  //   null
+  // );
+  // const boxOrder = [1, 1, 2, 1, 1, 2, 1, 1, 3];
+  const [boxIndex, _setBoxIndex] = useState(0);
+  const [currentBox, _setCurrentBox] = useState(0);
   const [distractors, setDistractors] = useState<string[] | null>(null); // cards left to learn
   const [storedDistractors, setStoredDistractors] = useState<string[] | null>(
     null
@@ -123,11 +104,11 @@ const Quiz = () => {
     }
   };
 
-  const handleShuffleDeck = () => {
-    if (cardsLeft !== null) {
-      setCardsLeft(arrayShuffle(cardsLeft));
-    }
-  };
+  // const handleShuffleDeck = () => {
+  //   if (cardsLeft !== null) {
+  //     setCardsLeft(arrayShuffle(cardsLeft));
+  //   }
+  // };
 
   const startLearn = () => {
     console.log("Starting Quiz.");
@@ -208,8 +189,6 @@ const Quiz = () => {
     axios
       .post("http://localhost:8080/chat", { prompt })
       .then((res) => {
-        setResponse(res.data);
-
         if (isNext) {
           setStoredDistractors(splitAnswers(res.data));
         } else {

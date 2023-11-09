@@ -7,7 +7,7 @@ import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect } from "react";
 import arrayShuffle from "array-shuffle";
 import { BsFillHeartFill } from "react-icons/bs";
-import { animate, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import {
   query,
@@ -17,13 +17,7 @@ import {
   setDoc,
   doc,
   getDoc,
-  updateDoc,
-  arrayUnion,
-  collection,
-  orderBy,
-  addDoc,
   serverTimestamp,
-  deleteDoc,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { DocumentData } from "firebase/firestore";
@@ -398,6 +392,7 @@ const Study = () => {
     setShouldSaveData((prevShouldSaveData) => {
       if (prevShouldSaveData) {
         console.log("Saving data...");
+        console.log(shouldSaveData);
         handleSaveData();
       } else {
         console.log("nothing has changed, do not need to save.");
@@ -540,7 +535,7 @@ const Study = () => {
         hideCloseButton={true}
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
                 Private Flashcard Set

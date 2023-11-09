@@ -1,11 +1,4 @@
-import {
-  Tabs,
-  Tab,
-  Card,
-  CardBody,
-  CardHeader,
-  Pagination,
-} from "@nextui-org/react";
+import { Tabs, Tab } from "@nextui-org/react";
 import { Key, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

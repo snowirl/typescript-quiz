@@ -9,7 +9,6 @@ import {
   startAfter,
   DocumentData,
   endBefore,
-  where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";

@@ -2,7 +2,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Tooltip,
   Image,
   Button,
@@ -11,7 +10,7 @@ import { Flashcard } from "../assets/globalTypes";
 import { FaTrash, FaImage } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useRef, ChangeEvent, useState, useEffect } from "react";
+import { useRef, ChangeEvent } from "react";
 
 interface CreateCardProps {
   flashcard: Flashcard;
