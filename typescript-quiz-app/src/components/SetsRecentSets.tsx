@@ -14,6 +14,7 @@ import {
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
 import { Button, ButtonGroup } from "@nextui-org/react";
+import { useUserContext } from "../context/userContext";
 
 const SetsRecentSets = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -22,12 +23,14 @@ const SetsRecentSets = () => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [lastDeck, setLastDeck] = useState<DocumentData | null>(null);
 
+  const { user } = useUserContext();
+
   const userID = auth.currentUser?.uid ?? "Error";
 
   useEffect(() => {
     handleFindSets(0);
     getDeckCount();
-  }, []);
+  }, [user]);
 
   const getDeckCount = async () => {
     try {

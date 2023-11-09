@@ -123,7 +123,7 @@ const NavigationMenu = () => {
             color="primary"
             variant="solid"
             onPress={() => navigate("/create/new")}
-            className="font-semibold"
+            className="font-bold"
           >
             Create
           </Button>

@@ -52,7 +52,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         className="flex flex-col h-[280px] items-center cursor-pointer overflow-y-auto"
         onClick={() => props.flipCard()}
       >
-        <p className="text-2xl text-center my-auto">
+        <p className="text-[22px] text-center my-auto">
           {props.isFront ? props.flashcard.front : props.flashcard.back}
         </p>
         <Image

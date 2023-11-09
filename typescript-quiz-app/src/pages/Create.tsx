@@ -228,10 +228,10 @@ const Create = () => {
         <div className="max-w-[800px] flex-grow space-y-3 px-4">
           <Alert isHidden={!hasError} text={errorText} />
           <div className="flex justify-between items-center">
-            <p className="text-left font-bold text-xl">Create a new set</p>
+            <p className="text-left font-bold text-xl">Create New Set</p>
             <Button
               color="primary"
-              className="font-semibold px-5"
+              className="font-bold  text-sm h-10"
               size="md"
               onClick={() => handleCreateSet()}
             >

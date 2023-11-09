@@ -443,7 +443,7 @@ const Study = () => {
         {isLoading ? (
           <Spinner />
         ) : (
-          <div className="max-w-[800px] flex-grow space-y-4 px-4">
+          <div className="max-w-[875px] flex-grow space-y-4 px-4">
             <p className="font-bold text-2xl">{deckData?.title}</p>
             <div className="flex justify-between relative">
               <div></div>
