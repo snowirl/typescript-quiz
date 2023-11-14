@@ -14,6 +14,7 @@ import "react-modern-drawer/dist/index.css";
 import { useLocation } from "react-router-dom";
 import { Input } from "@nextui-org/react";
 import logo from "../assets/logo2.png";
+import Sidebar from "./Sidebar";
 
 const NavigationMenu = () => {
   const { theme, setTheme } = useTheme();
@@ -58,77 +59,36 @@ const NavigationMenu = () => {
     <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-[#0f0f11]">
       <div className="flex justify-between px-4 py-3 mx-auto max-w-[1200px]">
         <div className="flex md:hidden relative">
-          <button
-            className="icon-btn px-2.5"
-            onClick={() => setOpen((prev) => !prev)}
-          >
-            <FaBars className="w-5 h-5" />
-          </button>
-          <Drawer open={open} direction="left" className="">
-            <div className="text-left text-base px-4 bg-white dark:bg-dark-1 h-full">
-              <div className="text-left pt-2">
-                <button className="icon-btn" onClick={() => setOpen(false)}>
-                  <FaXmark className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="w-full">
-                <Link to="/">
-                  <button
-                    className=" px-4 py-3 font-semibold"
-                    onClick={() => setOpen(false)}
-                  >
-                    Home
-                  </button>
-                </Link>
-              </div>
-              <div>
-                <Link to="/sets">
-                  <button
-                    className=" px-4 py-3 font-semibold"
-                    onClick={() => setOpen(false)}
-                  >
-                    Sets
-                  </button>
-                </Link>
-              </div>
-              <div className="w-full">
-                <Button
-                  color="primary"
-                  className="px-4 py-3 font-semibold w-full text-base"
-                  onClick={() => handleCreateButtonMenu()}
-                >
-                  Create
-                </Button>
-              </div>
-            </div>
-          </Drawer>
+          <Sidebar />
         </div>
 
-        <div className="space-x-2 items-center hidden md:flex">
+        <div className="space-x-4 items-center hidden md:flex">
           <img src={logo} alt="Logo" className="w-12 h-12 rounded-full" />
-          <Button
-            variant="light"
-            onPress={() => navigate("/create/new")}
-            className="font-semibold"
-          >
-            Home
-          </Button>
-          <Button
-            variant="light"
-            onPress={() => navigate("/sets/recents")}
-            className="font-semibold"
-          >
-            Sets
-          </Button>
+          <div className="space-x-2">
+            <Button
+              variant="light"
+              onPress={() => navigate("/create/new")}
+              className="font-semibold"
+            >
+              Home
+            </Button>
+            <Button
+              variant="light"
+              onPress={() => navigate("/sets/recents")}
+              className="font-semibold"
+            >
+              Sets
+            </Button>
 
-          <Button
-            color="primary"
-            variant="solid"
-            onPress={() => navigate("/create/new")}
-            className="font-bold"
-          >
-            Create
-          </Button>
+            <Button
+              color="primary"
+              variant="solid"
+              onPress={() => navigate("/create/new")}
+              className="font-semibold"
+            >
+              Create
+            </Button>
+          </div>
           <div className="flex items-center">
             <Input
               variant="bordered"

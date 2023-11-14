@@ -95,6 +95,9 @@ const SetsCreateFolder = () => {
                     ></button>
                   ))}
                 </div>
+                <div>
+                  <p className="bg-indigo-500">hi</p>
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

@@ -1,4 +1,14 @@
-import { Card, CardBody } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Divider,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Radio,
+  RadioGroup,
+  Switch,
+} from "@nextui-org/react";
 import LearnAnswers from "../components/QuizAnswers";
 import { Progress, Button } from "@nextui-org/react";
 import { useState, useEffect } from "react";
@@ -25,6 +35,7 @@ import { db } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
 import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
+import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -267,14 +278,60 @@ const Quiz = () => {
     }
   };
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
+    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-2">
       <div className="flex justify-center">
         <div className="max-w-[900px] space-y-2 px-4 flex-grow-1 w-full">
           <p className="text-center text-base font-semibold">Round 1</p>
           <div className="flex justify-between">
             <div></div>
             <div></div>
-            <FaGear className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+
+            <Popover placement="top" offset={10}>
+              <PopoverTrigger>
+                <Button isIconOnly variant="light">
+                  <FaGear className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="px-1 py-2 space-y-4">
+                  <RadioGroup
+                    label="Initial Side"
+                    orientation="horizontal"
+                    // defaultValue={props.isFrontFirst ? "front" : "back"}
+                    // onChange={(event) =>
+                    //   props.changeInitialCardSide(event.target.value)
+                    // }
+                  >
+                    <Radio value="front">Front</Radio>
+                    <Radio value="back">Back</Radio>
+                  </RadioGroup>
+                  <Divider className="my-4" />
+                  <RadioGroup
+                    label="Filter Cards"
+                    orientation="horizontal"
+                    // onChange={(event) =>
+                    //   // props.changeStarredSelected(event.target.value)
+                    // }
+                    // defaultValue={props.isStarredOnly ? "starred" : "all"}
+                  >
+                    <Radio value="all">All</Radio>
+                    <Radio value="starred">Starred Only</Radio>
+                  </RadioGroup>
+                  <Divider className="my-4" />
+                  <div className="text-center">
+                    <p className="text-gray-800 dark:text-gray-400 py-2">
+                      Shuffle Cards
+                    </p>
+                    <Switch
+                      aria-label="Shuffle Cards"
+                      size="sm"
+                      // isSelected={props.isShuffled}
+                      // onChange={() => props.shuffleDeck(props.isShuffled)}
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* <p className="text-center text-sm font-semibold">

@@ -49,22 +49,24 @@ const SignInModal = () => {
                 Sign in to your account
               </ModalHeader>
               <ModalBody className="pt-2 pb-2 space-y-2">
-                <Input
-                  type="email"
-                  label="Email"
-                  labelPlacement="inside"
-                  variant="faded"
-                  size="sm"
-                  ref={emailRef}
-                />
-                <Input
-                  type="password"
-                  label="Password"
-                  labelPlacement="inside"
-                  variant="faded"
-                  size="sm"
-                  ref={passRef}
-                />
+                <form className="space-y-2">
+                  <Input
+                    type="email"
+                    label="Email"
+                    labelPlacement="inside"
+                    variant="faded"
+                    size="sm"
+                    ref={emailRef}
+                  />
+                  <Input
+                    type="password"
+                    label="Password"
+                    labelPlacement="inside"
+                    variant="faded"
+                    size="sm"
+                    ref={passRef}
+                  />
+                </form>
                 <div className="flex justify-between text-xs">
                   <Checkbox>Remember me</Checkbox>
                   <Link href="#" underline="hover">

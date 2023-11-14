@@ -23,6 +23,7 @@ const SetsPage = () => {
               variant="underlined"
               selectedKey={tab}
               onSelectionChange={(key) => changeTab(key)}
+              className="font-semibold"
             >
               <Tab key="recents" title="Recents"></Tab>
               <Tab key="favorites" title="Favorites"></Tab>

@@ -57,7 +57,12 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                       ? "danger"
                       : "default"
                   }`}
-                  variant="bordered"
+                  variant={`${
+                    (0 === props.correctIndex || 0 == selectedIndex) &&
+                    showCorrect
+                      ? "flat"
+                      : "bordered"
+                  }`}
                   onClick={() => selectAnswer(0)}
                 >
                   <p className="whitespace-normal text-base">
@@ -87,7 +92,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   </div>
                 </Button>
                 <Button
-                  className="py-4 h-full relative grow-1 w-full bg-white dark:bg-dark-1"
+                  className="py-4 h-full relative grow-1 w-full"
                   color={`${
                     1 === props.correctIndex && showCorrect
                       ? "success"
@@ -97,7 +102,12 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                       ? "danger"
                       : "default"
                   }`}
-                  variant="bordered"
+                  variant={`${
+                    (1 === props.correctIndex || 1 == selectedIndex) &&
+                    showCorrect
+                      ? "flat"
+                      : "bordered"
+                  }`}
                   onClick={() => selectAnswer(1)}
                 >
                   <p className="whitespace-normal text-base">
@@ -131,7 +141,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
             <div className="flex w-full">
               <ButtonGroup className="flex flex-grow space-x-2">
                 <Button
-                  className="py-4 h-full grow-1 w-full relative bg-white dark:bg-dark-1"
+                  className="py-4 h-full grow-1 w-full relative"
                   color={`${
                     2 === props.correctIndex && showCorrect
                       ? "success"
@@ -141,7 +151,12 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                       ? "danger"
                       : "default"
                   }`}
-                  variant="bordered"
+                  variant={`${
+                    (2 === props.correctIndex || 2 == selectedIndex) &&
+                    showCorrect
+                      ? "flat"
+                      : "bordered"
+                  }`}
                   onClick={() => selectAnswer(2)}
                 >
                   <p className="whitespace-normal text-base">
@@ -172,7 +187,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                 </Button>
 
                 <Button
-                  className="py-4 h-full grow-1 w-full relative bg-white dark:bg-dark-1"
+                  className="py-4 h-full grow-1 w-full relative "
                   color={`${
                     3 === props.correctIndex && showCorrect
                       ? "success"
@@ -182,7 +197,12 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                       ? "danger"
                       : "default"
                   }`}
-                  variant="bordered"
+                  variant={`${
+                    (3 === props.correctIndex || 3 == selectedIndex) &&
+                    showCorrect
+                      ? "flat"
+                      : "bordered"
+                  }`}
                   onClick={() => selectAnswer(3)}
                 >
                   <p className="whitespace-normal text-base">

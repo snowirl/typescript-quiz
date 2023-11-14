@@ -11,6 +11,7 @@ import { FaTrash, FaImage } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRef, ChangeEvent } from "react";
+import { motion } from "framer-motion";
 
 interface CreateCardProps {
   flashcard: Flashcard;
@@ -91,112 +92,122 @@ const CreateCard = (props: CreateCardProps) => {
   };
 
   return (
-    <Card className="rounded-lg" shadow="sm">
-      <CardHeader className="">
-        <div className="flex justify-between flex-grow items-center">
-          <p className="text-base font-semibold">{props.index + 1}</p>
-          <Tooltip
-            content="Delete"
-            showArrow
-            delay={1000}
-            className="text-black dark:text-white"
-          >
-            <Button
-              className="icon-btn hover:text-rose-600"
-              variant="light"
-              size="sm"
-              radius="md"
-              isIconOnly
-              onClick={() => props.handleCardDelete(props.index)}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{
+        ease: "linear",
+        duration: 0.15,
+      }}
+      exit={{ opacity: 0 }}
+    >
+      <Card className="rounded-lg bg-white dark:bg-dark-1" shadow="sm">
+        <CardHeader className="">
+          <div className="flex justify-between flex-grow items-center">
+            <p className="text-base font-semibold">{props.index + 1}</p>
+            <Tooltip
+              content="Delete"
+              showArrow
+              delay={1000}
+              className="text-black dark:text-white"
             >
-              <FaTrash className="w-4 h-4 " />
-            </Button>
-          </Tooltip>
-        </div>
-      </CardHeader>
-      <CardBody className="pt-1">
-        <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0">
-          <div className="flex-1 flex-grow h-full">
-            <TextareaAutosize
-              className="textarea"
-              value={props.flashcard.front}
-              onChange={(e) => props.handleCardChange(e, props.index)}
-              placeholder="Enter front text"
-              name="front"
-            />
-            <div className="pl-0.5">
-              <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
-                Front
-              </p>
-              <div className="flex justify-between pt-1">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  color="primary"
-                  aria-label="Image"
-                  radius="md"
-                  onClick={() => handleButtonClick("front")}
-                >
-                  <FaImage />
-                </Button>
-                <input
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  style={{ display: "none" }}
-                  ref={fileInputFrontRef}
-                  onChange={(e) => handleFileChange(e, "front")}
-                />
-                <Image
-                  className=""
-                  width={150}
-                  alt="frontImage"
-                  src={props.flashcard.frontImage}
-                />
+              <Button
+                className="icon-btn hover:text-rose-600"
+                variant="light"
+                size="sm"
+                radius="md"
+                isIconOnly
+                onClick={() => props.handleCardDelete(props.index)}
+              >
+                <FaTrash className="w-4 h-4 " />
+              </Button>
+            </Tooltip>
+          </div>
+        </CardHeader>
+        <CardBody className="pt-1">
+          <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0">
+            <div className="flex-1 flex-grow h-full">
+              <TextareaAutosize
+                className="textarea"
+                value={props.flashcard.front}
+                onChange={(e) => props.handleCardChange(e, props.index)}
+                placeholder="Enter front text"
+                name="front"
+              />
+              <div className="pl-0.5">
+                <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
+                  Front
+                </p>
+                <div className="flex justify-between pt-1">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    color="primary"
+                    aria-label="Image"
+                    radius="md"
+                    onClick={() => handleButtonClick("front")}
+                  >
+                    <FaImage />
+                  </Button>
+                  <input
+                    type="file"
+                    accept=".jpg, .jpeg, .png"
+                    style={{ display: "none" }}
+                    ref={fileInputFrontRef}
+                    onChange={(e) => handleFileChange(e, "front")}
+                  />
+                  <Image
+                    className=""
+                    width={150}
+                    alt="frontImage"
+                    src={props.flashcard.frontImage}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 flex-grow h-full">
+              <TextareaAutosize
+                className="textarea"
+                value={props.flashcard.back}
+                onChange={(e) => props.handleCardChange(e, props.index)}
+                placeholder="Enter back text"
+                name="back"
+              />
+              <div className="pl-0.5">
+                <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
+                  Back
+                </p>
+                <div className="flex justify-between pt-1">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    color="primary"
+                    aria-label="Image"
+                    onClick={() => handleButtonClick("back")}
+                    radius="md"
+                  >
+                    <FaImage />
+                  </Button>
+                  <input
+                    type="file"
+                    accept=".jpg, .jpeg, .png"
+                    style={{ display: "none" }}
+                    ref={fileInputBackRef}
+                    onChange={(e) => handleFileChange(e, "back")}
+                  />
+                  <Image
+                    className=""
+                    width={150}
+                    alt="backImage"
+                    src={props.flashcard.backImage}
+                  />
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex-1 flex-grow h-full">
-            <TextareaAutosize
-              className="textarea"
-              value={props.flashcard.back}
-              onChange={(e) => props.handleCardChange(e, props.index)}
-              placeholder="Enter back text"
-              name="back"
-            />
-            <div className="pl-0.5">
-              <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
-                Back
-              </p>
-              <div className="flex justify-between pt-1">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  color="primary"
-                  aria-label="Image"
-                  onClick={() => handleButtonClick("back")}
-                  radius="md"
-                >
-                  <FaImage />
-                </Button>
-                <input
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  style={{ display: "none" }}
-                  ref={fileInputBackRef}
-                  onChange={(e) => handleFileChange(e, "back")}
-                />
-                <Image
-                  className=""
-                  width={150}
-                  alt="backImage"
-                  src={props.flashcard.backImage}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+    </motion.div>
   );
 };
 
