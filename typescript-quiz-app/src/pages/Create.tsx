@@ -280,7 +280,8 @@ const Create = () => {
               isIconOnly
               color="primary"
               size="lg"
-              className="font-semibold "
+              radius="md"
+              className="font-semibold"
               onClick={() => handleCardAdd()}
             >
               <FaPlus className="w-4 h-4" />

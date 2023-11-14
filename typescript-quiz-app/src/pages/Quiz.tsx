@@ -25,6 +25,7 @@ import { db } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
 import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
+import Notification from "../components/Notification";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -314,14 +315,17 @@ const Quiz = () => {
               </CardBody>
             </Card>
           ) : null}
+          <div className="items-center">
+            <Notification />
+            <button
+              onClick={() => nextCard()}
+              className="py-4 rounded-xl bg-primary px-8 my-4 font-bold text-white"
+            >
+              Next Card
+            </button>
+          </div>
         </div>
       </div>
-      <button
-        onClick={() => nextCard()}
-        className="py-4 rounded-xl bg-primary px-8 my-4 font-bold text-white"
-      >
-        Next Card
-      </button>
     </div>
   );
 };

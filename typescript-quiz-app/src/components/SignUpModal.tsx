@@ -86,7 +86,8 @@ const SignUpModal = () => {
                       color="primary"
                       variant="solid"
                       onPress={() => handleModalSubmit()}
-                      className="w-full rounded-md font-semibold"
+                      className="w-full font-semibold"
+                      radius="md"
                     >
                       Create account
                     </Button>

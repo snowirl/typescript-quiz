@@ -36,7 +36,7 @@ const SignInModal = () => {
         color="default"
         variant="light"
         className="font-semibold"
-        size="md"
+        radius="md"
         onPress={onOpen}
       >
         Login
@@ -78,7 +78,8 @@ const SignInModal = () => {
                     <Button
                       color="primary"
                       variant="solid"
-                      className="w-full rounded-md font-semibold"
+                      className="w-full font-semibold"
+                      radius="md"
                       onPress={() => handleModalSubmit()}
                     >
                       Log in

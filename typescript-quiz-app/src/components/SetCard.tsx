@@ -152,7 +152,7 @@ const SetCard = (props: SetCardProps) => {
   return (
     <div>
       <Card className="w-full" shadow="sm">
-        <CardHeader className="pb-0 pt-2">
+        <CardHeader className="pb-0 px-2 pt-2">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
               {profilePictureURL === "" ? (
@@ -170,25 +170,31 @@ const SetCard = (props: SetCardProps) => {
                   deck?.owner === auth.currentUser?.uid ? "" : "hidden"
                 }
               >
-                <button
-                  className="icon-btn hover:text-blue-600"
+                <Button
+                  isIconOnly
+                  variant="light"
+                  size="md"
+                  className=" hover:text-blue-600"
                   onClick={() => navigate(`/create/${deck?.id}`)}
                 >
-                  <FaEdit />
-                </button>
+                  <FaEdit className="w-4 h-4 " />
+                </Button>
 
-                <button
-                  className="icon-btn text-rose-600 "
+                <Button
+                  isIconOnly
+                  variant="light"
+                  size="md"
+                  className="text-rose-600"
                   onClick={() => onOpen()}
                 >
-                  <FaTrash />
-                </button>
+                  <FaTrash className="w-4 h-4 " />
+                </Button>
               </div>
             )}
           </div>
         </CardHeader>
         <CardBody
-          className="pt-1 pb-0 pl-4 cursor-pointer"
+          className="pt-1 pb-0 px-2 cursor-pointer"
           onClick={() => navigate(`/study/${deck?.id}`)}
         >
           <div className="text-left">
@@ -209,7 +215,7 @@ const SetCard = (props: SetCardProps) => {
             )}
           </div>
         </CardBody>
-        <CardFooter className="pt-1 pb-2">
+        <CardFooter className="pt-1 pb-2 px-2">
           {isLoading ? null : (
             <Chip size="sm" className="mt-1">
               <p className="font-semibold text-xs">{deck?.cardsLength} cards</p>

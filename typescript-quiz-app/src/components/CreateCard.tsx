@@ -93,7 +93,7 @@ const CreateCard = (props: CreateCardProps) => {
   return (
     <Card className="rounded-lg" shadow="sm">
       <CardHeader className="">
-        <div className="flex justify-between flex-grow items-center px-2 py-0">
+        <div className="flex justify-between flex-grow items-center">
           <p className="text-base font-semibold">{props.index + 1}</p>
           <Tooltip
             content="Delete"
@@ -101,12 +101,16 @@ const CreateCard = (props: CreateCardProps) => {
             delay={1000}
             className="text-black dark:text-white"
           >
-            <button
-              className="p-2 icon-btn hover:text-rose-600"
+            <Button
+              className="icon-btn hover:text-rose-600"
+              variant="light"
+              size="sm"
+              radius="md"
+              isIconOnly
               onClick={() => props.handleCardDelete(props.index)}
             >
               <FaTrash className="w-4 h-4 " />
-            </button>
+            </Button>
           </Tooltip>
         </div>
       </CardHeader>
@@ -130,6 +134,7 @@ const CreateCard = (props: CreateCardProps) => {
                   size="sm"
                   color="primary"
                   aria-label="Image"
+                  radius="md"
                   onClick={() => handleButtonClick("front")}
                 >
                   <FaImage />
@@ -169,6 +174,7 @@ const CreateCard = (props: CreateCardProps) => {
                   color="primary"
                   aria-label="Image"
                   onClick={() => handleButtonClick("back")}
+                  radius="md"
                 >
                   <FaImage />
                 </Button>
