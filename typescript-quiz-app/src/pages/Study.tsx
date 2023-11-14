@@ -454,8 +454,11 @@ const Study = () => {
                   content="Favorite"
                   className="text-black dark:text-white"
                 >
-                  <button
-                    className="icon-btn active:scale-95"
+                  <Button
+                    isIconOnly
+                    size="md"
+                    radius="full"
+                    variant="light"
                     onClick={() => handleFavorite()}
                   >
                     <BsFillHeartFill
@@ -465,7 +468,7 @@ const Study = () => {
                           : "w-5 h-5 text-gray-500"
                       }
                     />
-                  </button>
+                  </Button>
                 </Tooltip>
               </div>
             </div>

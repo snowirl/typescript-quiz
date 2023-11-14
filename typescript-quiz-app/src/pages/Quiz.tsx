@@ -1,6 +1,6 @@
 import { Card, CardBody } from "@nextui-org/react";
 import LearnAnswers from "../components/QuizAnswers";
-import { Progress } from "@nextui-org/react";
+import { Progress, Button } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -25,7 +25,6 @@ import { db } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
 import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
-import Notification from "../components/Notification";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -315,14 +314,15 @@ const Quiz = () => {
               </CardBody>
             </Card>
           ) : null}
-          <div className="items-center">
-            <Notification />
-            <button
+          <div className="items-center py-2">
+            <Button
+              size="lg"
+              color="primary"
+              className="font-semibold"
               onClick={() => nextCard()}
-              className="py-4 rounded-xl bg-primary px-8 my-4 font-bold text-white"
             >
               Next Card
-            </button>
+            </Button>
           </div>
         </div>
       </div>

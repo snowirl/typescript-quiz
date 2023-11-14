@@ -47,8 +47,16 @@ const QuizAnswers = (props: QuizAnswersProps) => {
             <div className="flex w-full">
               <ButtonGroup className="flex flex-grow space-x-2">
                 <Button
-                  className="py-4 h-full grow-1 w-full relative bg-white dark:bg-dark-1"
-                  color="default"
+                  className="py-4 h-full grow-1 w-full relative "
+                  color={`${
+                    0 === props.correctIndex && showCorrect
+                      ? "success"
+                      : selectedIndex === 0 &&
+                        selectedIndex !== props.correctIndex &&
+                        showCorrect
+                      ? "danger"
+                      : "default"
+                  }`}
                   variant="bordered"
                   onClick={() => selectAnswer(0)}
                 >
@@ -75,12 +83,20 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                         : "hidden"
                     }`}
                   >
-                    <FaCircleXmark className="w-6 h-6 text-red-500" />
+                    <FaCircleXmark className="w-6 h-6 text-rose-500" />
                   </div>
                 </Button>
                 <Button
                   className="py-4 h-full relative grow-1 w-full bg-white dark:bg-dark-1"
-                  color="default"
+                  color={`${
+                    1 === props.correctIndex && showCorrect
+                      ? "success"
+                      : selectedIndex === 1 &&
+                        selectedIndex !== props.correctIndex &&
+                        showCorrect
+                      ? "danger"
+                      : "default"
+                  }`}
                   variant="bordered"
                   onClick={() => selectAnswer(1)}
                 >
@@ -107,7 +123,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                         : "hidden"
                     }`}
                   >
-                    <FaCircleXmark className="w-6 h-6 text-red-500" />
+                    <FaCircleXmark className="w-6 h-6 text-rose-500" />
                   </div>
                 </Button>
               </ButtonGroup>
@@ -116,7 +132,15 @@ const QuizAnswers = (props: QuizAnswersProps) => {
               <ButtonGroup className="flex flex-grow space-x-2">
                 <Button
                   className="py-4 h-full grow-1 w-full relative bg-white dark:bg-dark-1"
-                  color="default"
+                  color={`${
+                    2 === props.correctIndex && showCorrect
+                      ? "success"
+                      : selectedIndex === 2 &&
+                        selectedIndex !== props.correctIndex &&
+                        showCorrect
+                      ? "danger"
+                      : "default"
+                  }`}
                   variant="bordered"
                   onClick={() => selectAnswer(2)}
                 >
@@ -143,13 +167,21 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                         : "hidden"
                     }`}
                   >
-                    <FaCircleXmark className="w-6 h-6 text-red-500" />
+                    <FaCircleXmark className="w-6 h-6 text-rose-500" />
                   </div>
                 </Button>
 
                 <Button
                   className="py-4 h-full grow-1 w-full relative bg-white dark:bg-dark-1"
-                  color="default"
+                  color={`${
+                    3 === props.correctIndex && showCorrect
+                      ? "success"
+                      : selectedIndex === 3 &&
+                        selectedIndex !== props.correctIndex &&
+                        showCorrect
+                      ? "danger"
+                      : "default"
+                  }`}
                   variant="bordered"
                   onClick={() => selectAnswer(3)}
                 >
@@ -176,7 +208,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                         : "hidden"
                     }`}
                   >
-                    <FaCircleXmark className="w-6 h-6 text-red-500" />
+                    <FaCircleXmark className="w-6 h-6 text-rose-500" />
                   </div>
                 </Button>
               </ButtonGroup>

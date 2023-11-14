@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Flashcard } from "../assets/globalTypes";
-import { Button, Checkbox } from "@nextui-org/react";
+import { Button, Checkbox, Input } from "@nextui-org/react";
 import CreateCard from "../components/CreateCard";
 import TextareaAutosize from "react-textarea-autosize";
 import { uid } from "uid";
@@ -236,13 +236,18 @@ const Create = () => {
             </Button>
           </div>
 
-          <input
+          <Input
             placeholder="Title of your set"
-            className="description h-12"
+            className="bg-white dark:bg-dark-1 w-full"
+            color="primary"
+            size="lg"
+            radius="md"
             type="text"
+            variant="bordered"
             onChange={(e) => setTitle(e.target.value)}
             value={title}
           />
+
           <div className="flex justify-start">
             <Checkbox
               onChange={() => setIsPrivate((priv) => !priv)}

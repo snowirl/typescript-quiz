@@ -31,6 +31,7 @@ import {
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { motion } from "framer-motion";
 
 interface SetCardProps {
   deckId?: string;
@@ -150,13 +151,20 @@ const SetCard = (props: SetCardProps) => {
     onClose();
   };
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{
+        ease: "linear",
+        duration: 0.3,
+      }}
+    >
       <Card className="w-full" shadow="sm">
         <CardHeader className="pb-0 px-2 pt-2">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
               {profilePictureURL === "" ? (
-                <Skeleton circle className="w-10 h-10" enableAnimation />
+                <Skeleton circle className="w-9 h-9" enableAnimation />
               ) : (
                 <div className="flex items-center space-x-2">
                   <Avatar src={profilePictureURL} className="" />
@@ -256,7 +264,7 @@ const SetCard = (props: SetCardProps) => {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </motion.div>
   );
 };
 

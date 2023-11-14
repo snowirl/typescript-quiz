@@ -18,8 +18,8 @@ interface StudyInfoProps {
 const StudyInfo = (props: StudyInfoProps) => {
   return (
     <Card className="rounded-lg" shadow="md">
-      <CardHeader>
-        <div className="flex justify-around flex-grow px-2">
+      <CardHeader className="py-2">
+        <div className="flex justify-around flex-grow">
           <div className="flex-grow text-left">
             <div className="flex space-x-2 items-center">
               <Avatar
@@ -33,9 +33,9 @@ const StudyInfo = (props: StudyInfoProps) => {
           <div className="flex-grow flex justify-end">
             <Dropdown>
               <DropdownTrigger>
-                <button className="icon-btn  py-0 px-1">
-                  <IoEllipsisHorizontalSharp className="w-8 h-6" />
-                </button>
+                <Button isIconOnly size="md" radius="full" variant="light">
+                  <IoEllipsisHorizontalSharp className="w-5 h-5" />
+                </Button>
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="Static Actions"

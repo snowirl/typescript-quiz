@@ -11,6 +11,7 @@ import {
   Switch,
   Divider,
   Image,
+  Button,
 } from "@nextui-org/react";
 import { FaStar, FaVolumeUp } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
@@ -35,8 +36,11 @@ const StudyCardSide = (props: StudyCardSideProps) => {
     <Card className="rounded-lg">
       <CardHeader className="flex gap-3 justify-between px-4 py-5 cursor-pointer">
         <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
-        <button
-          className="icon-btn"
+        <Button
+          isIconOnly
+          size="md"
+          radius="full"
+          variant="light"
           onClick={() => props.handleStarCard(props.flashcard)}
         >
           <FaStar
@@ -46,7 +50,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
                 : "w-5 h-5 text-gray-500"
             }
           />
-        </button>
+        </Button>
       </CardHeader>
       <CardBody
         className="flex flex-col h-[280px] items-center cursor-pointer overflow-y-auto"
@@ -67,14 +71,26 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         />
       </CardBody>
       <CardFooter className="flex gap-3 justify-between px-4 py-5">
-        <button className="icon-btn">
+        <Button
+          isIconOnly
+          size="md"
+          radius="full"
+          variant="light"
+          className="icon-btn"
+        >
           <FaVolumeUp className="w-5 h-5" />
-        </button>
+        </Button>
         <Popover placement="top" offset={10}>
           <PopoverTrigger>
-            <button className="icon-btn">
+            <Button
+              isIconOnly
+              size="md"
+              radius="full"
+              variant="light"
+              className="icon-btn"
+            >
               <IoEllipsisHorizontalSharp className="w-5 h-5" />
-            </button>
+            </Button>
           </PopoverTrigger>
           <PopoverContent>
             <div className="px-1 py-2 space-y-4">

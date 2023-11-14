@@ -104,20 +104,22 @@ const NavigationMenu = () => {
           </Drawer>
         </div>
 
-        <div className="space-x-4 items-center hidden md:flex">
+        <div className="space-x-2 items-center hidden md:flex">
           <img src={logo} alt="Logo" className="w-12 h-12 rounded-full" />
-          <Tabs
-            variant="underlined"
-            aria-label="NavMenu"
-            color="primary"
+          <Button
+            variant="light"
+            onPress={() => navigate("/create/new")}
             className="font-semibold"
-            selectedKey={tabKey}
-            onSelectionChange={(key) => handleTabButton(key)}
           >
-            <Tab key="none" title="none" className="hidden"></Tab>
-            <Tab key="home" title="Home"></Tab>
-            <Tab key="sets" title="Sets"></Tab>
-          </Tabs>
+            Home
+          </Button>
+          <Button
+            variant="light"
+            onPress={() => navigate("/sets/recents")}
+            className="font-semibold"
+          >
+            Sets
+          </Button>
 
           <Button
             color="primary"
@@ -131,8 +133,9 @@ const NavigationMenu = () => {
             <Input
               variant="bordered"
               placeholder="Search sets, users"
-              className="bg-white rounded-2xl dark:bg-dark-1 w-auto lg:w-[300px]"
+              className="bg-white dark:bg-dark-1 w-auto lg:w-[300px]"
               type="text"
+              color="primary"
               startContent={<FaMagnifyingGlass className="w-5 h-5" />}
             />
           </div>
