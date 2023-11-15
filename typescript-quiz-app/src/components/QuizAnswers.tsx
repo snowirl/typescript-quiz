@@ -11,17 +11,18 @@ interface QuizAnswersProps {
   correctAnswer: string | null;
   correctIndex: number;
   setIsCorrect: Dispatch<SetStateAction<boolean>>;
+  showCorrect: boolean;
+  setShowCorrect: Dispatch<SetStateAction<boolean>>;
   currentCard: Flashcard | null;
 }
 
 const QuizAnswers = (props: QuizAnswersProps) => {
-  const [showCorrect, setShowCorrect] = useState(false);
   const [canAnswer, setCanAnswer] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (props.currentCard) {
-      setShowCorrect(false);
+      props.setShowCorrect(false);
       setCanAnswer(true);
     }
   }, [props.currentCard]);
@@ -32,15 +33,19 @@ const QuizAnswers = (props: QuizAnswersProps) => {
     }
     setCanAnswer(false);
     setSelectedIndex(index);
-    setShowCorrect(true);
+    props.setShowCorrect(true);
     if (index === props.correctIndex) {
       console.log("Correct.");
       props.setIsCorrect(true);
-      toast.success("Correct!"), { duration: 2000 };
+      toast.dismiss();
+      toast.success("Correct!", {
+        duration: 4000,
+      });
     } else {
       props.setIsCorrect(false);
       console.log("Wrong.");
-      toast.error("Incorrect!"), { duration: 2000 };
+      toast.dismiss();
+      toast.error("Incorrect!", { duration: 4000 });
     }
   };
 
@@ -51,7 +56,8 @@ const QuizAnswers = (props: QuizAnswersProps) => {
           position="bottom-center"
           reverseOrder={false}
           toastOptions={{
-            className: "dark:bg-dark-1 dark:text-white",
+            className:
+              "dark:bg-dark-1 dark:text-white px-4 py-2 text-lg font-semibold shadow-lg border border-1 border-black/20 rounded-md",
           }}
         />
       </div>
@@ -61,21 +67,21 @@ const QuizAnswers = (props: QuizAnswersProps) => {
             <div className="flex w-full">
               <ButtonGroup className="flex flex-grow space-x-2">
                 <Button
-                  className="py-4 h-full grow-1 w-full relative "
+                  className="py-4 h-full grow-1 w-full relative font-semibold"
                   color={`${
-                    0 === props.correctIndex && showCorrect
+                    0 === props.correctIndex && props.showCorrect
                       ? "success"
                       : selectedIndex === 0 &&
                         selectedIndex !== props.correctIndex &&
-                        showCorrect
+                        props.showCorrect
                       ? "danger"
                       : "default"
                   }`}
                   variant={`${
                     (0 === props.correctIndex || 0 == selectedIndex) &&
-                    showCorrect
-                      ? "flat"
-                      : "bordered"
+                    props.showCorrect
+                      ? "bordered"
+                      : "ghost"
                   }`}
                   onClick={() => selectAnswer(0)}
                 >
@@ -88,7 +94,9 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   </p>
                   <div
                     className={`absolute right-4 z-20 ${
-                      0 === props.correctIndex && showCorrect ? "" : "hidden"
+                      0 === props.correctIndex && props.showCorrect
+                        ? ""
+                        : "hidden"
                     }`}
                   >
                     <FaCircleCheck className="w-6 h-6 text-green-500" />
@@ -96,7 +104,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   <div
                     className={`absolute right-4 z-20 ${
                       selectedIndex !== props.correctIndex &&
-                      showCorrect &&
+                      props.showCorrect &&
                       selectedIndex === 0
                         ? ""
                         : "hidden"
@@ -106,21 +114,21 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   </div>
                 </Button>
                 <Button
-                  className="py-4 h-full relative grow-1 w-full"
+                  className="py-4 h-full relative grow-1 w-full font-semibold"
                   color={`${
-                    1 === props.correctIndex && showCorrect
+                    1 === props.correctIndex && props.showCorrect
                       ? "success"
                       : selectedIndex === 1 &&
                         selectedIndex !== props.correctIndex &&
-                        showCorrect
+                        props.showCorrect
                       ? "danger"
                       : "default"
                   }`}
                   variant={`${
                     (1 === props.correctIndex || 1 == selectedIndex) &&
-                    showCorrect
-                      ? "flat"
-                      : "bordered"
+                    props.showCorrect
+                      ? "bordered"
+                      : "ghost"
                   }`}
                   onClick={() => selectAnswer(1)}
                 >
@@ -133,7 +141,9 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   </p>
                   <div
                     className={`absolute right-4 z-20 ${
-                      1 === props.correctIndex && showCorrect ? "" : "hidden"
+                      1 === props.correctIndex && props.showCorrect
+                        ? ""
+                        : "hidden"
                     }`}
                   >
                     <FaCircleCheck className="w-6 h-6 text-green-500" />
@@ -141,7 +151,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   <div
                     className={`absolute right-4 z-20 ${
                       selectedIndex !== props.correctIndex &&
-                      showCorrect &&
+                      props.showCorrect &&
                       selectedIndex === 1
                         ? ""
                         : "hidden"
@@ -155,21 +165,21 @@ const QuizAnswers = (props: QuizAnswersProps) => {
             <div className="flex w-full">
               <ButtonGroup className="flex flex-grow space-x-2">
                 <Button
-                  className="py-4 h-full grow-1 w-full relative"
+                  className="py-4 h-full grow-1 w-full relative font-semibold"
                   color={`${
-                    2 === props.correctIndex && showCorrect
+                    2 === props.correctIndex && props.showCorrect
                       ? "success"
                       : selectedIndex === 2 &&
                         selectedIndex !== props.correctIndex &&
-                        showCorrect
+                        props.showCorrect
                       ? "danger"
                       : "default"
                   }`}
                   variant={`${
                     (2 === props.correctIndex || 2 == selectedIndex) &&
-                    showCorrect
-                      ? "flat"
-                      : "bordered"
+                    props.showCorrect
+                      ? "bordered"
+                      : "ghost"
                   }`}
                   onClick={() => selectAnswer(2)}
                 >
@@ -182,7 +192,9 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   </p>
                   <div
                     className={`absolute right-4 z-20 ${
-                      2 === props.correctIndex && showCorrect ? "" : "hidden"
+                      2 === props.correctIndex && props.showCorrect
+                        ? ""
+                        : "hidden"
                     }`}
                   >
                     <FaCircleCheck className="w-6 h-6 text-green-500" />
@@ -190,7 +202,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   <div
                     className={`absolute right-4 z-20 ${
                       selectedIndex !== props.correctIndex &&
-                      showCorrect &&
+                      props.showCorrect &&
                       selectedIndex === 2
                         ? ""
                         : "hidden"
@@ -201,21 +213,21 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                 </Button>
 
                 <Button
-                  className="py-4 h-full grow-1 w-full relative "
+                  className="py-4 h-full grow-1 w-full relative font-semibold"
                   color={`${
-                    3 === props.correctIndex && showCorrect
+                    3 === props.correctIndex && props.showCorrect
                       ? "success"
                       : selectedIndex === 3 &&
                         selectedIndex !== props.correctIndex &&
-                        showCorrect
+                        props.showCorrect
                       ? "danger"
                       : "default"
                   }`}
                   variant={`${
                     (3 === props.correctIndex || 3 == selectedIndex) &&
-                    showCorrect
-                      ? "flat"
-                      : "bordered"
+                    props.showCorrect
+                      ? "bordered"
+                      : "ghost"
                   }`}
                   onClick={() => selectAnswer(3)}
                 >
@@ -228,7 +240,9 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   </p>
                   <div
                     className={`absolute right-4 z-20 ${
-                      3 === props.correctIndex && showCorrect ? "" : "hidden"
+                      3 === props.correctIndex && props.showCorrect
+                        ? ""
+                        : "hidden"
                     }`}
                   >
                     <FaCircleCheck className="w-6 h-6 text-green-500" />
@@ -236,7 +250,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   <div
                     className={`absolute right-4 z-20 ${
                       selectedIndex !== props.correctIndex &&
-                      showCorrect &&
+                      props.showCorrect &&
                       selectedIndex === 3
                         ? ""
                         : "hidden"

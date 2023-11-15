@@ -1,6 +1,8 @@
 import {
   Card,
   CardBody,
+  CardHeader,
+  Chip,
   Divider,
   Popover,
   PopoverContent,
@@ -9,7 +11,7 @@ import {
   RadioGroup,
   Switch,
 } from "@nextui-org/react";
-import LearnAnswers from "../components/QuizAnswers";
+import QuizAnswers from "../components/QuizAnswers";
 import { Progress, Button } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -36,6 +38,7 @@ import { Flashcard } from "../assets/globalTypes";
 import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
 import QuizRoundBreak from "../components/QuizRoundBreak";
+import { motion } from "framer-motion";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -46,25 +49,51 @@ const Quiz = () => {
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null); // currently using card
   const [cardsLeft, setCardsLeft] = useState<Flashcard[] | null>(null); // cards left to learn
   const [currentBox, setCurrentBox] = useState<Flashcard[] | null>(null);
-  const [boxOne, setBoxOne] = useState<Flashcard[] | null>(null);
-  const [boxTwo, setBoxTwo] = useState<Flashcard[] | null>(null);
-  const [boxThree, setBoxThree] = useState<Flashcard[] | null>(null);
+  const [currentCardIndex, setCurrentCardIndex] = useState(-1); // which order we are in box order
+  const [boxOne, setBoxOne] = useState<Flashcard[]>([]);
+  const [boxTwo, setBoxTwo] = useState<Flashcard[]>([]);
+  const [boxThree, setBoxThree] = useState<Flashcard[]>([]);
   const boxOrder = [1, 1, 2, 1, 1, 2, 1, 1, 3];
   const [boxIndex, setBoxIndex] = useState(0); // which order we are in box order
-  const [currentBoxNumber, setCurrentBoxNumber] = useState(0); // to know which box we are in, not index. just 0 1 or 2.
   const [distractors, setDistractors] = useState<string[] | null>(null); // cards left to learn
   const [storedDistractors, setStoredDistractors] = useState<string[] | null>(
     null
   ); // distractors stored in advance
   const [randomIndex, setRandomIndex] = useState(0); // for which slot the correct answer will be
+  const [showCorrect, setShowCorrect] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isRoundBreak, setIsRoundBreak] = useState(false);
+  const [cardsCorrect, setCardsCorrect] = useState<Flashcard[] | null>(null);
+  const [cardsWrong, setCardsWrong] = useState<Flashcard[] | null>(null);
+  const [cardsStudied, setCardsStudied] = useState(0);
 
   let { id } = useParams();
 
   useEffect(() => {
     initializeDeck();
   }, []);
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Do something when any key is pressed
+      console.log("Key pressed:", event.key);
+
+      // You can perform additional logic based on the key pressed
+      if (event.key !== "Enter" && showCorrect) {
+        console.log("Enter key pressed");
+        nextCard();
+        // Perform specific actions for Enter key
+      }
+    };
+
+    // Attach the event listener when the component mounts
+    document.addEventListener("keydown", handleKeyPress);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [currentCardIndex, showCorrect]);
 
   useEffect(() => {
     if (
@@ -78,10 +107,10 @@ const Quiz = () => {
   }, [isLoading]);
 
   useEffect(() => {
-    if (currentBox !== null && currentBox.length > 0) {
+    if (currentBox !== null) {
       changeCurrentCard();
     }
-  }, [currentBox]);
+  }, [currentCardIndex]);
 
   useEffect(() => {
     if (currentCard !== null) {
@@ -90,10 +119,18 @@ const Quiz = () => {
   }, [currentCard]);
 
   useEffect(() => {
-    if (distractors !== null) {
-      console.log(distractors);
+    // run when we show answers
+    if (showCorrect) {
+      handleAnswer(isCorrect);
     }
-  }, [distractors]);
+  }, [showCorrect]);
+
+  useEffect(() => {
+    // run when we show answers
+    if (currentBox !== null) {
+      handleWhichRound();
+    }
+  }, [boxIndex]);
 
   const initializeDeck = async () => {
     setIsLoading(true);
@@ -107,7 +144,7 @@ const Quiz = () => {
       setCardsLeft(docRef.docs[0].data().cards);
       setOriginalDeck(docRef.docs[0].data().cards);
 
-      console.log(docRef.docs[0].data().cards);
+      // console.log(docRef.docs[0].data().cards);
       setIsLoading(false);
     } catch (e) {
       console.log("error occurred: " + e);
@@ -115,14 +152,7 @@ const Quiz = () => {
     }
   };
 
-  // const handleShuffleDeck = () => {
-  //   if (cardsLeft !== null) {
-  //     setCardsLeft(arrayShuffle(cardsLeft));
-  //   }
-  // };
-
   const startLearn = () => {
-    console.log("Starting Quiz.");
     drawCards(10);
   };
 
@@ -140,17 +170,20 @@ const Quiz = () => {
       // Create a new array with both the original and new cards in boxOne
       const newBoxOne = boxOne ? [...boxOne, ...selectedCards] : selectedCards;
       setCurrentBox(newBoxOne);
+      setBoxOne(newBoxOne);
+      setCurrentCardIndex(0);
 
       // Update cardsLeft by removing the selected cards
       setCardsLeft(remainingCards.slice(selectedCards.length));
     } else {
       console.log("No more cards to draw.");
+      nextRound();
     }
   };
 
   const nextCard = () => {
-    if (currentBox !== null && currentBox.length - 1 > 0) {
-      handleAnswer(isCorrect);
+    if (currentBox !== null && currentCardIndex < currentBox.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1);
     } else {
       roundBreak();
     }
@@ -158,36 +191,72 @@ const Quiz = () => {
 
   const roundBreak = () => {
     setIsRoundBreak(true);
+    console.log(boxOne);
+    console.log(boxTwo);
+    console.log(boxThree);
   };
 
   const nextRound = () => {
     setIsRoundBreak(false);
 
-    if (boxIndex < boxOrder.length) {
+    if (boxIndex < boxOrder.length - 1) {
       setBoxIndex(boxIndex + 1);
+    } else if (boxOne && boxTwo && boxThree) {
+      if (boxOne.length > 0 || boxTwo.length > 0 || boxThree.length > 0) {
+        setBoxIndex(0);
+      } else {
+        // DONE
+        console.log("No more cards to study. You finished!");
+      }
+    }
+  };
+
+  const handleWhichRound = () => {
+    setCurrentCardIndex(0);
+
+    if (boxIndex === 0 || boxIndex === 3 || boxIndex === 6) {
+      if (cardsLeft && cardsLeft.length > 0) {
+        drawCards(5);
+      } else {
+        nextRound();
+      }
+    } else if (boxIndex == 1 || boxIndex == 4 || boxIndex == 7) {
+      if (boxOne && boxOne.length > 0) {
+        setCurrentBox(boxOne);
+      } else {
+        nextRound();
+      }
+    } else if (boxIndex == 2 || boxIndex == 5) {
+      if (boxTwo && boxTwo.length > 0) {
+        setCurrentBox(boxTwo);
+      } else {
+        nextRound();
+      }
     } else {
-      setBoxIndex(0);
+      if (boxThree && boxThree.length > 0) {
+        setCurrentBox(boxThree);
+      } else {
+        nextRound();
+      }
     }
   };
 
   const changeCurrentCard = async () => {
-    if (currentBox && currentBox.length > 0) {
-      console.log(currentBox[0]);
-      setCurrentCard(currentBox[0]);
+    if (currentBox) {
+      setCurrentCard(currentBox[currentCardIndex]);
 
       if (storedDistractors !== null) {
-        console.log("used stored distractors...");
         setDistractors(storedDistractors);
       }
 
       // Fetch the next card and initiate ChatGPT API call
-      const nextCard = currentBox[1];
+      const nextCard = currentBox[currentCardIndex + 1];
       if (nextCard !== undefined) {
         await callChatGPT(nextCard, true);
       }
     } else {
       if (currentBox) {
-        setCurrentCard(currentBox[0]);
+        setCurrentCard(currentBox[currentCardIndex]);
         setDistractors(storedDistractors);
       }
       console.log("No more cards in the box.");
@@ -209,7 +278,6 @@ const Quiz = () => {
 
   const callChatGPT = (flashcard: Flashcard, isNext: boolean) => {
     // FOR CHATGPT API
-    console.log(flashcard);
 
     const prompt = isQuestionFirst ? flashcard.front : flashcard.back;
 
@@ -221,8 +289,6 @@ const Quiz = () => {
         } else {
           setDistractors(splitAnswers(res.data));
         }
-
-        console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -262,37 +328,88 @@ const Quiz = () => {
         setDistractors(selectedDistractors);
       }
 
-      console.log("Used shuffled distractors instead of ChatGPT.");
+      // console.log("Used shuffled distractors instead of ChatGPT.");
     }
   };
 
   const handleAnswer = (isCorrect: boolean) => {
-    if (currentBoxNumber === 0 && currentCard) {
+    setCardsStudied((prevCardsStudied) => prevCardsStudied + 1);
+
+    if (currentCard && boxOne && boxTwo && boxThree) {
+      const boxOneIndices = [0, 1, 3, 4, 6, 7];
+      const boxTwoIndices = [2, 5];
+      const boxThreeIndex = 8;
+
       if (isCorrect) {
-        if (boxTwo) {
-          setBoxTwo([...boxTwo, currentCard]);
-        } else {
-          setBoxTwo([currentCard]);
+        if (boxOneIndices.includes(boxIndex)) {
+          // Move to boxTwo from boxOne
+          setBoxTwo((prevBoxTwo) => [...(prevBoxTwo || []), currentCard]);
+
+          setBoxOne((prevBoxOne) =>
+            prevBoxOne.filter((card) => card.cardId !== currentCard.cardId)
+          );
+        } else if (boxTwoIndices.includes(boxIndex)) {
+          // Move to boxThree from boxTwo
+          setBoxThree((prevBoxThree) => [...(prevBoxThree || []), currentCard]);
+
+          setBoxTwo((prevBoxTwo) =>
+            prevBoxTwo
+              ? prevBoxTwo.filter((card) => card.cardId !== currentCard.cardId)
+              : []
+          );
+        } else if (boxThreeIndex === boxIndex) {
+          // Do something specific for box three when mastered
+          // For now, let's just move it back to boxOne
+
+          setBoxThree((prevBoxThree) =>
+            prevBoxThree
+              ? prevBoxThree.filter(
+                  (card) => card.cardId !== currentCard.cardId
+                )
+              : []
+          );
         }
 
-        console.log("Correct!");
+        setCardsCorrect((prevCardsCorrect) => [
+          ...(prevCardsCorrect || []),
+          currentCard,
+        ]);
       } else {
-        if (boxOne) {
-          setBoxOne([...boxOne, currentCard]);
-        } else {
-          setBoxOne([currentCard]);
+        // Incorrect answer, move to boxOne
+        if (!boxOneIndices.includes(boxIndex)) {
+          setBoxOne((prevBoxOne) =>
+            prevBoxOne ? [...prevBoxOne, currentCard] : [currentCard]
+          );
+
+          if (boxTwoIndices.includes(boxIndex)) {
+            // If it was in boxTwo, remove it from there
+            setBoxTwo((prevBoxTwo) =>
+              prevBoxTwo
+                ? prevBoxTwo.filter(
+                    (card) => card.cardId !== currentCard.cardId
+                  )
+                : []
+            );
+          } else if (boxThreeIndex === boxIndex) {
+            // If it was in boxThree, remove it from there
+            setBoxThree((prevBoxThree) =>
+              prevBoxThree
+                ? prevBoxThree.filter(
+                    (card) => card.cardId !== currentCard.cardId
+                  )
+                : []
+            );
+          }
         }
 
-        console.log("Wrong!");
+        setCardsWrong((prevCardsWrong) => [
+          ...(prevCardsWrong || []),
+          currentCard,
+        ]);
       }
-
-      setCurrentBox((prevBox) =>
-        prevBox
-          ? prevBox.filter((card) => card.cardId !== currentCard.cardId)
-          : []
-      );
     }
   };
+
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-2">
       <div className="flex justify-center">
@@ -300,6 +417,9 @@ const Quiz = () => {
           <div className="flex justify-center relative py-2">
             <div className="flex-grow flex justify-center items-center">
               <p className="text-center text-base font-semibold">Round 1</p>
+              <p className="text-center text-base font-semibold">
+                Box index: {boxIndex}
+              </p>
             </div>
             <div className="flex-grow flex justify-end absolute right-0">
               <Popover placement="top" offset={10}>
@@ -352,53 +472,92 @@ const Quiz = () => {
           </div>
           <Progress
             aria-label="Loading..."
-            value={currentBox ? 100 - ((currentBox.length - 1) / 10) * 100 : 0}
+            value={
+              currentBox
+                ? (currentCardIndex / (currentBox.length - 1)) * 100
+                : 0
+            }
             className="py-2"
             size="sm"
           />
           {!isRoundBreak ? (
             distractors ? (
-              <Card className="h-[500px]">
-                <CardBody className="space-y-8 p-12">
-                  <p className="text-left text-xl font-semibold pb-24">
-                    {currentCard
-                      ? isQuestionFirst
-                        ? currentCard.back
-                        : currentCard.front
-                      : null}
-                  </p>
-                  <div className="items-end flex flex-grow justify-center w-full h-full">
-                    <LearnAnswers
-                      currentCard={currentCard}
-                      distractors={distractors}
-                      correctAnswer={
-                        currentCard
-                          ? isQuestionFirst
-                            ? currentCard.front
-                            : currentCard.back
-                          : null
-                      }
-                      correctIndex={randomIndex}
-                      setIsCorrect={setIsCorrect}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 25,
+                }}
+              >
+                <Card className="h-[500px]">
+                  <CardHeader className="absolute">
+                    {boxIndex == 1 || boxIndex == 4 || boxIndex == 7 ? (
+                      <Chip color="danger">
+                        <p className=" font-semibold">Let's try that again.</p>
+                      </Chip>
+                    ) : null}
+                  </CardHeader>
+                  <CardBody className="space-y-8 p-12">
+                    <p className="text-left text-xl font-semibold pb-24">
+                      {currentCard
+                        ? isQuestionFirst
+                          ? currentCard.back
+                          : currentCard.front
+                        : null}
+                    </p>
+                    <div className="items-end flex flex-grow justify-center w-full h-full">
+                      <QuizAnswers
+                        currentCard={currentCard}
+                        distractors={distractors}
+                        correctAnswer={
+                          currentCard
+                            ? isQuestionFirst
+                              ? currentCard.front
+                              : currentCard.back
+                            : null
+                        }
+                        correctIndex={randomIndex}
+                        setIsCorrect={setIsCorrect}
+                        showCorrect={showCorrect}
+                        setShowCorrect={setShowCorrect}
+                      />
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
             ) : null
           ) : (
-            <QuizRoundBreak nextRound={() => nextRound()} />
+            <QuizRoundBreak
+              nextRound={() => nextRound()}
+              cardsCorrect={cardsCorrect}
+              cardsWrong={cardsWrong}
+              cardsStudied={cardsStudied}
+            />
           )}
-
-          <div className="items-center py-2">
-            <Button
-              size="lg"
-              color="primary"
-              className="font-semibold"
-              onClick={() => nextCard()}
+          {showCorrect && !isRoundBreak ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+              }}
+              className="items-center py-2 space-y-2"
             >
-              Next Card
-            </Button>
-          </div>
+              <Button
+                size="lg"
+                color="primary"
+                className="font-semibold"
+                onClick={() => nextCard()}
+              >
+                Next Card
+              </Button>
+              <p className="font-semibold">Tap any key to keep going!</p>
+            </motion.div>
+          ) : null}
         </div>
       </div>
     </div>

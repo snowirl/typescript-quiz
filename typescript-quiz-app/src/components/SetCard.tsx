@@ -152,8 +152,8 @@ const SetCard = (props: SetCardProps) => {
   };
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, translateY: 5 }}
+      animate={{ opacity: 1, translateY: 0 }}
       transition={{
         ease: "linear",
         duration: 0.3,
