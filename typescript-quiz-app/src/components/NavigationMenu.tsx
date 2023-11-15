@@ -56,7 +56,7 @@ const NavigationMenu = () => {
   };
 
   return (
-    <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-[#0f0f11]">
+    <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-dark-2">
       <div className="flex justify-between px-4 py-3 mx-auto max-w-[1200px]">
         <div className="flex md:hidden relative">
           <Sidebar />

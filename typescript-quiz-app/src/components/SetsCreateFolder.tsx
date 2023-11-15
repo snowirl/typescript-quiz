@@ -36,6 +36,8 @@ const SetsCreateFolder = () => {
     "rose",
   ];
 
+  // to add new colors, make sure to add them in the safelist in tailwind.config.js
+
   const createNewFolder = async (func: () => void) => {
     if (!isCreating) {
       setIsCreating(true);
@@ -62,7 +64,7 @@ const SetsCreateFolder = () => {
   };
   return (
     <div>
-      <Button onPress={onOpen} color="primary" className="font-semibold">
+      <Button onClick={onOpen} color="primary" className="font-semibold">
         Create new folder
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
@@ -87,16 +89,13 @@ const SetsCreateFolder = () => {
                     <button
                       key={num}
                       onClick={() => setColorSelected(color)}
-                      className={`bg-${color}-500 h-6 w-6 rounded-full mx-1 mb-1 ${
+                      className={`bg-${color}-500 h-7 w-7 my-1 rounded-full mx-1 mb-1 ${
                         colorSelected === color
-                          ? "outline outline-4 outline-yellow-400 duration-200"
-                          : ""
+                          ? "outline outline-4 outline-yellow-400 duration-100"
+                          : "outline-yellow-400"
                       }`}
                     ></button>
                   ))}
-                </div>
-                <div>
-                  <p className="bg-indigo-500">hi</p>
                 </div>
               </ModalBody>
               <ModalFooter>

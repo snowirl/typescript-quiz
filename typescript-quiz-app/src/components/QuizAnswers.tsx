@@ -2,6 +2,9 @@ import { Button, ButtonGroup } from "@nextui-org/react";
 import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { Flashcard } from "../assets/globalTypes";
+import toast, { Toaster } from "react-hot-toast";
+
+const notify = () => toast("Here is your toast.");
 
 interface QuizAnswersProps {
   distractors: string[] | null;
@@ -33,14 +36,25 @@ const QuizAnswers = (props: QuizAnswersProps) => {
     if (index === props.correctIndex) {
       console.log("Correct.");
       props.setIsCorrect(true);
+      toast.success("Correct!"), { duration: 2000 };
     } else {
       props.setIsCorrect(false);
       console.log("Wrong.");
+      toast.error("Incorrect!"), { duration: 2000 };
     }
   };
 
   return (
     <div className="flex w-full ">
+      <div>
+        <Toaster
+          position="bottom-center"
+          reverseOrder={false}
+          toastOptions={{
+            className: "dark:bg-dark-1 dark:text-white",
+          }}
+        />
+      </div>
       <div className="w-full space-y-2">
         <div className="flex w-full py-2">
           <div className="space-y-2 px-1 w-full">

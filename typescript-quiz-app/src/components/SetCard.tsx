@@ -159,8 +159,8 @@ const SetCard = (props: SetCardProps) => {
         duration: 0.3,
       }}
     >
-      <Card className="w-full" shadow="sm">
-        <CardHeader className="pb-0 px-2 pt-2">
+      <Card className="w-full p-1" shadow="sm" radius="lg">
+        <CardHeader className="px-2 pt-2 pb-1">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
               {profilePictureURL === "" ? (
@@ -181,7 +181,7 @@ const SetCard = (props: SetCardProps) => {
                 <Button
                   isIconOnly
                   variant="light"
-                  size="md"
+                  size="sm"
                   className=" hover:text-blue-600"
                   onClick={() => navigate(`/create/${deck?.id}`)}
                 >
@@ -191,7 +191,7 @@ const SetCard = (props: SetCardProps) => {
                 <Button
                   isIconOnly
                   variant="light"
-                  size="md"
+                  size="sm"
                   className="text-rose-600"
                   onClick={() => onOpen()}
                 >
@@ -202,7 +202,7 @@ const SetCard = (props: SetCardProps) => {
           </div>
         </CardHeader>
         <CardBody
-          className="pt-1 pb-0 px-2 cursor-pointer"
+          className="pt-1 pb-1 px-2 cursor-pointer"
           onClick={() => navigate(`/study/${deck?.id}`)}
         >
           <div className="text-left">

@@ -101,7 +101,7 @@ const CreateCard = (props: CreateCardProps) => {
       }}
       exit={{ opacity: 0 }}
     >
-      <Card className="rounded-lg bg-white dark:bg-dark-1" shadow="sm">
+      <Card className="bg-white dark:bg-dark-1" radius="md" shadow="sm">
         <CardHeader className="">
           <div className="flex justify-between flex-grow items-center">
             <p className="text-base font-semibold">{props.index + 1}</p>

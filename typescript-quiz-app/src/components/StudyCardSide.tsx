@@ -32,9 +32,19 @@ interface StudyCardSideProps {
   isStarred: boolean;
 }
 const StudyCardSide = (props: StudyCardSideProps) => {
+  const handleFooterClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // Prevent the click event from propagating to child elements
+    event.stopPropagation();
+    // Add your logic here for handling CardFooter click
+    props.flipCard();
+  };
+
   return (
-    <Card className="rounded-lg">
-      <CardHeader className="flex gap-3 justify-between px-4 py-5 cursor-pointer">
+    <Card>
+      <CardHeader
+        className="flex gap-3 justify-between px-4 py-5 cursor-pointer"
+        onClick={handleFooterClick}
+      >
         <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
         <Button
           isIconOnly
@@ -70,7 +80,10 @@ const StudyCardSide = (props: StudyCardSideProps) => {
           }
         />
       </CardBody>
-      <CardFooter className="flex gap-3 justify-between px-4 py-5">
+      <CardFooter
+        className="flex gap-3 justify-between px-4 py-5 cursor-pointer"
+        onClick={handleFooterClick}
+      >
         <Button
           isIconOnly
           size="md"

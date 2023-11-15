@@ -36,6 +36,7 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@nextui-org/react";
 import { useAnimationControls } from "framer-motion";
+import StudyNav from "../components/StudyNav";
 
 const flashcards: Flashcard[] = [
   {
@@ -438,7 +439,7 @@ const Study = () => {
         {isLoading ? (
           <Spinner />
         ) : (
-          <div className="max-w-[875px] flex-grow space-y-4 px-4">
+          <div className="max-w-[875px] flex-grow space-y-4 px-4 py-2">
             <p className="font-bold text-2xl">{deckData?.title}</p>
             <div className="flex justify-between relative">
               <div></div>
@@ -448,7 +449,6 @@ const Study = () => {
                 </p>
               </div>
               <div></div>
-
               <div className="absolute -top-2 right-0">
                 <Tooltip
                   content="Favorite"
@@ -479,6 +479,7 @@ const Study = () => {
               className=""
               size="sm"
             />
+            <StudyNav deckId={id ?? "undefined"} />
             <motion.div
               initial={{ x: 0 }}
               // onClick={handleCardClick}
