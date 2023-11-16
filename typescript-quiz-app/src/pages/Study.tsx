@@ -156,11 +156,12 @@ const Study = () => {
   }, [currentDeck]);
 
   useEffect(() => {
-    if (shouldSaveData) {
-      // toast.dismiss();
+    if (shouldSaveData && !isLoading) {
+      toast.dismiss();
       toast("Unsaved changes", { duration: Infinity });
     } else {
-      // toast.dismiss();
+      // // toast.dismiss();
+      // toast.success("Savedddd!");
     }
   }, [shouldSaveData]);
 
@@ -252,9 +253,13 @@ const Study = () => {
         {
           docId: pageID,
           favorited:
-            parsedActivityData.isFavorited ?? isFavoritedRef.current ?? false,
+            (parsedActivityData && parsedActivityData.isFavorited) ||
+            isFavoritedRef.current ||
+            false,
           starred:
-            parsedActivityData.starredList ?? starredListRef.current ?? [],
+            (parsedActivityData && parsedActivityData.starredList) ||
+            starredListRef.current ||
+            [],
           timestamp: serverTimestamp(),
         },
         { merge: true }
@@ -265,8 +270,9 @@ const Study = () => {
       return;
     }
 
-    toast.success("Saved!");
     console.log("Saved.");
+    toast.dismiss();
+    toast.success("Saved!");
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
   };
@@ -462,17 +468,19 @@ const Study = () => {
               <>
                 {icon}
                 {message}
-                {t.type !== "loading" && (
-                  <Button
-                    color="primary"
-                    size="sm"
-                    className="font-semibold"
-                    // onClick={() => toast.dismiss(t.id)}
-                    onClick={() => handleSaveData()}
-                  >
-                    Save
-                  </Button>
-                )}
+                {t.type !== "loading" &&
+                  t.type !== "error" &&
+                  t.type !== "success" && (
+                    <Button
+                      color="primary"
+                      size="sm"
+                      className="font-semibold"
+                      // onClick={() => toast.dismiss(t.id)}
+                      onClick={() => handleSaveData()}
+                    >
+                      Save
+                    </Button>
+                  )}
               </>
             )}
           </ToastBar>
