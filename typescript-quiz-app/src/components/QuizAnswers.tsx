@@ -51,16 +51,6 @@ const QuizAnswers = (props: QuizAnswersProps) => {
 
   return (
     <div className="flex w-full ">
-      <div>
-        <Toaster
-          position="bottom-center"
-          reverseOrder={false}
-          toastOptions={{
-            className:
-              "dark:bg-dark-1 dark:text-white px-4 py-2 text-lg font-semibold shadow-lg border border-1 border-black/20 rounded-md",
-          }}
-        />
-      </div>
       <div className="w-full space-y-2">
         <div className="flex w-full py-2">
           <div className="space-y-2 px-1 w-full">
@@ -85,7 +75,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   }`}
                   onClick={() => selectAnswer(0)}
                 >
-                  <p className="whitespace-normal text-base">
+                  <p className="whitespace-normal text-base px-8">
                     {props.correctIndex === 0
                       ? props.correctAnswer
                       : props.distractors
@@ -132,7 +122,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   }`}
                   onClick={() => selectAnswer(1)}
                 >
-                  <p className="whitespace-normal text-base">
+                  <p className="whitespace-normal text-base px-8">
                     {props.correctIndex === 1
                       ? props.correctAnswer
                       : props.distractors
@@ -183,7 +173,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   }`}
                   onClick={() => selectAnswer(2)}
                 >
-                  <p className="whitespace-normal text-base">
+                  <p className="whitespace-normal text-base px-8">
                     {props.correctIndex === 2
                       ? props.correctAnswer
                       : props.distractors
@@ -231,7 +221,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                   }`}
                   onClick={() => selectAnswer(3)}
                 >
-                  <p className="whitespace-normal text-base">
+                  <p className="whitespace-normal text-base px-8">
                     {props.correctIndex === 3
                       ? props.correctAnswer
                       : props.distractors

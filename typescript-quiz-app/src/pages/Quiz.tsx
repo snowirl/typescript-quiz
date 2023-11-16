@@ -39,6 +39,7 @@ import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
 import QuizRoundBreak from "../components/QuizRoundBreak";
 import { motion } from "framer-motion";
+import { Toaster } from "react-hot-toast";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -413,6 +414,15 @@ const Quiz = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-2">
       <div className="flex justify-center">
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{
+            className:
+              "dark:bg-dark-1 dark:text-white px-4 py-2 text-lg font-semibold shadow-lg border border-1 border-black/20 rounded-md",
+          }}
+        />
+
         <div className="max-w-[900px] space-y-2 px-4 flex-grow-1 w-full">
           <div className="flex justify-center relative py-2">
             <div className="flex-grow flex justify-center items-center">

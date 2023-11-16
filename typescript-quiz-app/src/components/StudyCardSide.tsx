@@ -13,9 +13,10 @@ import {
   Image,
   Button,
 } from "@nextui-org/react";
-import { FaStar, FaVolumeUp } from "react-icons/fa";
+import { FaStar, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { Flashcard } from "../assets/globalTypes";
+import { useState } from "react";
 
 interface StudyCardSideProps {
   isFlipped: boolean;
@@ -32,11 +33,30 @@ interface StudyCardSideProps {
   isStarred: boolean;
 }
 const StudyCardSide = (props: StudyCardSideProps) => {
+  const [speaking, setSpeaking] = useState(false);
+
   const handleFooterClick = (event: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to child elements
     event.stopPropagation();
     // Add your logic here for handling CardFooter click
     props.flipCard();
+  };
+
+  const handleSpeak = () => {
+    if (!speaking) {
+      const utterance = new SpeechSynthesisUtterance(
+        props.isFront ? props.flashcard.front : props.flashcard.back
+      );
+      speechSynthesis.speak(utterance);
+
+      utterance.onstart = () => {
+        setSpeaking(true);
+      };
+
+      utterance.onend = () => {
+        setSpeaking(false);
+      };
+    }
   };
 
   return (
@@ -90,8 +110,14 @@ const StudyCardSide = (props: StudyCardSideProps) => {
           radius="full"
           variant="light"
           className="icon-btn"
+          onClick={() => handleSpeak()}
+          disabled={speaking}
         >
-          <FaVolumeUp className="w-5 h-5" />
+          {speaking ? (
+            <FaVolumeUp className="w-5 h-5" />
+          ) : (
+            <FaVolumeMute className="w-5 h-5" />
+          )}
         </Button>
         <Popover placement="top" offset={10}>
           <PopoverTrigger>

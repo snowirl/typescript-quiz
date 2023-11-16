@@ -63,22 +63,20 @@ const NavigationMenu = () => {
         </div>
 
         <div className="space-x-4 items-center hidden md:flex">
-          <img src={logo} alt="Logo" className="w-12 h-12 rounded-full" />
-          <div className="space-x-2">
-            <Button
-              variant="light"
-              onPress={() => navigate("/create/new")}
-              className="font-semibold"
+          <img src={logo} alt="Logo" className="w-10" />
+          <div className="space-x-4">
+            <button
+              onClick={() => navigate("/create/new")}
+              className="font-semibold text-sm px-4 py-3"
             >
               Home
-            </Button>
-            <Button
-              variant="light"
-              onPress={() => navigate("/sets/recents")}
-              className="font-semibold"
+            </button>
+            <button
+              onClick={() => navigate("/sets/recents")}
+              className="font-semibold text-sm px-4 py-3"
             >
               Sets
-            </Button>
+            </button>
 
             <Button
               color="primary"
@@ -93,7 +91,7 @@ const NavigationMenu = () => {
             <Input
               variant="bordered"
               placeholder="Search sets, users"
-              className="bg-white dark:bg-dark-1 w-auto lg:w-[300px]"
+              className="bg-white dark:bg-dark-1 md:w-[280px] xl:w-[400px]"
               type="text"
               color="primary"
               startContent={<FaMagnifyingGlass className="w-5 h-5" />}
