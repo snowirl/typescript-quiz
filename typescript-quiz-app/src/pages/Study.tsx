@@ -37,6 +37,7 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@nextui-org/react";
 import { useAnimationControls } from "framer-motion";
 import StudyNav from "../components/StudyNav";
+import { Toaster, toast, ToastBar } from "react-hot-toast";
 
 const flashcards: Flashcard[] = [
   {
@@ -154,6 +155,15 @@ const Study = () => {
     setIndex(0);
   }, [currentDeck]);
 
+  useEffect(() => {
+    if (shouldSaveData) {
+      // toast.dismiss();
+      toast("Unsaved changes", { duration: Infinity });
+    } else {
+      // toast.dismiss();
+    }
+  }, [shouldSaveData]);
+
   const initializeDeckInfo = async () => {
     setIsLoading(true);
 
@@ -241,7 +251,8 @@ const Study = () => {
         doc(db, "users", userID, "activity", pageID),
         {
           docId: pageID,
-          favorited: parsedActivityData.isFavorited ?? isFavoritedRef.current,
+          favorited:
+            parsedActivityData.isFavorited ?? isFavoritedRef.current ?? false,
           starred:
             parsedActivityData.starredList ?? starredListRef.current ?? [],
           timestamp: serverTimestamp(),
@@ -250,9 +261,11 @@ const Study = () => {
       );
     } catch (e) {
       console.log("error occurred: " + e);
+      toast.error("Error saving data!");
       return;
     }
 
+    toast.success("Saved!");
     console.log("Saved.");
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
@@ -435,11 +448,42 @@ const Study = () => {
 
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
+      <Toaster
+        position="bottom-right"
+        reverseOrder={true}
+        toastOptions={{
+          className:
+            "dark:bg-dark-1 dark:text-white px-4 py-2 text-sm font-semibold shadow-lg outline outline-1 outline-black/10  rounded-md",
+        }}
+      >
+        {(t) => (
+          <ToastBar toast={t}>
+            {({ icon, message }) => (
+              <>
+                {icon}
+                {message}
+                {t.type !== "loading" && (
+                  <Button
+                    color="primary"
+                    size="sm"
+                    className="font-semibold"
+                    // onClick={() => toast.dismiss(t.id)}
+                    onClick={() => handleSaveData()}
+                  >
+                    Save
+                  </Button>
+                )}
+              </>
+            )}
+          </ToastBar>
+        )}
+      </Toaster>
+      ;
       <div className="flex justify-center">
         {isLoading ? (
           <Spinner />
         ) : (
-          <div className="max-w-[875px] flex-grow space-y-3 px-4 py-2">
+          <div className="max-w-[875px] flex-grow space-y-3 px-4">
             <p className="font-bold text-2xl">{deckData?.title}</p>
             <div className="flex justify-between relative">
               <div></div>
@@ -449,6 +493,7 @@ const Study = () => {
                 </p>
               </div>
               <div></div>
+
               <div className="absolute -top-2 right-0">
                 <Tooltip
                   content="Favorite"
@@ -480,6 +525,7 @@ const Study = () => {
               size="sm"
             />
             <StudyNav deckId={id ?? "undefined"} />
+
             <motion.div
               initial={{ x: 0 }}
               // onClick={handleCardClick}
