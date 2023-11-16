@@ -482,7 +482,7 @@ const Study = () => {
         reverseOrder={true}
         toastOptions={{
           className:
-            "dark:bg-dark-1 dark:text-white px-4 py-2 text-sm font-semibold shadow-lg outline outline-1 outline-black/10  rounded-md",
+            "dark:bg-dark-1 dark:text-white p-2 text-sm font-semibold shadow-lg outline outline-1 outline-black/10  rounded-[4px]",
         }}
       >
         {(t) => (
@@ -514,18 +514,17 @@ const Study = () => {
         {isLoading ? (
           <LoadingContainer />
         ) : (
-          <div className="max-w-[875px] flex-grow space-y-3 px-4">
+          <div className="max-w-[825px] flex-grow space-y-3 px-4">
             <p className="font-bold text-2xl">{deckData?.title}</p>
             <div className="flex justify-between relative">
               <div></div>
-              <div>
+              <div className="flex w-full items-center justify-center relative">
                 <p className="font-semibold text-sm">
                   {index + 1} / {currentDeck.length}
                 </p>
               </div>
-              <div></div>
 
-              <div className="absolute -top-2 right-0">
+              <div className="absolute -top-4 right-0">
                 <Tooltip
                   content="Favorite"
                   className="text-black dark:text-white"
@@ -594,11 +593,13 @@ const Study = () => {
               decrementIndex={() => decrementIndex()}
               deckId={id ?? "undefined"}
             />
+
             <StudyInfo
               username={deckData?.username}
               description={deckData?.description}
               profilePictureURL={profilePictureURL}
             />
+
             <p className="text-left font-semibold pt-4">
               All cards ({originalDeck.length})
             </p>

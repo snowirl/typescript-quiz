@@ -12,6 +12,7 @@ import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
 import { Pagination } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
+import { useUserContext } from "../context/userContext";
 
 const SetsCreatedSets = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -21,9 +22,10 @@ const SetsCreatedSets = () => {
   const displayPerPage = 3;
   const userID = auth.currentUser?.uid ?? "Error";
   const location = useLocation();
+  const { user } = useUserContext();
 
   useEffect(() => {
-    if (location.pathname === "/sets/created") {
+    if (location.pathname === "/sets/created" && user) {
       handleFindSets(0);
       getDeckCount();
     }
@@ -32,10 +34,10 @@ const SetsCreatedSets = () => {
       if (location.pathname === "/sets/created") {
       }
     };
-  }, [location.pathname]);
+  }, [user, location.pathname]);
 
   useEffect(() => {
-    if (location.pathname === "/sets/created") {
+    if (location.pathname === "/sets/created" && user) {
       handleFindSets(pageIndex);
     }
   }, [pageIndex]);
@@ -45,6 +47,10 @@ const SetsCreatedSets = () => {
   }, [deckList]);
 
   const getDeckCount = async () => {
+    if (deckCount > 0) {
+      return;
+    }
+
     try {
       const coll = collection(db, "users", userID, "decks");
       const snapshot = await getCountFromServer(coll);
@@ -102,7 +108,7 @@ const SetsCreatedSets = () => {
               <div className="flex justify-center py-4">
                 <Pagination
                   size="lg"
-                  total={Math.ceil(deckCount / displayPerPage)}
+                  total={Math.max(1, Math.ceil(deckCount / displayPerPage))}
                   initialPage={1}
                   variant="faded"
                   onChange={(num) => setPageIndex(num - 1)}
