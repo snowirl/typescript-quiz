@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import { FaFolderPlus } from "react-icons/fa6";
 
 const SetsCreateFolder = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -66,6 +67,7 @@ const SetsCreateFolder = () => {
     <div>
       <Button onClick={onOpen} color="primary" className="font-semibold">
         Create new folder
+        <FaFolderPlus />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
         <ModalContent className="text-black dark:text-gray-100">
@@ -81,9 +83,11 @@ const SetsCreateFolder = () => {
                   labelPlacement="outside"
                   placeholder="Folder name"
                   value={folderName}
+                  variant="faded"
+                  color="primary"
                   onChange={(e) => setFolderName(e.target.value)}
                 />
-                <p className="text-sm font-semibold">Color</p>
+                <div></div>
                 <div className="flex flex-wrap justify-start">
                   {colors.map((color, num) => (
                     <button

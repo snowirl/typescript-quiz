@@ -38,6 +38,7 @@ import { Tooltip } from "@nextui-org/react";
 import { useAnimationControls } from "framer-motion";
 import StudyNav from "../components/StudyNav";
 import { Toaster, toast, ToastBar } from "react-hot-toast";
+import LoadingContainer from "../components/LoadingContainer";
 
 const flashcards: Flashcard[] = [
   {
@@ -73,7 +74,7 @@ const Study = () => {
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [starredList, setStarredList] = useState<string[] | null>(null);
-  const [shouldSaveData, setShouldSaveData] = useState(true);
+  const [shouldSaveData, setShouldSaveData] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
@@ -90,6 +91,7 @@ const Study = () => {
   const starredListRef = useRef(starredList);
 
   useEffect(() => {
+    toast.dismiss();
     initializeDeckInfo();
   }, []);
 
@@ -145,7 +147,7 @@ const Study = () => {
         setIsFavorited(parsedActivityData.isFavorited);
         setStarredList(parsedActivityData.starredList);
         console.log("GOT LOCAL ACTIVITY.");
-        handleSaveData();
+        handleSaveData(true);
       }
     }
   }, [deckData]);
@@ -156,13 +158,31 @@ const Study = () => {
   }, [currentDeck]);
 
   useEffect(() => {
-    if (shouldSaveData && !isLoading) {
+    if (shouldSaveData) {
       toast.dismiss();
       toast("Unsaved changes", { duration: Infinity });
     } else {
       // // toast.dismiss();
       // toast.success("Savedddd!");
     }
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (shouldSaveData) {
+        const message =
+          "You have unsaved changes. Are you sure you want to leave?";
+        // Standard for most browsers
+        event.returnValue = message;
+        // For some older browsers
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, [shouldSaveData]);
 
   const initializeDeckInfo = async () => {
@@ -214,7 +234,7 @@ const Study = () => {
       const docRef = await getDoc(q);
       setStarredList(docRef.data()?.starred);
       setIsFavorited(docRef.data()?.favorited);
-      // console.log(docRef.data());
+      handleSaveData(true); // save data on initialize for activity
     } catch (e) {
       console.log("error occurred: " + e);
     }
@@ -240,7 +260,7 @@ const Study = () => {
     setShouldSaveData(true);
   };
 
-  const handleSaveData = async () => {
+  const handleSaveData = async (isInitial: boolean) => {
     const activityData = localStorage.getItem(`activity/${deckData?.id}`);
     let parsedActivityData = null;
 
@@ -271,8 +291,12 @@ const Study = () => {
     }
 
     console.log("Saved.");
-    toast.dismiss();
-    toast.success("Saved!");
+
+    if (!isInitial) {
+      toast.dismiss();
+      toast.success("Saved!");
+    }
+
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
   };
@@ -412,8 +436,7 @@ const Study = () => {
     setShouldSaveData((prevShouldSaveData) => {
       if (prevShouldSaveData) {
         console.log("Saving data...");
-        console.log(shouldSaveData);
-        handleSaveData();
+        handleSaveData(false);
       } else {
         console.log("nothing has changed, do not need to save.");
       }
@@ -455,7 +478,7 @@ const Study = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       <Toaster
-        position="bottom-right"
+        position={"bottom-right"}
         reverseOrder={true}
         toastOptions={{
           className:
@@ -476,7 +499,7 @@ const Study = () => {
                       size="sm"
                       className="font-semibold"
                       // onClick={() => toast.dismiss(t.id)}
-                      onClick={() => handleSaveData()}
+                      onClick={() => handleSaveData(false)}
                     >
                       Save
                     </Button>
@@ -486,10 +509,10 @@ const Study = () => {
           </ToastBar>
         )}
       </Toaster>
-      ;
+
       <div className="flex justify-center">
         {isLoading ? (
-          <Spinner />
+          <LoadingContainer />
         ) : (
           <div className="max-w-[875px] flex-grow space-y-3 px-4">
             <p className="font-bold text-2xl">{deckData?.title}</p>

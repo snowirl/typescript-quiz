@@ -3,12 +3,11 @@ import { FaEdit } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
-import { useRef, ChangeEvent, useEffect } from "react";
+import { useRef, ChangeEvent, useEffect, useState } from "react";
+import ProfileStats from "../components/ProfileStats";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {}, []);
 
   const handleButtonClick = () => {
     // Trigger the file input when the button is clicked
@@ -111,25 +110,32 @@ const Settings = () => {
           <Card>
             <CardBody>
               <div className="flex justify-center">
-                <Badge
-                  content={<FaEdit />}
-                  color="primary"
-                  className="w-8 h-8 bottom-3 cursor-pointer"
-                  placement="bottom-right"
-                  onClick={handleButtonClick}
-                >
-                  <Avatar
-                    src={auth.currentUser?.photoURL ?? ""}
-                    className="w-20 h-20 text-large"
+                {/* <p className="font-semibold text-sm">
+                  {auth.currentUser?.displayName}
+                </p> */}
+                <div className="flex flex-col justify-center items-center space-y-3 w-full">
+                  <p className="font-bold text-xl">Thundersalad</p>
+                  <Badge
+                    content={<FaEdit />}
+                    color="primary"
+                    className="w-8 h-8 bottom-3 cursor-pointer"
+                    placement="bottom-right"
+                    onClick={handleButtonClick}
+                  >
+                    <Avatar
+                      src={auth.currentUser?.photoURL ?? ""}
+                      className="w-20 h-20 text-large"
+                    />
+                  </Badge>
+                  <input
+                    type="file"
+                    accept=".jpg, .jpeg, .png"
+                    style={{ display: "none" }}
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
                   />
-                </Badge>
-                <input
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  style={{ display: "none" }}
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                />
+                  <ProfileStats />
+                </div>
               </div>
             </CardBody>
           </Card>

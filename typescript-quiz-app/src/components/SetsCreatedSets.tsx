@@ -11,6 +11,7 @@ import {
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
 import { Pagination } from "@nextui-org/react";
+import { useLocation } from "react-router-dom";
 
 const SetsCreatedSets = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -19,18 +20,28 @@ const SetsCreatedSets = () => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const displayPerPage = 3;
   const userID = auth.currentUser?.uid ?? "Error";
+  const location = useLocation();
 
   useEffect(() => {
-    handleFindSets(0);
-    getDeckCount();
-  }, []);
+    if (location.pathname === "/sets/created") {
+      handleFindSets(0);
+      getDeckCount();
+    }
+
+    return () => {
+      if (location.pathname === "/sets/created") {
+      }
+    };
+  }, [location.pathname]);
 
   useEffect(() => {
-    handleFindSets(pageIndex);
+    if (location.pathname === "/sets/created") {
+      handleFindSets(pageIndex);
+    }
   }, [pageIndex]);
 
   useEffect(() => {
-    localStorage.setItem("deckList", JSON.stringify(deckList));
+    // localStorage.setItem("created-sets", JSON.stringify(deckList));
   }, [deckList]);
 
   const getDeckCount = async () => {
@@ -52,7 +63,7 @@ const SetsCreatedSets = () => {
       limit(5 * (pageNum + 1))
     );
 
-    if ((pageNum + 1) * displayPerPage - deckList?.length < 5) {
+    if ((pageNum + 1) * displayPerPage - deckList?.length < pageNum) {
       return;
     }
 
@@ -65,8 +76,6 @@ const SetsCreatedSets = () => {
       setIsLoading(false);
       console.log(e);
     }
-
-    console.log(list);
 
     setDeckList(list);
     setIsLoading(false);
