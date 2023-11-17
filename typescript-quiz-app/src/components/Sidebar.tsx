@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
-  const [tabKey, setTabKey] = useState("none");
 
   return (
     <div>

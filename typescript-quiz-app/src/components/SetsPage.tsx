@@ -13,6 +13,7 @@ const SetsPage = () => {
   const changeTab = (key: Key) => {
     setTab(key.toString());
   };
+
   return (
     <>
       <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 pt-6">
@@ -22,7 +23,7 @@ const SetsPage = () => {
               aria-label="Options"
               variant="underlined"
               selectedKey={tab}
-              onSelectionChange={(key: string) => changeTab(key)}
+              onSelectionChange={changeTab}
               className="font-semibold"
             >
               <Tab key="recents" title="Recents"></Tab>

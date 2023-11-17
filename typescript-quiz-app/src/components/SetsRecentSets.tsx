@@ -6,13 +6,11 @@ import {
   query,
   orderBy,
   getCountFromServer,
-  startAfter,
   DocumentData,
-  endBefore,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
-import { Button, ButtonGroup, Pagination } from "@nextui-org/react";
+import { Pagination } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
 import { useLocation } from "react-router-dom";
 
@@ -53,50 +51,6 @@ const SetsRecentSets = () => {
       console.log(e);
     }
   };
-
-  // const handleFindSets = async (whichWay: number) => {
-  //   // -1 go back one, 0 initialize, 1 next page
-  //   // find your sets
-  //   let list: DocumentData = [];
-  //   const setsRef = collection(db, "users", userID, "activity");
-  //   let q = query(setsRef, orderBy("timestamp", "desc"), limit(5));
-
-  //   if (whichWay === -1) {
-  //     q = query(
-  //       setsRef,
-  //       orderBy("timestamp", "desc"),
-  //       limit(5),
-  //       endBefore(lastDeck)
-  //     );
-  //     setPageIndex(pageIndex - 1);
-  //   } else if (whichWay === 0) {
-  //     q = query(setsRef, orderBy("timestamp", "desc"), limit(5));
-  //   } else if (whichWay === 1) {
-  //     q = query(
-  //       setsRef,
-  //       orderBy("timestamp", "desc"),
-  //       limit(5),
-  //       startAfter(lastDeck)
-  //     );
-  //     setPageIndex(pageIndex + 1);
-  //   }
-
-  //   try {
-  //     const querySnapshot = await getDocs(q);
-  //     querySnapshot.forEach((doc) => {
-  //       list.push(doc.data());
-  //     });
-  //     setLastDeck(querySnapshot.docs[querySnapshot.docs.length - 1]);
-  //   } catch (e) {
-  //     setIsLoading(false);
-  //     console.log(e);
-  //   }
-
-  //   console.log(list);
-
-  //   setDeckList(list);
-  //   setIsLoading(false);
-  // };
 
   const handleFindSets = async (pageNum: number) => {
     let list: DocumentData = [];
@@ -149,7 +103,7 @@ const SetsRecentSets = () => {
                   total={Math.max(1, Math.ceil(deckCount / displayPerPage))}
                   initialPage={1}
                   variant="faded"
-                  onChange={(num) => setPageIndex(num - 1)}
+                  onChange={(num: number) => setPageIndex(num - 1)}
                 />
               </div>
             )}

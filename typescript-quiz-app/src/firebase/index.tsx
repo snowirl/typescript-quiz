@@ -1,12 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, initializeFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import {
-  persistentLocalCache,
-  PersistentLocalCache,
-  memoryLocalCache,
-} from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
+import { persistentLocalCache } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDd19QER41mmU6QZQ3k9HHplg36p3U41pw",
@@ -18,7 +13,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 
-const storage = getStorage(app);
+// const storage = getStorage(app);
 const auth = getAuth(app);
 // const db = getFirestore(app);
 
