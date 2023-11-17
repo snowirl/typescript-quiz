@@ -3,8 +3,8 @@ import { FaEdit } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
-import { useRef, ChangeEvent, useEffect, useState } from "react";
 import ProfileStats from "../components/ProfileStats";
+import { useRef, ChangeEvent } from "react";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
