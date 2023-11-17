@@ -10,13 +10,12 @@ import {
   Radio,
   Switch,
   Divider,
-  Image,
   Button,
 } from "@nextui-org/react";
 import { FaStar, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { Flashcard } from "../assets/globalTypes";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
 interface StudyCardSideProps {
   isFlipped: boolean;
@@ -34,9 +33,7 @@ interface StudyCardSideProps {
 }
 const StudyCardSide = (props: StudyCardSideProps) => {
   const [speaking, setSpeaking] = useState(false);
-  const [imageWidth, setImageWidth] = useState(200);
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const maxWidth = 1000;
 
   const handleFooterClick = (event: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to child elements
@@ -143,7 +140,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
                 label="Initial Side"
                 orientation="horizontal"
                 defaultValue={props.isFrontFirst ? "front" : "back"}
-                onChange={(event) =>
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   props.changeInitialCardSide(event.target.value)
                 }
               >
@@ -154,7 +151,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
               <RadioGroup
                 label="Filter Cards"
                 orientation="horizontal"
-                onChange={(event) =>
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   props.changeStarredSelected(event.target.value)
                 }
                 defaultValue={props.isStarredOnly ? "starred" : "all"}

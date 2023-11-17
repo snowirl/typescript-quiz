@@ -1,18 +1,13 @@
-import { Switch, Tabs, Tab, Chip } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import { Switch, Chip } from "@nextui-org/react";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import { useTheme } from "next-themes";
-import { FaBars, FaXmark, FaMagnifyingGlass } from "react-icons/fa6";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import AvatarContainer from "./AvatarContainer";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
-import { useLocation } from "react-router-dom";
-import { Input } from "@nextui-org/react";
 import logo from "../assets/logo2.png";
 import textLogo from "../assets/Studucky.png";
 import Sidebar from "./Sidebar";
@@ -21,38 +16,12 @@ const NavigationMenu = () => {
   const { theme, setTheme } = useTheme();
   const { user } = useUserContext();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [open, setOpen] = useState(false);
-  const [tabKey, setTabKey] = useState("none");
-
-  useEffect(() => {
-    if (location.pathname.includes("sets")) {
-      setTabKey("sets");
-    } else if (location.pathname === "/") {
-      setTabKey("home");
-    } else {
-      setTabKey("none");
-    }
-  }, [location]);
 
   const changeTheme = () => {
     if (theme === "dark") {
       setTheme("light");
     } else {
       setTheme("dark");
-    }
-  };
-
-  const handleCreateButtonMenu = () => {
-    navigate("/create/new");
-    setOpen(false);
-  };
-
-  const handleTabButton = (key: React.Key) => {
-    if (key === "sets") {
-      navigate("/sets/recents");
-    } else if (key === "home") {
-      navigate("/");
     }
   };
 

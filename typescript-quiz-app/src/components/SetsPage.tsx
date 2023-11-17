@@ -22,7 +22,7 @@ const SetsPage = () => {
               aria-label="Options"
               variant="underlined"
               selectedKey={tab}
-              onSelectionChange={(key) => changeTab(key)}
+              onSelectionChange={(key: string) => changeTab(key)}
               className="font-semibold"
             >
               <Tab key="recents" title="Recents"></Tab>

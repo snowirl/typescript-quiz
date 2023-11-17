@@ -9,7 +9,7 @@ import {
   useDisclosure,
   Input,
 } from "@nextui-org/react";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { FaFolderPlus } from "react-icons/fa6";
 
@@ -46,9 +46,8 @@ const SetsCreateFolder = () => {
       return;
     }
     const userID: string = auth.currentUser?.uid ?? "Error";
-    const displayName: string = auth.currentUser?.displayName ?? "Error";
     try {
-      const docRef = await addDoc(collection(db, "users", userID, "folders"), {
+      await addDoc(collection(db, "users", userID, "folders"), {
         folderName: folderName,
         folderColor: colorSelected,
       });
@@ -85,7 +84,9 @@ const SetsCreateFolder = () => {
                   value={folderName}
                   variant="faded"
                   color="primary"
-                  onChange={(e) => setFolderName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFolderName(e.target.value)
+                  }
                 />
                 <div></div>
                 <div className="flex flex-wrap justify-start">

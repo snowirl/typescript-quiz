@@ -6,13 +6,8 @@ import {
   query,
   orderBy,
   getCountFromServer,
-  startAfter,
   DocumentData,
-  endBefore,
   where,
-  getDocFromCache,
-  getDocsFromCache,
-  DocumentSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
@@ -56,7 +51,7 @@ const SetsFavorites = () => {
       const coll = collection(db, "users", userID, "activity");
 
       // Adding a query to filter activities with isFavorited: true
-      const q = query(coll, where("isFavorited", "==", true));
+      const q = query(coll, where("favorited", "==", true));
 
       const snapshot = await getCountFromServer(q);
       setDeckCount(snapshot.data().count); // Use snapshot.size to get the count
@@ -117,7 +112,7 @@ const SetsFavorites = () => {
                   total={Math.max(1, Math.ceil(deckCount / displayPerPage))}
                   initialPage={1}
                   variant="faded"
-                  onChange={(num) => setPageIndex(num - 1)}
+                  onChange={(num: number) => setPageIndex(num - 1)}
                 />
               </div>
             )}

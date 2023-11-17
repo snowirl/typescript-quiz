@@ -7,18 +7,16 @@ import {
   limit,
   query,
   orderBy,
-  getCountFromServer,
   startAfter,
   DocumentData,
   endBefore,
-  where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useUserContext } from "../context/userContext";
 
 const SetsFolders = () => {
-  const [folderCount, setFolderCount] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [folderCount, setFolderCount] = useState<number>(0);
+  const [_isLoading, setIsLoading] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [pageIndex, setPageIndex] = useState<number>(0);

@@ -111,7 +111,7 @@ const SetsCreatedSets = () => {
                   total={Math.max(1, Math.ceil(deckCount / displayPerPage))}
                   initialPage={1}
                   variant="faded"
-                  onChange={(num) => setPageIndex(num - 1)}
+                  onChange={(num: number) => setPageIndex(num - 1)}
                 />
               </div>
             )}

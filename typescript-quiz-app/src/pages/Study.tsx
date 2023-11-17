@@ -1,4 +1,4 @@
-import { Progress, Spinner } from "@nextui-org/react";
+import { Progress } from "@nextui-org/react";
 import StudyButtons from "../components/StudyButtons";
 import StudyCard from "../components/StudyCard";
 import StudyInfo from "../components/StudyInfo";
@@ -39,7 +39,6 @@ import { useAnimationControls } from "framer-motion";
 import StudyNav from "../components/StudyNav";
 import { Toaster, toast, ToastBar } from "react-hot-toast";
 import LoadingContainer from "../components/LoadingContainer";
-import { Slider } from "@nextui-org/react";
 
 const flashcards: Flashcard[] = [
   {

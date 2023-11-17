@@ -1,5 +1,3 @@
-import { Button } from "@nextui-org/react";
-
 interface AlertProps {
   isHidden: boolean;
   text: string;
