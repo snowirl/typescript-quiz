@@ -60,10 +60,10 @@ const NavigationMenu = () => {
             </Button>
           </div>
           <div className="flex items-center relative">
-            <FaMagnifyingGlass className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2" />
+            <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
             <input
               placeholder="Search sets, users"
-              className="description md:w-[280px] xl:w-[400px] pl-8"
+              className="description md:w-[280px] xl:w-[400px] rounded-full pl-12 border-2"
               type="text"
               // startContent={<FaMagnifyingGlass className="w-5 h-5" />}
             />
