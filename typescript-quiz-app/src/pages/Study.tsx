@@ -39,6 +39,7 @@ import { useAnimationControls } from "framer-motion";
 import StudyNav from "../components/StudyNav";
 import { Toaster, toast, ToastBar } from "react-hot-toast";
 import LoadingContainer from "../components/LoadingContainer";
+import { Slider } from "@nextui-org/react";
 
 const flashcards: Flashcard[] = [
   {
@@ -75,6 +76,7 @@ const Study = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [starredList, setStarredList] = useState<string[] | null>(null);
   const [shouldSaveData, setShouldSaveData] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
@@ -261,6 +263,12 @@ const Study = () => {
   };
 
   const handleSaveData = async (isInitial: boolean) => {
+    if (isSaving) {
+      return;
+    } else {
+      setIsSaving(true);
+    }
+
     const activityData = localStorage.getItem(`activity/${deckData?.id}`);
     let parsedActivityData = null;
 
@@ -287,6 +295,7 @@ const Study = () => {
     } catch (e) {
       console.log("error occurred: " + e);
       toast.error("Error saving data!");
+      setIsSaving(false);
       return;
     }
 
@@ -299,6 +308,7 @@ const Study = () => {
 
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
+    setIsSaving(false);
   };
 
   useEffect(() => {
@@ -547,6 +557,7 @@ const Study = () => {
                 </Tooltip>
               </div>
             </div>
+            <div className="w-full"></div>
 
             <Progress
               aria-label="Loading..."
@@ -554,6 +565,7 @@ const Study = () => {
               className=""
               size="sm"
             />
+
             <StudyNav deckId={id ?? "undefined"} />
 
             <motion.div

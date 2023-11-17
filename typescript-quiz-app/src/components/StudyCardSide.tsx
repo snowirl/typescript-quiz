@@ -16,7 +16,7 @@ import {
 import { FaStar, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { Flashcard } from "../assets/globalTypes";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface StudyCardSideProps {
   isFlipped: boolean;
@@ -34,6 +34,9 @@ interface StudyCardSideProps {
 }
 const StudyCardSide = (props: StudyCardSideProps) => {
   const [speaking, setSpeaking] = useState(false);
+  const [imageWidth, setImageWidth] = useState(200);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const maxWidth = 1000;
 
   const handleFooterClick = (event: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to child elements
@@ -60,9 +63,9 @@ const StudyCardSide = (props: StudyCardSideProps) => {
   };
 
   return (
-    <Card>
+    <Card className="overflow-auto">
       <CardHeader
-        className="flex gap-3 justify-between px-4 py-5 cursor-pointer"
+        className="flex gap-3 justify-between pb-0 cursor-pointer"
         onClick={handleFooterClick}
       >
         <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
@@ -82,26 +85,29 @@ const StudyCardSide = (props: StudyCardSideProps) => {
           />
         </Button>
       </CardHeader>
-      <CardBody
-        className="flex flex-col h-[280px] items-center cursor-pointer overflow-y-auto"
-        onClick={() => props.flipCard()}
-      >
-        <p className="text-[22px] text-center my-auto">
-          {props.isFront ? props.flashcard.front : props.flashcard.back}
-        </p>
-        <Image
-          className="mt-4 "
-          width={250}
-          alt="frontImage"
-          src={
-            props.isFront
-              ? props.flashcard.frontImage
-              : props.flashcard.backImage
-          }
-        />
+      <CardBody className="cursor-pointer" onClick={() => props.flipCard()}>
+        <div className="flex flex-col h-[280px] items-center overflow-y-auto">
+          <p className="text-[22px] text-center my-auto">
+            {props.isFront ? props.flashcard.front : props.flashcard.back}
+          </p>
+          {(props.isFront && props.flashcard.frontImage) ||
+          (!props.isFront && props.flashcard.backImage) ? (
+            <img
+              ref={imageRef}
+              className="mt-4 max-w-[400px]"
+              // width={imageWidth}
+              alt="frontImage"
+              src={
+                props.isFront
+                  ? props.flashcard.frontImage
+                  : props.flashcard.backImage
+              }
+            />
+          ) : null}
+        </div>
       </CardBody>
       <CardFooter
-        className="flex gap-3 justify-between px-4 py-5 cursor-pointer"
+        className="flex gap-3 justify-between pt-2 cursor-pointer"
         onClick={handleFooterClick}
       >
         <Button

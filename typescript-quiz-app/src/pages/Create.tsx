@@ -24,7 +24,6 @@ const Create = () => {
     front: "",
     back: "",
     cardId: uid(),
-    isStarred: false,
   };
   const navigate = useNavigate();
   const { user } = useUserContext();
@@ -236,15 +235,17 @@ const Create = () => {
             </Button>
           </div>
 
-          <Input
+          <input
             placeholder="Title of your set"
-            className="bg-white dark:bg-dark-1 w-full"
+            className="description text-lg py-3"
             color="primary"
-            size="lg"
-            radius="md"
+            // size="sm"
+            // radius="md"
             type="text"
-            variant="bordered"
-            onChange={(e) => setTitle(e.target.value)}
+            // variant="bordered"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setTitle(e.target.value)
+            }
             value={title}
           />
 

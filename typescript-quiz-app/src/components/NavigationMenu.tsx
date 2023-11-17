@@ -1,4 +1,4 @@
-import { Switch, Tabs, Tab } from "@nextui-org/react";
+import { Switch, Tabs, Tab, Chip } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
@@ -14,6 +14,7 @@ import "react-modern-drawer/dist/index.css";
 import { useLocation } from "react-router-dom";
 import { Input } from "@nextui-org/react";
 import logo from "../assets/logo2.png";
+import textLogo from "../assets/Studucky.png";
 import Sidebar from "./Sidebar";
 
 const NavigationMenu = () => {
@@ -63,14 +64,16 @@ const NavigationMenu = () => {
         </div>
 
         <div className="space-x-4 items-center hidden md:flex">
-          <img src={logo} alt="Logo" className="w-10" />
+          <button className="flex items-center" onClick={() => navigate("/")}>
+            <img src={textLogo} alt="Logo" className="w-20 hidden lg:block" />
+
+            <img src={logo} alt="Logo" className="w-10" />
+            <Chip className="mx-2 h-6 px-0 bg-dark-1 text-white dark:bg-white dark:text-black rounded-[4px]">
+              <p className="font-semibold  text-xs">Beta</p>
+            </Chip>
+          </button>
+
           <div className="space-x-4">
-            <button
-              onClick={() => navigate("/create/new")}
-              className="font-semibold text-sm px-4 py-3"
-            >
-              Home
-            </button>
             <button
               onClick={() => navigate("/sets/recents")}
               className="font-semibold text-sm px-4 py-3"
@@ -87,14 +90,13 @@ const NavigationMenu = () => {
               Create
             </Button>
           </div>
-          <div className="flex items-center">
-            <Input
-              variant="bordered"
+          <div className="flex items-center relative">
+            <FaMagnifyingGlass className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2" />
+            <input
               placeholder="Search sets, users"
-              className="bg-white dark:bg-dark-1 md:w-[280px] xl:w-[400px]"
+              className="description md:w-[280px] xl:w-[400px] pl-8"
               type="text"
-              color="primary"
-              startContent={<FaMagnifyingGlass className="w-5 h-5" />}
+              // startContent={<FaMagnifyingGlass className="w-5 h-5" />}
             />
           </div>
         </div>
