@@ -1,6 +1,5 @@
 import { Button, ButtonGroup } from "@nextui-org/react";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
 
 interface StudyButtonsProps {
   deckId: string;
@@ -12,7 +11,6 @@ interface StudyButtonsProps {
 }
 
 const StudyButtons = (props: StudyButtonsProps) => {
-  const navigate = useNavigate();
   return (
     <div>
       <div className="flex flex-grow">

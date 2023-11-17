@@ -2,9 +2,7 @@ import { Button, ButtonGroup } from "@nextui-org/react";
 import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { Flashcard } from "../assets/globalTypes";
-import toast, { Toaster } from "react-hot-toast";
-
-const notify = () => toast("Here is your toast.");
+import toast from "react-hot-toast";
 
 interface QuizAnswersProps {
   distractors: string[] | null;

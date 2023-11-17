@@ -42,7 +42,7 @@ const SignUpModal = () => {
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
         <ModalContent className="w-[400px] p-2 text-black dark:text-white rounded-md">
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 dark">
                 Create an account
@@ -100,9 +100,7 @@ const SignUpModal = () => {
                     </div>
                   ) : null}
                   <div className="justify-center text-center items-center">
-                    <Link href="#" underline="hover">
-                      Have an account?
-                    </Link>
+                    <Link href="#">Have an account?</Link>
                   </div>
                 </div>
               </ModalFooter>

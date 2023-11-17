@@ -1,5 +1,5 @@
 import { Flashcard } from "../assets/globalTypes";
-import { Card, CardBody, Divider } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 
 interface StudyCardPreviewProps {
   flashcard: Flashcard;

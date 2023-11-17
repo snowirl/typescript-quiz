@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  Chip,
   Button,
 } from "@nextui-org/react";
 import { useState, useEffect } from "react";

@@ -43,7 +43,7 @@ const SignInModal = () => {
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
         <ModalContent className="w-[400px] p-2 text-black dark:text-white rounded-md">
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 dark">
                 Sign in to your account
@@ -69,9 +69,7 @@ const SignInModal = () => {
                 </form>
                 <div className="flex justify-between text-xs">
                   <Checkbox>Remember me</Checkbox>
-                  <Link href="#" underline="hover">
-                    Forgot password?
-                  </Link>
+                  <Link href="#">Forgot password?</Link>
                 </div>
               </ModalBody>
               <ModalFooter className="py-4">
@@ -95,9 +93,7 @@ const SignInModal = () => {
                     </div>
                   ) : null}
                   <div className="justify-center text-center items-center">
-                    <Link href="#" underline="hover">
-                      Don't have an account?
-                    </Link>
+                    <Link href="#">Don't have an account?</Link>
                   </div>
                 </div>
               </ModalFooter>

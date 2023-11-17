@@ -1,7 +1,6 @@
 import StudyCardSide from "./StudyCardSide";
 import ReactCardFlip from "react-card-flip";
 import { Flashcard } from "../assets/globalTypes";
-import { motion } from "framer-motion";
 
 interface StudyCardProps {
   flashcard: Flashcard;
