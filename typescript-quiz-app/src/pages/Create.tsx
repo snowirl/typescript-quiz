@@ -73,7 +73,7 @@ const Create = () => {
       return;
     }
 
-    const userID: string = auth.currentUser?.uid ?? "Error";
+    const userID: string = auth.currentUser?.displayName ?? "Error"; // changed to display name in Algolia era
     const displayName: string = auth.currentUser?.displayName ?? "Error";
 
     const docRef = doc(db, "users", userID);

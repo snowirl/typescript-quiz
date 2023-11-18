@@ -6,13 +6,19 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Input,
   Link,
 } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const SignUpModal = () => {
+  const [isUserAvailable, setIsUserAvailable] = useState(false);
+  let typingTimer: NodeJS.Timeout | null = null;
+  const [username, setUserName] = useState("");
+
+  const [didSearch, setDidSearch] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const usernameRef = useRef<HTMLInputElement | null>(null);
@@ -21,13 +27,64 @@ const SignUpModal = () => {
 
   const { registerUser, error } = useUserContext();
 
+  useEffect(() => {
+    if (typingTimer !== null) {
+      clearTimeout(typingTimer);
+    }
+
+    typingTimer = setTimeout(() => {
+      checkUsernameAvailability();
+    }, 500);
+    // Cleanup the timer on component unmount
+    return () => {
+      if (typingTimer !== null) {
+        clearTimeout(typingTimer);
+      }
+    };
+  }, [username]);
+
   const handleModalSubmit = () => {
     const username = usernameRef.current?.value;
     const email = emailRef.current?.value;
     const password = passRef.current?.value;
 
     if (username && email && password) {
-      registerUser(email, username, password);
+      if (isUserAvailable) {
+        registerUser(email, username, password);
+      }
+
+      checkUsernameAvailability();
+    }
+  };
+
+  const checkUsernameAvailability = async () => {
+    if (!usernameRef.current) {
+      setDidSearch(false);
+      return;
+    }
+
+    setDidSearch(false);
+
+    try {
+      const docRef = doc(
+        db,
+        "users",
+        usernameRef.current.value.toLowerCase().trim()
+      );
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log("Found user.");
+        setIsUserAvailable(false);
+        setDidSearch(true);
+      } else {
+        console.log("No such user!");
+        setIsUserAvailable(true);
+        setDidSearch(true);
+      }
+    } catch (e) {
+      setDidSearch(false);
     }
   };
   return (
@@ -47,30 +104,45 @@ const SignUpModal = () => {
               <ModalHeader className="flex flex-col gap-1 dark">
                 Create an account
               </ModalHeader>
-              <ModalBody className="pt-2 pb-2 space-y-2">
-                <Input
+              <ModalBody className="pt-2 pb-2 space-y-0">
+                {didSearch ? (
+                  isUserAvailable ? (
+                    <span className="text-green-600 font-semibold">
+                      Username is available.
+                    </span>
+                  ) : (
+                    <span className="text-rose-600 font-semibold">
+                      Username is not available.
+                    </span>
+                  )
+                ) : null}
+
+                <input
                   type="text"
-                  label="Username"
-                  labelPlacement="inside"
-                  variant="faded"
-                  size="sm"
+                  placeholder="Username"
+                  className="description"
                   ref={usernameRef}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setUserName(e.target.value)
+                  }
                 />
-                <Input
+                <input
                   type="email"
-                  label="Email"
-                  labelPlacement="inside"
-                  variant="faded"
-                  size="sm"
                   ref={emailRef}
+                  placeholder="Email"
+                  className="description"
                 />
-                <Input
+                <input
                   type="password"
-                  label="Password"
-                  labelPlacement="inside"
-                  variant="faded"
-                  size="sm"
                   ref={passRef}
+                  placeholder="Password"
+                  className="description"
+                />
+                <input
+                  type="password"
+                  // ref={passRef2}
+                  placeholder="Confirm Password"
+                  className="description"
                 />
                 {/* <div className="flex justify-between text-xs">
                   <Checkbox>Remember me</Checkbox>
