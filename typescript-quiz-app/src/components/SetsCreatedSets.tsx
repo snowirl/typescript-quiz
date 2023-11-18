@@ -61,6 +61,10 @@ const SetsCreatedSets = () => {
   };
 
   const handleFindSets = async (pageNum: number) => {
+    if (user === null) {
+      return;
+    }
+
     let list: DocumentData = [];
     const setsRef = collection(db, "users", userID, "decks");
     let q = query(

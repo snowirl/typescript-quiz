@@ -35,6 +35,11 @@ const SetsFolders = () => {
   const handleFindFolders = async (whichWay: number) => {
     // -1 go back one, 0 initialize, 1 next page
     // find your sets
+
+    if (user === null) {
+      return;
+    }
+
     let list: DocumentData = [];
     let idList: DocumentData = [];
     const setsRef = collection(db, "users", userID, "folders");

@@ -3,9 +3,16 @@ import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import { FaXmark, FaBars } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCreateButtonMenu = () => {
+    setOpen(false);
+    navigate("create/new");
+  };
 
   return (
     <div>
@@ -36,7 +43,7 @@ const Sidebar = () => {
             </Link>
           </div>
           <div>
-            <Link to="/sets">
+            <Link to="/sets/recents">
               <button
                 className=" px-4 py-3 font-semibold"
                 onClick={() => setOpen(false)}
@@ -49,7 +56,7 @@ const Sidebar = () => {
             <Button
               color="primary"
               className="px-4 py-3 font-semibold w-full text-base"
-              // onClick={() => handleCreateButtonMenu()}
+              onClick={handleCreateButtonMenu}
             >
               Create
             </Button>

@@ -65,6 +65,11 @@ const Create = () => {
   };
 
   const handleCreateSet = async () => {
+    if (user === null) {
+      console.log("No user signed in...");
+      return;
+    }
+
     if (!isCreating) {
       setIsCreating(true);
       setHasError(false);
@@ -227,11 +232,11 @@ const Create = () => {
             <p className="text-left font-bold text-xl">Create New Set</p>
             <Button
               color="primary"
-              className="font-bold  text-sm h-10"
+              className="font-bold  text-sm h-11"
               size="md"
               onClick={() => handleCreateSet()}
             >
-              Create
+              Create Set
             </Button>
           </div>
 

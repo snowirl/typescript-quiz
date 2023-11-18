@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 const AvatarContainer = () => {
   const { logOutUser } = useUserContext();
   const navigate = useNavigate();
+
   return (
     <div>
       <div className="flex justify-center items-center space-x-2">

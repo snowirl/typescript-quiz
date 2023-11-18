@@ -8,8 +8,9 @@ import {
   sendPasswordResetEmail,
   User,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { ReactNode } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 interface UserContextType {
   user: User | null;
@@ -59,9 +60,27 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
           displayName: username,
         });
       })
-      .then((res) => console.log(res))
+      .then(() => addUserToDatabase(username))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+  };
+
+  const addUserToDatabase = async (username: string) => {
+    const docRef = doc(db, "users", username);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Found user.");
+    } else {
+      console.log("No such user!");
+
+      try {
+        await setDoc(doc(db, "users", username), {});
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        return;
+      }
+    }
   };
 
   const signInUser = (email: string, password: string) => {

@@ -42,22 +42,9 @@ import LoadingContainer from "../components/LoadingContainer";
 
 const flashcards: Flashcard[] = [
   {
-    front: "What is the capital of Italy?",
-    back: "Rome",
+    front: "",
+    back: "",
     cardId: "1",
-    isStarred: false,
-  },
-  {
-    front: "In which century was the Colosseum built?",
-    back: "1st century AD",
-    cardId: "2",
-    isStarred: true,
-  },
-  {
-    front: "Who was the first Roman Emperor?",
-    back: "Augustus (Octavian)",
-    cardId: "3",
-    isStarred: false,
   },
 ];
 
@@ -159,7 +146,7 @@ const Study = () => {
   }, [currentDeck]);
 
   useEffect(() => {
-    if (shouldSaveData) {
+    if (shouldSaveData && user) {
       toast.dismiss();
       toast("Unsaved changes", { duration: Infinity });
     } else {
@@ -262,7 +249,7 @@ const Study = () => {
   };
 
   const handleSaveData = async (isInitial: boolean) => {
-    if (isSaving) {
+    if (isSaving || user === null) {
       return;
     } else {
       setIsSaving(true);
@@ -455,6 +442,10 @@ const Study = () => {
   };
 
   const handleFavorite = () => {
+    if (user === null) {
+      console.log("No user signed in...");
+      return;
+    }
     setIsFavorited((prev) => !prev);
     setShouldSaveData(true);
   };
@@ -523,7 +514,7 @@ const Study = () => {
         {isLoading ? (
           <LoadingContainer />
         ) : (
-          <div className="max-w-[825px] flex-grow space-y-3 px-4">
+          <div className="max-w-[825px] w-full flex-grow space-y-3 px-4">
             <p className="font-bold text-2xl">{deckData?.title}</p>
             <div className="flex justify-between relative">
               <div></div>

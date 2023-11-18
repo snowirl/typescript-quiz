@@ -491,7 +491,7 @@ const Quiz = () => {
                   damping: 25,
                 }}
               >
-                <Card className="h-[500px]">
+                <Card className="min-h-[500px] max-h-[800px]">
                   <CardHeader className="absolute">
                     {boxIndex == 1 || boxIndex == 4 || boxIndex == 7 ? (
                       <Chip color="danger">

@@ -5,6 +5,7 @@ import {
   Tooltip,
   Image,
   Button,
+  CardFooter,
 } from "@nextui-org/react";
 import { Flashcard } from "../assets/globalTypes";
 import { FaTrash, FaImage } from "react-icons/fa6";
@@ -102,7 +103,7 @@ const CreateCard = (props: CreateCardProps) => {
       exit={{ opacity: 0 }}
     >
       <Card className="bg-white dark:bg-dark-1" radius="md" shadow="sm">
-        <CardHeader className="">
+        <CardHeader className="px-4">
           <div className="flex justify-between flex-grow items-center">
             <p className="text-base font-semibold">{props.index + 1}</p>
             <Tooltip
@@ -206,6 +207,7 @@ const CreateCard = (props: CreateCardProps) => {
             </div>
           </div>
         </CardBody>
+        <CardFooter />
       </Card>
     </motion.div>
   );
