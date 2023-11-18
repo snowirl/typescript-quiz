@@ -286,16 +286,16 @@ const Create = () => {
               </div>
             ))}
           </div>
-          <div className="justify-center  flex pt-4 pb-6">
+          <div className="justify-center w-full py-2 flex pb-6">
             <Button
               isIconOnly
               color="primary"
+              variant="flat"
               size="lg"
-              radius="md"
-              className="font-semibold"
+              className="font-semibold w-full h-14"
               onClick={() => handleCardAdd()}
             >
-              <FaPlus className="w-4 h-4" />
+              <FaPlus className="w-4 h-4" /> Add Card
             </Button>
           </div>
         </div>

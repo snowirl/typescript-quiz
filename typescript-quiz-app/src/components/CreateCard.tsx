@@ -113,14 +113,14 @@ const CreateCard = (props: CreateCardProps) => {
               className="text-black dark:text-white"
             >
               <Button
-                className="icon-btn hover:text-rose-600"
+                className="hover:text-rose-600"
                 variant="light"
                 size="sm"
                 radius="md"
                 isIconOnly
                 onClick={() => props.handleCardDelete(props.index)}
               >
-                <FaTrash className="w-4 h-4 " />
+                <FaTrash className="w-4 h-4" />
               </Button>
             </Tooltip>
           </div>
@@ -132,15 +132,15 @@ const CreateCard = (props: CreateCardProps) => {
                 className="textarea"
                 value={props.flashcard.front}
                 onChange={(e) => props.handleCardChange(e, props.index)}
-                placeholder="Enter front text"
+                placeholder="Enter term"
                 name="front"
               />
               <div className="pl-0.5">
                 <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
-                  Front
+                  Term
                 </p>
                 <div className="flex justify-between pt-1">
-                  <Button
+                  {/* <Button
                     isIconOnly
                     size="sm"
                     color="primary"
@@ -149,7 +149,7 @@ const CreateCard = (props: CreateCardProps) => {
                     onClick={() => handleButtonClick("front")}
                   >
                     <FaImage />
-                  </Button>
+                  </Button> */}
                   <input
                     type="file"
                     accept=".jpg, .jpeg, .png"
@@ -171,12 +171,12 @@ const CreateCard = (props: CreateCardProps) => {
                 className="textarea"
                 value={props.flashcard.back}
                 onChange={(e) => props.handleCardChange(e, props.index)}
-                placeholder="Enter back text"
+                placeholder="Enter definition"
                 name="back"
               />
               <div className="pl-0.5">
                 <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
-                  Back
+                  Definition
                 </p>
                 <div className="flex justify-between pt-1">
                   <Button
