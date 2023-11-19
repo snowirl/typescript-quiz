@@ -226,9 +226,9 @@ const Create = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
-        <div className="max-w-[800px] flex-grow space-y-3 px-4">
+        <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <Alert isHidden={!hasError} text={errorText} />
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center py-1">
             <p className="text-left font-bold text-xl">Create New Set</p>
             <Button
               color="primary"
@@ -288,14 +288,14 @@ const Create = () => {
           </div>
           <div className="justify-center w-full py-2 flex pb-6">
             <Button
-              isIconOnly
               color="primary"
               variant="flat"
               size="lg"
-              className="font-semibold w-full h-14"
+              className="font-semibold w-full h-14 text-base"
               onClick={() => handleCardAdd()}
             >
-              <FaPlus className="w-4 h-4" /> Add Card
+              <FaPlus className="w-5 h-5" />
+              Add Card
             </Button>
           </div>
         </div>

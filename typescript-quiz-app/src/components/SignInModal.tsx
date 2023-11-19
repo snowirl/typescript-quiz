@@ -54,7 +54,7 @@ const SignInModal = () => {
                     type="email"
                     label="Email"
                     labelPlacement="inside"
-                    variant="faded"
+                    variant="flat"
                     size="sm"
                     ref={emailRef}
                   />
@@ -62,7 +62,7 @@ const SignInModal = () => {
                     type="password"
                     label="Password"
                     labelPlacement="inside"
-                    variant="faded"
+                    variant="flat"
                     size="sm"
                     ref={passRef}
                   />

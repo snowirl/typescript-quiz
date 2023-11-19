@@ -7,6 +7,7 @@ import {
   Button,
   useDisclosure,
   Link,
+  Input,
 } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
 import { useRef, useState, useEffect } from "react";
@@ -117,39 +118,34 @@ const SignUpModal = () => {
                   )
                 ) : null}
 
-                <input
+                <Input
                   type="text"
-                  placeholder="Username"
-                  className="description"
+                  label="Username"
+                  labelPlacement="inside"
+                  size="sm"
+                  variant="flat"
                   ref={usernameRef}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setUserName(e.target.value)
                   }
                 />
-                <input
+
+                <Input
                   type="email"
+                  label="Email"
+                  labelPlacement="inside"
+                  size="sm"
+                  variant="flat"
                   ref={emailRef}
-                  placeholder="Email"
-                  className="description"
                 />
-                <input
+                <Input
                   type="password"
+                  label="Password"
+                  labelPlacement="inside"
+                  size="sm"
+                  variant="flat"
                   ref={passRef}
-                  placeholder="Password"
-                  className="description"
                 />
-                <input
-                  type="password"
-                  // ref={passRef2}
-                  placeholder="Confirm Password"
-                  className="description"
-                />
-                {/* <div className="flex justify-between text-xs">
-                  <Checkbox>Remember me</Checkbox>
-                  <Link href="#" underline="hover">
-                    Forgot password?
-                  </Link>
-                </div> */}
               </ModalBody>
               <ModalFooter className="py-4">
                 <div className="flex-grow space-y-4">

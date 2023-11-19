@@ -126,8 +126,8 @@ const CreateCard = (props: CreateCardProps) => {
           </div>
         </CardHeader>
         <CardBody className="pt-1">
-          <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0">
-            <div className="flex-1 flex-grow h-full">
+          <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0 mx-12">
+            <div className="flex-1 flex-grow h-full space-y-1">
               <TextareaAutosize
                 className="textarea"
                 value={props.flashcard.front}
@@ -166,7 +166,7 @@ const CreateCard = (props: CreateCardProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex-1 flex-grow h-full">
+            <div className="flex-1 flex-grow h-full space-y-1">
               <TextareaAutosize
                 className="textarea"
                 value={props.flashcard.back}
@@ -178,7 +178,7 @@ const CreateCard = (props: CreateCardProps) => {
                 <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
                   Definition
                 </p>
-                <div className="flex justify-between pt-1">
+                <div className="flex justify-between pt-2">
                   <Button
                     isIconOnly
                     size="sm"

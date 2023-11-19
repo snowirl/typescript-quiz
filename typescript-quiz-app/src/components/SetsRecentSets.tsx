@@ -100,7 +100,7 @@ const SetsRecentSets = () => {
               : null}
           </div>
           <div className="flex-grow">
-            {isLoading ? null : (
+            {isLoading || Math.ceil(deckCount / displayPerPage) < 2 ? null : (
               <div className="flex justify-center py-4">
                 <Pagination
                   size="lg"

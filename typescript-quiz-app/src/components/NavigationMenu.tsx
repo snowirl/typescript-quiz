@@ -45,7 +45,7 @@ const NavigationMenu = () => {
       <div className="flex justify-between px-4 py-3 mx-auto max-w-[1200px]">
         <div className="flex md:hidden relative">
           <Sidebar />
-          <div className="flex items-center relative md:hidden">
+          {/* <div className="flex items-center relative md:hidden">
             <form onSubmit={handleSubmit}>
               <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
               <input
@@ -56,7 +56,7 @@ const NavigationMenu = () => {
               />
               <input type="submit" className="hidden" />
             </form>
-          </div>
+          </div> */}
         </div>
 
         <div className="space-x-4 items-center hidden md:flex">

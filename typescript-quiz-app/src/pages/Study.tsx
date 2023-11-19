@@ -222,7 +222,8 @@ const Study = () => {
       const docRef = await getDoc(q);
       setStarredList(docRef.data()?.starred);
       setIsFavorited(docRef.data()?.favorited);
-      handleSaveData(true); // save data on initialize for activity
+      setShouldSaveData(true);
+      // handleSaveData(true); // save data on initialize for activity
     } catch (e) {
       console.log("error occurred: " + e);
     }
@@ -266,14 +267,13 @@ const Study = () => {
         doc(db, "users", userID, "activity", pageID),
         {
           docId: pageID,
-          favorited:
-            (parsedActivityData && parsedActivityData.isFavorited) ||
-            isFavoritedRef.current ||
-            false,
-          starred:
-            (parsedActivityData && parsedActivityData.starredList) ||
-            starredListRef.current ||
-            [],
+          favorited: activityData
+            ? parsedActivityData.isFavorited
+            : isFavoritedRef.current,
+
+          starred: activityData
+            ? parsedActivityData.starredList
+            : starredListRef.current,
           timestamp: serverTimestamp(),
         },
         { merge: true }
