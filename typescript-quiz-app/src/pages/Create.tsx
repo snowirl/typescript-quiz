@@ -67,6 +67,8 @@ const Create = () => {
   const handleCreateSet = async () => {
     if (user === null) {
       console.log("No user signed in...");
+      setHasError(true);
+      setErrorText("No user signed in.");
       return;
     }
 
@@ -229,14 +231,14 @@ const Create = () => {
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <Alert isHidden={!hasError} text={errorText} />
           <div className="flex justify-between items-center py-1">
-            <p className="text-left font-bold text-xl">Create New Set</p>
+            <p className="text-left font-bold text-xl">Create New Set 🔥</p>
             <Button
               color="primary"
               className="font-bold  text-sm h-11"
               size="md"
               onClick={() => handleCreateSet()}
             >
-              Create Set
+              Create Set ✨
             </Button>
           </div>
 

@@ -197,8 +197,7 @@ const CreateCard = (props: CreateCardProps) => {
                     onChange={(e) => handleFileChange(e, "back")}
                   />
                   <Image
-                    className=""
-                    width={150}
+                    className="max-w-[250px]"
                     alt="backImage"
                     src={props.flashcard.backImage}
                   />

@@ -39,17 +39,21 @@ const StudyInfo = (props: StudyInfoProps) => {
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="Static Actions"
-                className="text-black dark:text-white"
+                className="text-black dark:text-white space-y-0"
               >
-                <DropdownItem key="new">New file</DropdownItem>
-                <DropdownItem key="copy">Copy link</DropdownItem>
-                <DropdownItem key="edit">Edit file</DropdownItem>
+                <DropdownItem key="edit">Edit</DropdownItem>
+                <DropdownItem key="folder">Add to folder</DropdownItem>
+                <DropdownItem key="copy">Create a copy</DropdownItem>
+                <DropdownItem key="share">Share</DropdownItem>
+                <DropdownItem color="warning" key="report" variant="flat">
+                  Report
+                </DropdownItem>
                 <DropdownItem
                   key="delete"
                   className="text-danger"
                   color="danger"
                 >
-                  Delete file
+                  Delete
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

@@ -2,7 +2,13 @@ const Home = () => {
   return (
     <>
       <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
-        <p className="font-bold text-4xl text-center py-4 bg-gradient-to-b from-teal-400 to-teal-700 drop-shadow-lg  bg-clip-text text-transparent"></p>
+        <div className="space-y-5">
+          {/* <p className="text-5xl font-bold">No more winging it.</p>
+
+          <Button className="font-bold" size="lg" color="primary">
+            Sign up today
+          </Button> */}
+        </div>
       </div>
     </>
   );

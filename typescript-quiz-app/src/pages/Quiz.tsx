@@ -417,9 +417,9 @@ const Quiz = () => {
           <div className="flex justify-center relative py-2">
             <div className="flex-grow flex justify-center items-center">
               <p className="text-center text-base font-semibold">Round 1</p>
-              <p className="text-center text-base font-semibold">
+              {/* <p className="text-center text-base font-semibold">
                 Box index: {boxIndex}
-              </p>
+              </p> */}
             </div>
             <div className="flex-grow flex justify-end absolute right-0">
               <Popover placement="top" offset={10}>
