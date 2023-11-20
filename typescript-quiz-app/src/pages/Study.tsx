@@ -173,6 +173,31 @@ const Study = () => {
     };
   }, [shouldSaveData]);
 
+  useEffect(() => {
+    // for arrow functions
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Do something when any key is pressed
+
+      // You can perform additional logic based on the key pressed
+      if (event.key === "ArrowLeft") {
+        decrementIndex();
+      } else if (event.key === "ArrowRight") {
+        incrementIndex();
+      } else if (event.key === " ") {
+        event.preventDefault();
+        flipCard();
+      }
+    };
+
+    // Attach the event listener when the component mounts
+    document.addEventListener("keydown", handleKeyPress);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [currentDeck, index, isAnimating, isFlipped]);
+
   const initializeDeckInfo = async () => {
     setIsLoading(true);
 
@@ -311,9 +336,12 @@ const Study = () => {
   }, [index]);
 
   const incrementIndex = () => {
+    console.log(currentDeck.length - 1);
     if (index < currentDeck.length - 1) {
+      console.log("Before increment:", index);
       setIndex((prevIndex) => prevIndex + 1);
       animateCard(true);
+      console.log("After increment:", index);
     }
   };
 
@@ -422,7 +450,7 @@ const Study = () => {
   };
 
   const flipCard = () => {
-    setIsFlipped(!isFlipped);
+    setIsFlipped((prevFlipped) => !prevFlipped);
     setTimeout(() => {
       setFlipSpeed(0.35);
     }, 150);
@@ -482,7 +510,7 @@ const Study = () => {
         reverseOrder={true}
         toastOptions={{
           className:
-            "dark:bg-dark-1 dark:text-white p-2 text-sm font-semibold shadow-lg outline outline-1 outline-black/10  rounded-[4px]",
+            "dark:bg-dark-1 dark:text-white p-2 text-sm font-semibold shadow-md outline outline-1 outline-black/10  rounded-lg",
         }}
       >
         {(t) => (

@@ -65,7 +65,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         className="flex gap-3 justify-between pb-0 cursor-pointer"
         onClick={handleFooterClick}
       >
-        <p className="text-xs p-2">{props.isFront ? "Front" : "Back"}</p>
+        <p className="text-xs p-2">{props.isFront ? "Term" : "Definition"}</p>
         <Button
           isIconOnly
           size="md"
@@ -144,8 +144,8 @@ const StudyCardSide = (props: StudyCardSideProps) => {
                   props.changeInitialCardSide(event.target.value)
                 }
               >
-                <Radio value="front">Front</Radio>
-                <Radio value="back">Back</Radio>
+                <Radio value="front">Term</Radio>
+                <Radio value="back">Definition</Radio>
               </RadioGroup>
               <Divider className="my-4" />
               <RadioGroup

@@ -409,7 +409,7 @@ const Quiz = () => {
           reverseOrder={false}
           toastOptions={{
             className:
-              "dark:bg-dark-1 dark:text-white px-4 py-2 text-lg font-semibold shadow-lg border border-1 border-black/20 rounded-md",
+              "dark:bg-dark-1 dark:text-white p-2 text-sm font-semibold shadow-md outline outline-1 outline-black/10  rounded-lg",
           }}
         />
 
