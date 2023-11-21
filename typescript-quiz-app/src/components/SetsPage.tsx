@@ -25,6 +25,7 @@ const SetsPage = () => {
               selectedKey={tab}
               onSelectionChange={changeTab}
               className="font-semibold"
+              color="primary"
             >
               <Tab key="recents" title="Recents"></Tab>
               <Tab key="favorites" title="Favorites"></Tab>
