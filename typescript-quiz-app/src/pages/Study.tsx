@@ -303,11 +303,11 @@ const Study = () => {
           docId: pageID,
           favorited: activityData
             ? parsedActivityData.isFavorited
-            : isFavoritedRef.current,
+            : isFavoritedRef.current ?? false,
 
           starred: activityData
             ? parsedActivityData.starredList
-            : starredListRef.current,
+            : starredListRef.current ?? [],
           timestamp: serverTimestamp(),
         },
         { merge: true }
