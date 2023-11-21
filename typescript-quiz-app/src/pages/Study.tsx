@@ -287,6 +287,10 @@ const Study = () => {
       setIsSaving(true);
     }
 
+    if (isFavoritedRef === undefined || starredListRef === undefined) {
+      console.log("oh noes...");
+    }
+
     console.log("saving");
 
     const activityData = localStorage.getItem(`activity/${deckData?.id}`);
@@ -301,13 +305,17 @@ const Study = () => {
         doc(db, "users", userID, "activity", pageID),
         {
           docId: pageID,
-          favorited: activityData
-            ? parsedActivityData.isFavorited
-            : isFavoritedRef.current ?? false,
+          favorited: parsedActivityData
+            ? parsedActivityData.isFavorited !== undefined
+              ? parsedActivityData.isFavorited
+              : isFavoritedRef.current
+            : isFavoritedRef.current,
 
-          starred: activityData
-            ? parsedActivityData.starredList
-            : starredListRef.current ?? [],
+          starred: parsedActivityData
+            ? parsedActivityData.starredList !== undefined
+              ? parsedActivityData.starredList
+              : starredListRef.current
+            : starredListRef.current,
           timestamp: serverTimestamp(),
         },
         { merge: true }
