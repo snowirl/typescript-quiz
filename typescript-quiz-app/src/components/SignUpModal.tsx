@@ -6,8 +6,8 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Link,
   Input,
+  Checkbox,
 } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
 import { useRef, useState, useEffect } from "react";
@@ -88,6 +88,7 @@ const SignUpModal = () => {
       setDidSearch(false);
     }
   };
+
   return (
     <>
       <Button
@@ -99,7 +100,7 @@ const SignUpModal = () => {
         Sign up
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
-        <ModalContent className="w-[400px] p-2 text-black dark:text-white rounded-md">
+        <ModalContent className="w-[800px] p-2 text-black dark:text-white rounded-md">
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 dark">
@@ -146,15 +147,33 @@ const SignUpModal = () => {
                   variant="flat"
                   ref={passRef}
                 />
+                <div className="flex items-center text-gray-500 dark:text-gray-300">
+                  <div className="flex-1 border-t border-gray-300"></div>
+                  <div className="mx-4">or</div>
+                  <div className="flex-1 border-t border-gray-300"></div>
+                </div>
+                <Button className="font-semibold" variant="bordered">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                    alt="Google G logo"
+                  />
+                  Sign up with Google
+                </Button>
+                <Checkbox className="text-semibold">
+                  <p className="text-xs">
+                    By signing up, you are creating a Studucky account, and you
+                    agree to Studucky's Terms of Use and Privacy Policy.
+                  </p>
+                </Checkbox>
               </ModalBody>
-              <ModalFooter className="py-4">
+              <ModalFooter className="py-2">
                 <div className="flex-grow space-y-4">
                   <div>
                     <Button
                       color="primary"
                       variant="solid"
                       onPress={() => handleModalSubmit()}
-                      className="w-full font-semibold"
+                      className="w-full font-bold"
                       radius="md"
                     >
                       Create account
@@ -168,7 +187,7 @@ const SignUpModal = () => {
                     </div>
                   ) : null}
                   <div className="justify-center text-center items-center">
-                    <Link href="#">Have an account?</Link>
+                    <button className="font-semibold">Have an account?</button>
                   </div>
                 </div>
               </ModalFooter>

@@ -113,7 +113,7 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-dark-2 flex justify-center">
-      <div className="max-w-[800px] w-[800px] flex flex-col items-center justify-start py-6">
+      <div className="max-w-[800px] w-[800px] flex flex-col items-center justify-start py-6 mx-4">
         <div className="w-full text-left">
           {/* <p className="text-black dark:text-white font-bold text-xl">
             Showing results for "{location.pathname}"

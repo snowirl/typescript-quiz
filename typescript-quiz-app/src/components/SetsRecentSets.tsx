@@ -22,7 +22,7 @@ const SetsRecentSets = () => {
 
   const displayPerPage = 3;
   const { user } = useUserContext();
-  const userID = auth.currentUser?.uid ?? "Error";
+  const userID = auth.currentUser?.displayName ?? "Error";
 
   const location = useLocation();
 

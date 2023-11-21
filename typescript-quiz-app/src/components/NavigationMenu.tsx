@@ -45,18 +45,6 @@ const NavigationMenu = () => {
       <div className="flex justify-between px-4 py-3 mx-auto max-w-[1200px]">
         <div className="flex md:hidden relative">
           <Sidebar />
-          {/* <div className="flex items-center relative md:hidden">
-            <form onSubmit={handleSubmit}>
-              <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
-              <input
-                placeholder="Search sets, users"
-                className="description w-[200px] rounded-full pl-12"
-                type="text"
-                onChange={handleInputChange}
-              />
-              <input type="submit" className="hidden" />
-            </form>
-          </div> */}
         </div>
 
         <div className="space-x-4 items-center hidden md:flex">
@@ -72,7 +60,7 @@ const NavigationMenu = () => {
           <div className="space-x-2">
             <Button
               color={`${
-                location.pathname.includes("sets") ? "primary" : "default"
+                location.pathname.includes("sets/") ? "primary" : "default"
               }`}
               onClick={() => navigate("/sets/recents")}
               className="font-semibold"
@@ -84,7 +72,7 @@ const NavigationMenu = () => {
             <Button
               color={"primary"}
               variant={`${
-                location.pathname.includes("create/") ? "solid" : "flat"
+                location.pathname.includes("create/") ? "flat" : "flat"
               }`}
               onPress={() => navigate("/create/new")}
               className="font-semibold"

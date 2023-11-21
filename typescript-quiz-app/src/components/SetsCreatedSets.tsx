@@ -20,7 +20,7 @@ const SetsCreatedSets = () => {
   const [deckList, setDeckList] = useState<DocumentData | null>(null);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const displayPerPage = 3;
-  const userID = auth.currentUser?.uid ?? "Error";
+  const userID = auth.currentUser?.displayName ?? "Error";
   const location = useLocation();
   const { user } = useUserContext();
 

@@ -21,7 +21,7 @@ const SetsFolders = () => {
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [lastFolder, setLastFolder] = useState<DocumentData | null>(null);
-  const userID = auth.currentUser?.uid ?? "Error";
+  const userID = auth.currentUser?.displayName ?? "Error";
   const { user } = useUserContext();
 
   useEffect(() => {

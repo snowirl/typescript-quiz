@@ -15,7 +15,7 @@ import {
 import { FaStar, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import { Flashcard } from "../assets/globalTypes";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface StudyCardSideProps {
   isFlipped: boolean;
@@ -34,6 +34,11 @@ interface StudyCardSideProps {
 const StudyCardSide = (props: StudyCardSideProps) => {
   const [speaking, setSpeaking] = useState(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    speechSynthesis.cancel();
+    setSpeaking(false);
+  }, [props.isFlipped]);
 
   const handleFooterClick = (event: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to child elements
@@ -56,6 +61,9 @@ const StudyCardSide = (props: StudyCardSideProps) => {
       utterance.onend = () => {
         setSpeaking(false);
       };
+    } else {
+      speechSynthesis.cancel();
+      setSpeaking(false);
     }
   };
 
@@ -114,7 +122,6 @@ const StudyCardSide = (props: StudyCardSideProps) => {
           variant="light"
           className="icon-btn"
           onClick={() => handleSpeak()}
-          disabled={speaking}
         >
           {speaking ? (
             <FaVolumeUp className="w-5 h-5" />

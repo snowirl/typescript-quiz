@@ -52,9 +52,12 @@ const QuizAnswers = (props: QuizAnswersProps) => {
       <div className="w-full space-y-2">
         <div className="w-full flex-col flex space-y-2">
           <div className="flex w-full">
-            <ButtonGroup className="flex flex-grow">
+            <ButtonGroup
+              className="w-full flex flex-grow items-stretch mx-2"
+              fullWidth={true}
+            >
               <Button
-                className=" py-4 h-full grow-1 w-full relative font-semibold"
+                className="py-4 h-full w-full font-semibold flex flex-col items-center justify-center"
                 color={`${
                   0 === props.correctIndex && props.showCorrect
                     ? "success"
@@ -64,12 +67,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                     ? "danger"
                     : "default"
                 }`}
-                variant={`${
-                  (0 === props.correctIndex || 0 == selectedIndex) &&
-                  props.showCorrect
-                    ? "ghost"
-                    : "ghost"
-                }`}
+                variant="ghost"
                 onClick={() => selectAnswer(0)}
               >
                 <p className="whitespace-normal text-base px-8">
@@ -101,7 +99,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                 </div>
               </Button>
               <Button
-                className="py-4 h-full relative grow-1 w-full font-semibold"
+                className="py-4 h-full w-full font-semibold flex flex-col items-center justify-center"
                 color={`${
                   1 === props.correctIndex && props.showCorrect
                     ? "success"
@@ -111,12 +109,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
                     ? "danger"
                     : "default"
                 }`}
-                variant={`${
-                  (1 === props.correctIndex || 1 == selectedIndex) &&
-                  props.showCorrect
-                    ? "ghost"
-                    : "ghost"
-                }`}
+                variant="ghost"
                 onClick={() => selectAnswer(1)}
               >
                 <p className="whitespace-normal text-base px-8">

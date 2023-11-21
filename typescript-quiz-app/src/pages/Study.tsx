@@ -70,7 +70,7 @@ const Study = () => {
 
   let { id } = useParams();
   const pageID: string = id ?? "";
-  let userID: string = auth.currentUser?.uid ?? "Error";
+  let userID: string = auth.currentUser?.displayName ?? "Error";
   const { user } = useUserContext();
   const navigate = useNavigate();
   const { isOpen, onOpen, onOpenChange } = useDisclosure(); // for locked modal
@@ -88,7 +88,7 @@ const Study = () => {
       return;
     }
 
-    userID = auth.currentUser?.uid ?? "Error"; // make sure isnt error, also [user] so it isnt null
+    userID = auth.currentUser?.displayName ?? "Error"; // make sure isnt error, also [user] so it isnt null
 
     const intervalId = setInterval(() => {
       // Use the values from the refs, which are always up-to-date

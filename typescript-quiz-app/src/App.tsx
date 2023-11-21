@@ -12,6 +12,7 @@ import Quiz from "./pages/Quiz";
 import Game from "./pages/Game";
 import Test from "./pages/Test";
 import Search from "./pages/Search";
+import Legal from "./pages/Legal";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/search/:query" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

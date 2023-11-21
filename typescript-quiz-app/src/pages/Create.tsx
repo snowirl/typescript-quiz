@@ -31,21 +31,46 @@ const Create = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
-  const [flashcardList, setFlashcardList] = useState([flashcard]);
+  const [flashcardList, setFlashcardList] = useState<Flashcard[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [errorText, setErrorText] = useState(
     "An error occurred. Please try again."
   );
+  const [scrollTimeoutId, setScrollTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   useEffect(() => {
     if (id !== "new" && user !== null) {
       initializeDeck();
+    } else {
+    }
+
+    if (flashcardList.length === 0) {
+      handleCardAdd();
     }
   }, [user]);
 
+  useEffect(() => {
+    return () => {
+      // Clear the timeout when the component unmounts
+      if (scrollTimeoutId) {
+        clearTimeout(scrollTimeoutId);
+      }
+    };
+  }, [scrollTimeoutId]);
+
   const handleCardAdd = () => {
     setFlashcardList([...flashcardList, flashcard]);
+
+    if (flashcardList.length > 0) {
+      const timeoutId: NodeJS.Timeout = setTimeout(() => {
+        handleScrollToBottom();
+      }, 0);
+
+      setScrollTimeoutId(timeoutId);
+    }
   };
 
   const handleCardDelete = (index: number) => {
@@ -69,6 +94,19 @@ const Create = () => {
       console.log("No user signed in...");
       setHasError(true);
       setErrorText("No user signed in.");
+      return;
+    }
+
+    if (title.trim() === "") {
+      // String is empty or contains only whitespace
+      setHasError(true);
+      setErrorText("Title cannot be empty.");
+      return;
+    }
+
+    if (flashcardList.length <= 4) {
+      setHasError(true);
+      setErrorText("You must have at least 5 cards to make a set.");
       return;
     }
 
@@ -225,6 +263,14 @@ const Create = () => {
     setFlashcardList(list);
   };
 
+  const handleScrollToBottom = () => {
+    // Scroll to the bottom of the page
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Optional: Adds smooth scrolling animation
+    });
+  };
+
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
@@ -254,6 +300,7 @@ const Create = () => {
               setTitle(e.target.value)
             }
             value={title}
+            maxLength={75}
           />
 
           <div className="flex justify-start">
@@ -273,6 +320,7 @@ const Create = () => {
             className="description"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
+            maxLength={280}
           />
 
           <div className="space-y-4">
@@ -289,16 +337,18 @@ const Create = () => {
             ))}
           </div>
           <div className="justify-center w-full py-2 flex pb-6">
-            <Button
-              color="primary"
-              variant="flat"
-              size="lg"
-              className="font-semibold w-full h-14 text-base"
-              onClick={() => handleCardAdd()}
-            >
-              <FaPlus className="w-5 h-5" />
-              Add Card
-            </Button>
+            {flashcardList.length <= 249 ? (
+              <Button
+                color="primary"
+                variant="flat"
+                size="lg"
+                className="font-semibold w-full h-14 text-base"
+                onClick={() => handleCardAdd()}
+              >
+                <FaPlus className="w-5 h-5" />
+                Add Card
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>

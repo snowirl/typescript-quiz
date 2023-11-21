@@ -1,5 +1,9 @@
 import { Card, CardHeader, CardBody } from "@nextui-org/react";
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import {
+  IoEllipsisHorizontalSharp,
+  IoShareOutline,
+  IoWarningOutline,
+} from "react-icons/io5";
 import {
   Dropdown,
   DropdownTrigger,
@@ -8,6 +12,8 @@ import {
   Button,
   Avatar,
 } from "@nextui-org/react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaFolderPlus, FaRegCopy } from "react-icons/fa6";
 
 interface StudyInfoProps {
   username: string;
@@ -41,17 +47,31 @@ const StudyInfo = (props: StudyInfoProps) => {
                 aria-label="Static Actions"
                 className="text-black dark:text-white space-y-0"
               >
-                <DropdownItem key="edit">Edit</DropdownItem>
-                <DropdownItem key="folder">Add to folder</DropdownItem>
-                <DropdownItem key="copy">Create a copy</DropdownItem>
-                <DropdownItem key="share">Share</DropdownItem>
-                <DropdownItem color="warning" key="report" variant="flat">
+                <DropdownItem key="edit" startContent={<FaEdit />}>
+                  Edit
+                </DropdownItem>
+                <DropdownItem key="folder" startContent={<FaFolderPlus />}>
+                  Add to folder
+                </DropdownItem>
+                <DropdownItem key="copy" startContent={<FaRegCopy />}>
+                  Create a copy
+                </DropdownItem>
+                <DropdownItem key="share" startContent={<IoShareOutline />}>
+                  Share
+                </DropdownItem>
+                <DropdownItem
+                  color="warning"
+                  key="report"
+                  variant="flat"
+                  startContent={<IoWarningOutline />}
+                >
                   Report
                 </DropdownItem>
                 <DropdownItem
                   key="delete"
                   className="text-danger"
                   color="danger"
+                  startContent={<FaTrash />}
                 >
                   Delete
                 </DropdownItem>

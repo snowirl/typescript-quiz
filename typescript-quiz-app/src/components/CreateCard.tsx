@@ -92,6 +92,13 @@ const CreateCard = (props: CreateCardProps) => {
       });
   };
 
+  const handleImageDelete = () => {
+    if (fileInputBackRef.current) {
+      fileInputBackRef.current.value = "";
+      props.handleCardImageChange("", "back", props.index);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -106,23 +113,25 @@ const CreateCard = (props: CreateCardProps) => {
         <CardHeader className="px-4">
           <div className="flex justify-between flex-grow items-center">
             <p className="text-base font-semibold">{props.index + 1}</p>
-            <Tooltip
-              content="Delete"
-              showArrow
-              delay={1000}
-              className="text-black dark:text-white"
-            >
-              <Button
-                className="hover:text-rose-600"
-                variant="light"
-                size="sm"
-                radius="md"
-                isIconOnly
-                onClick={() => props.handleCardDelete(props.index)}
+            {props.index > 0 ? (
+              <Tooltip
+                content="Delete"
+                showArrow
+                delay={1000}
+                className="text-black dark:text-white"
               >
-                <FaTrash className="w-4 h-4" />
-              </Button>
-            </Tooltip>
+                <Button
+                  className="hover:text-rose-600"
+                  variant="light"
+                  size="sm"
+                  radius="md"
+                  isIconOnly
+                  onClick={() => props.handleCardDelete(props.index)}
+                >
+                  <FaTrash className="w-4 h-4" />
+                </Button>
+              </Tooltip>
+            ) : null}
           </div>
         </CardHeader>
         <CardBody className="pt-1">
@@ -134,6 +143,7 @@ const CreateCard = (props: CreateCardProps) => {
                 onChange={(e) => props.handleCardChange(e, props.index)}
                 placeholder="Enter term"
                 name="front"
+                maxLength={500}
               />
               <div className="pl-0.5">
                 <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
@@ -173,6 +183,7 @@ const CreateCard = (props: CreateCardProps) => {
                 onChange={(e) => props.handleCardChange(e, props.index)}
                 placeholder="Enter definition"
                 name="back"
+                maxLength={500}
               />
               <div className="pl-0.5">
                 <p className="text-sm text-zinc-600 dark:text-zinc-200 font-semibold">
@@ -201,6 +212,18 @@ const CreateCard = (props: CreateCardProps) => {
                     alt="backImage"
                     src={props.flashcard.backImage}
                   />
+                  {props.flashcard.backImage ? (
+                    <Button
+                      isIconOnly
+                      color="danger"
+                      variant="light"
+                      className="absolute right-4 z-10"
+                      size="sm"
+                      onClick={handleImageDelete}
+                    >
+                      <FaTrash />
+                    </Button>
+                  ) : null}
                 </div>
               </div>
             </div>
