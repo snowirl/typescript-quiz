@@ -14,19 +14,44 @@ import { useRef, useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-const SignUpModal = () => {
+interface SignUpModalProps {
+  isLogInModalOpen: boolean;
+  setIsLogInModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSignUpModalOpen: boolean;
+  setIsSignUpModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SignUpModal = (props: SignUpModalProps) => {
   const [isUserAvailable, setIsUserAvailable] = useState(false);
   let typingTimer: NodeJS.Timeout | null = null;
   const [username, setUserName] = useState("");
 
   const [didSearch, setDidSearch] = useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const usernameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passRef = useRef<HTMLInputElement | null>(null);
 
   const { registerUser, error } = useUserContext();
+
+  useEffect(() => {
+    if (props.isSignUpModalOpen) {
+      if (!isOpen) {
+        onOpen();
+      } else {
+        onClose();
+      }
+    } else {
+      onClose();
+    }
+  }, [props.isSignUpModalOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      props.setIsSignUpModalOpen(false);
+    }
+  }, [onOpenChange]);
 
   useEffect(() => {
     if (typingTimer !== null) {
@@ -89,6 +114,10 @@ const SignUpModal = () => {
     }
   };
 
+  const handleOpenLogInModal = () => {
+    props.setIsLogInModalOpen(true);
+    console.log(props.setIsLogInModalOpen);
+  };
   return (
     <>
       <Button
@@ -101,7 +130,7 @@ const SignUpModal = () => {
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
         <ModalContent className="w-[800px] p-2 text-black dark:text-white rounded-md">
-          {() => (
+          {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 dark">
                 Create an account
@@ -187,7 +216,15 @@ const SignUpModal = () => {
                     </div>
                   ) : null}
                   <div className="justify-center text-center items-center">
-                    <button className="font-semibold">Have an account?</button>
+                    <button
+                      className="font-semibold"
+                      onClick={() => {
+                        onClose();
+                        handleOpenLogInModal();
+                      }}
+                    >
+                      Have an account?
+                    </button>
                   </div>
                 </div>
               </ModalFooter>

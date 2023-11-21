@@ -41,17 +41,20 @@ const SetCard = (props: SetCardProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [deck, setDeck] = useState<DocumentData | null>(null);
   const [profilePictureURL, setProfilePictureURL] = useState("");
+  const [isPicLoading, setIsPicLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid ?? "Error";
-  const deckId = props?.deckId ?? "Error";
+  const deckId = props?.deckId ?? null;
 
   useEffect(() => {
-    initializeDeck();
+    if (deckId) {
+      initializeDeck();
+    }
   }, [deckId]);
 
   useEffect(() => {
-    if (deck == null) {
+    if (deck === null) {
       return;
     }
 
@@ -87,6 +90,9 @@ const SetCard = (props: SetCardProps) => {
   };
 
   const handleDeleteActivitySet = async () => {
+    if (deckId === null) {
+      return;
+    }
     // deletes reents set when there is an undefined error retrieving it, so most likely deleted or privated.
     const setRef = doc(db, "users", userId, "activity", deckId);
 
@@ -107,25 +113,37 @@ const SetCard = (props: SetCardProps) => {
 
     try {
       // Check if the image is a JPG
-      const jpgImageRef = ref(storage, jpgImagePath);
-      const jpgDownloadUrl = await getDownloadURL(jpgImageRef);
-      setProfilePictureURL(jpgDownloadUrl);
-    } catch (jpgError) {
-      console.log(jpgError);
+      const jpgDownloadUrl = await getDownloadURL(ref(storage, jpgImagePath));
+
+      if (jpgDownloadUrl) {
+        setProfilePictureURL(jpgDownloadUrl);
+        setIsPicLoading(false);
+      }
+    } catch (error) {
+      //   console.log("error here....");
       // If JPG fetch fails, check if the image is a PNG
       try {
-        const pngImageRef = ref(storage, pngImagePath);
-        const pngDownloadUrl = await getDownloadURL(pngImageRef);
-        setProfilePictureURL(pngDownloadUrl);
-      } catch (pngError) {
+        const pngDownloadUrl = await getDownloadURL(ref(storage, pngImagePath));
+
+        if (pngDownloadUrl) {
+          setProfilePictureURL(pngDownloadUrl);
+          setIsPicLoading(false);
+        }
+      } catch (error) {
         // Handle the case when no image is found for the given user ID
-        console.log(pngError);
+        // console.log("error here....");
+        setIsPicLoading(false);
         return null;
       }
+
+      setIsPicLoading(false);
     }
   };
 
   const deleteSet = async () => {
+    if (deckId === null) {
+      return;
+    }
     const setRef = doc(db, "users", userId, "decks", deckId);
 
     try {
@@ -159,78 +177,83 @@ const SetCard = (props: SetCardProps) => {
         duration: 0.3,
       }}
     >
-      <Card className="w-full p-1" shadow="sm" radius="lg">
-        <CardHeader className="px-2 pt-2 pb-1">
-          <div className="flex justify-between w-full">
-            <div className="flex-grow-1">
-              {profilePictureURL === "" ? (
-                <Skeleton circle className="w-9 h-9" enableAnimation />
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <Avatar src={profilePictureURL} className="" />
-                  <p className="font-semibold">{deck?.username}</p>
+      {deck ? (
+        <Card className="w-full p-1" shadow="sm" radius="lg">
+          <CardHeader className="px-2 pt-2 pb-1">
+            <div className="flex justify-between w-full">
+              <div className="flex-grow-1">
+                {isPicLoading ? (
+                  <Skeleton circle className="w-9 h-9" enableAnimation />
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <Avatar src={profilePictureURL} className="" />
+                    <p className="font-semibold">{deck?.username}</p>
+                  </div>
+                )}
+              </div>
+              {isLoading ? null : (
+                <div
+                  className={
+                    deck?.owner === auth.currentUser?.uid ? "" : "hidden"
+                  }
+                >
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    size="sm"
+                    className=" hover:text-blue-600"
+                    onClick={() => navigate(`/create/${deck?.id}`)}
+                  >
+                    <FaEdit className="w-4 h-4 " />
+                  </Button>
+
+                  <Button
+                    isIconOnly
+                    variant="light"
+                    size="sm"
+                    className="text-rose-600"
+                    onClick={() => onOpen()}
+                  >
+                    <FaTrash className="w-4 h-4 " />
+                  </Button>
                 </div>
               )}
             </div>
-            {isLoading ? null : (
-              <div
-                className={
-                  deck?.owner === auth.currentUser?.uid ? "" : "hidden"
-                }
-              >
-                <Button
-                  isIconOnly
-                  variant="light"
-                  size="sm"
-                  className=" hover:text-blue-600"
-                  onClick={() => navigate(`/create/${deck?.id}`)}
-                >
-                  <FaEdit className="w-4 h-4 " />
-                </Button>
-
-                <Button
-                  isIconOnly
-                  variant="light"
-                  size="sm"
-                  className="text-rose-600"
-                  onClick={() => onOpen()}
-                >
-                  <FaTrash className="w-4 h-4 " />
-                </Button>
-              </div>
-            )}
-          </div>
-        </CardHeader>
-        <CardBody
-          className="pt-1 pb-1 px-2 cursor-pointer"
-          onClick={() => navigate(`/study/${deck?.id}`)}
-        >
-          <div className="text-left">
-            {isLoading ? (
-              <Skeleton className="w-1/3" enableAnimation />
-            ) : (
-              <p className="font-bold text-lg">{deck?.title}</p>
-            )}
-            {isLoading ? (
-              <Skeleton className="w-full" count={2} enableAnimation />
-            ) : (
-              <p
-                className="text-sm text-zinc-600 overflow-ellipsis line-clamp-2
+          </CardHeader>
+          <CardBody
+            className="pt-1 pb-1 px-2 cursor-pointer"
+            onClick={() => navigate(`/study/${deck?.id}`)}
+          >
+            <div className="text-left">
+              {isLoading ? (
+                <Skeleton className="w-1/3" enableAnimation />
+              ) : (
+                <p className="font-bold text-lg">{deck?.title}</p>
+              )}
+              {isLoading ? (
+                <Skeleton className="w-full" count={2} enableAnimation />
+              ) : (
+                <p
+                  className="text-sm text-zinc-600 overflow-ellipsis line-clamp-2
             "
-              >
-                {deck?.description}
-              </p>
+                >
+                  {deck?.description}
+                </p>
+              )}
+            </div>
+          </CardBody>
+          <CardFooter className="pt-1 pb-2 px-2">
+            {isLoading ? null : (
+              <Chip size="sm" className="mt-1">
+                <p className="font-semibold text-xs">
+                  {deck?.cardsLength} cards
+                </p>
+              </Chip>
             )}
-          </div>
-        </CardBody>
-        <CardFooter className="pt-1 pb-2 px-2">
-          {isLoading ? null : (
-            <Chip size="sm" className="mt-1">
-              <p className="font-semibold text-xs">{deck?.cardsLength} cards</p>
-            </Chip>
-          )}
-        </CardFooter>
-      </Card>
+          </CardFooter>
+        </Card>
+      ) : null}
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           {(onClose) => (

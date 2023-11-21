@@ -66,6 +66,7 @@ const Study = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
+  const [isInitial, setIsInitial] = useState(true);
   const controls = useAnimationControls(); // for card animation
 
   let { id } = useParams();
@@ -79,7 +80,7 @@ const Study = () => {
   const starredListRef = useRef(starredList);
 
   useEffect(() => {
-    toast.dismiss();
+    toast.remove();
     initializeDeckInfo();
   }, []);
 
@@ -110,10 +111,14 @@ const Study = () => {
     };
 
     if (deckData?.id && activityData) {
-      localStorage.setItem(
-        `activity/${deckData.id}`,
-        JSON.stringify(activityData)
-      );
+      if (isInitial) {
+        setShouldSaveData(true);
+      } else {
+        localStorage.setItem(
+          `activity/${deckData.id}`,
+          JSON.stringify(activityData)
+        );
+      }
     }
   }, [isFavorited, starredList]);
 
@@ -135,7 +140,7 @@ const Study = () => {
         setIsFavorited(parsedActivityData.isFavorited);
         setStarredList(parsedActivityData.starredList);
         console.log("GOT LOCAL ACTIVITY.");
-        handleSaveData(true);
+        handleSaveData();
       }
     }
   }, [deckData]);
@@ -146,12 +151,15 @@ const Study = () => {
   }, [currentDeck]);
 
   useEffect(() => {
-    if (shouldSaveData && user) {
-      toast.dismiss();
+    if (shouldSaveData && user && !isInitial) {
       toast("Unsaved changes", { duration: Infinity });
+      console.log("ran....");
     } else {
-      // // toast.dismiss();
-      // toast.success("Savedddd!");
+    }
+
+    if (shouldSaveData && isInitial) {
+      // save on initial
+      handleSaveData();
     }
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -247,8 +255,6 @@ const Study = () => {
       const docRef = await getDoc(q);
       setStarredList(docRef.data()?.starred);
       setIsFavorited(docRef.data()?.favorited);
-      setShouldSaveData(true);
-      // handleSaveData(true); // save data on initialize for activity
     } catch (e) {
       console.log("error occurred: " + e);
     }
@@ -274,18 +280,21 @@ const Study = () => {
     setShouldSaveData(true);
   };
 
-  const handleSaveData = async (isInitial: boolean) => {
+  const handleSaveData = async () => {
     if (isSaving || user === null) {
       return;
     } else {
       setIsSaving(true);
     }
 
+    console.log("saving");
+
     const activityData = localStorage.getItem(`activity/${deckData?.id}`);
     let parsedActivityData = null;
 
     if (activityData !== null) {
       parsedActivityData = JSON.parse(activityData);
+      console.log("found local storage.");
     }
     try {
       await setDoc(
@@ -313,13 +322,15 @@ const Study = () => {
     console.log("Saved.");
 
     if (!isInitial) {
-      toast.dismiss();
+      toast.remove();
       toast.success("Saved!");
+    } else {
     }
 
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
     setIsSaving(false);
+    setIsInitial(false);
   };
 
   useEffect(() => {
@@ -395,7 +406,12 @@ const Study = () => {
 
   const shuffleDeck = (bool: boolean) => {
     if (bool) {
-      if (isStarredOnly && starredList !== null && starredList.length > 0) {
+      if (
+        isStarredOnly &&
+        starredList !== null &&
+        starredList !== undefined &&
+        starredList.length > 0
+      ) {
         setCurrentDeck(
           originalDeck.filter((flashcard) =>
             starredList?.includes(flashcard.cardId)
@@ -407,7 +423,12 @@ const Study = () => {
       }
       setIsShuffled(false);
     } else {
-      if (isStarredOnly && starredList !== null && starredList.length > 0) {
+      if (
+        isStarredOnly &&
+        starredList !== null &&
+        starredList !== undefined &&
+        starredList.length > 0
+      ) {
         setCurrentDeck(
           arrayShuffle(
             originalDeck.filter((flashcard) =>
@@ -460,7 +481,7 @@ const Study = () => {
     setShouldSaveData((prevShouldSaveData) => {
       if (prevShouldSaveData) {
         console.log("Saving data...");
-        handleSaveData(false);
+        handleSaveData();
       } else {
         console.log("nothing has changed, do not need to save.");
       }
@@ -527,7 +548,7 @@ const Study = () => {
                       size="sm"
                       className="font-semibold"
                       // onClick={() => toast.dismiss(t.id)}
-                      onClick={() => handleSaveData(false)}
+                      onClick={() => handleSaveData()}
                     >
                       Save
                     </Button>

@@ -27,7 +27,7 @@ function App() {
           <Route path="/sets/*" element={<Sets />} />
           <Route path="/create/:id" element={<Create />} />
           <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/search/:query" element={<Search />} />
+          <Route path="/search/:query?" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<NoPage />} />

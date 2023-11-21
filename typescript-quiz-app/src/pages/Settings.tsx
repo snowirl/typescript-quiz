@@ -36,7 +36,7 @@ const Settings = () => {
 
     const storage = getStorage();
 
-    const userId = auth.currentUser?.uid;
+    const userId = auth.currentUser?.displayName;
 
     const storageRef = ref(storage, `profilePictures/${userId}`);
 

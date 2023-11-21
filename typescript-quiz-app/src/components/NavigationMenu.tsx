@@ -1,7 +1,6 @@
-import { Switch, Chip } from "@nextui-org/react";
+import { Chip } from "@nextui-org/react";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
-import { useTheme } from "next-themes";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import AvatarContainer from "./AvatarContainer";
@@ -16,18 +15,11 @@ import { useState } from "react";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
-  const { theme, setTheme } = useTheme();
+  const [isLogInModalOpen, setIsLogInModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const { user } = useUserContext();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const changeTheme = () => {
-    if (theme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -95,18 +87,22 @@ const NavigationMenu = () => {
         </div>
         <div></div>
         <div className="space-x-2 flex items-center">
-          <Switch
-            aria-label="Automatic updates"
-            size="sm"
-            onClick={() => changeTheme()}
-            isSelected={theme === "dark" ? true : false}
-          />
           {user ? (
             <AvatarContainer />
           ) : (
             <div className="space-x-2">
-              <SignInModal />
-              <SignUpModal />
+              <SignInModal
+                isLogInModalOpen={isLogInModalOpen}
+                setIsLogInModalOpen={setIsLogInModalOpen}
+                isSignUpModalOpen={isSignUpModalOpen}
+                setIsSignUpModalOpen={setIsSignUpModalOpen}
+              />
+              <SignUpModal
+                isLogInModalOpen={isLogInModalOpen}
+                setIsLogInModalOpen={setIsLogInModalOpen}
+                isSignUpModalOpen={isSignUpModalOpen}
+                setIsSignUpModalOpen={setIsSignUpModalOpen}
+              />
             </div>
           )}
         </div>

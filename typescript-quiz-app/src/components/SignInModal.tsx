@@ -11,15 +11,40 @@ import {
   Link,
 } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
-const SignInModal = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+interface SignInModalProps {
+  isLogInModalOpen: boolean;
+  setIsLogInModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSignUpModalOpen: boolean;
+  setIsSignUpModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SignInModal = (props: SignInModalProps) => {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passRef = useRef<HTMLInputElement | null>(null);
 
   const { signInUser, error } = useUserContext();
+
+  useEffect(() => {
+    if (props.isLogInModalOpen) {
+      if (!isOpen) {
+        onOpen();
+      } else {
+        onClose();
+      }
+    } else {
+      onClose();
+    }
+  }, [props.isLogInModalOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      props.setIsLogInModalOpen(false);
+    }
+  }, [onOpenChange]);
 
   const handleModalSubmit = () => {
     const email = emailRef.current?.value;
@@ -28,6 +53,10 @@ const SignInModal = () => {
     if (email && password) {
       signInUser(email, password);
     }
+  };
+
+  const handleOpenSignUpModal = () => {
+    props.setIsSignUpModalOpen(true);
   };
 
   return (
@@ -43,7 +72,7 @@ const SignInModal = () => {
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
         <ModalContent className="w-[425px] p-2 text-black dark:text-white rounded-md">
-          {() => (
+          {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 dark">
                 Log in to your account
@@ -57,6 +86,7 @@ const SignInModal = () => {
                     variant="flat"
                     size="sm"
                     ref={emailRef}
+                    autoFocus
                   />
                   <Input
                     type="password"
@@ -95,9 +125,15 @@ const SignInModal = () => {
                     </div>
                   ) : null}
                   <div className="justify-center text-center items-center">
-                    <Link href="#" className="font-semibold">
+                    <button
+                      className="font-semibold"
+                      onClick={() => {
+                        onClose();
+                        handleOpenSignUpModal();
+                      }}
+                    >
                       Don't have an account?
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </ModalFooter>

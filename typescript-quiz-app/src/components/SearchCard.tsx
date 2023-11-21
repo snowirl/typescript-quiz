@@ -39,26 +39,32 @@ const SearchCard = (props: SearchCardProps) => {
 
     try {
       // Check if the image is a JPG
-      const jpgDownloadUrl = await getDownloadURL(ref(storage, jpgImagePath));
+      const jpgDownloadUrlPromise = getDownloadURL(ref(storage, jpgImagePath));
+
+      const jpgDownloadUrl = await jpgDownloadUrlPromise;
 
       if (jpgDownloadUrl) {
         setProfilePictureURL(jpgDownloadUrl);
         setIsPicLoading(false);
       }
-    } catch (error) {
-      //   console.log("error here....");
+    } catch (jpgError) {
       // If JPG fetch fails, check if the image is a PNG
       try {
-        const pngDownloadUrl = await getDownloadURL(ref(storage, pngImagePath));
+        const pngDownloadUrlPromise = getDownloadURL(
+          ref(storage, pngImagePath)
+        );
+        const pngDownloadUrl = await pngDownloadUrlPromise;
 
         if (pngDownloadUrl) {
           setProfilePictureURL(pngDownloadUrl);
           setIsPicLoading(false);
         }
-      } catch (error) {
+        console.log(pngDownloadUrl);
+      } catch (pngError) {
         // Handle the case when no image is found for the given user ID
-        // console.log("error here....");
         setIsPicLoading(false);
+        // Optionally, you can log this error if needed
+        // console.error(pngError);
         return null;
       }
 
