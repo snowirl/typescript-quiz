@@ -1,4 +1,3 @@
-import { Chip } from "@nextui-org/react";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -7,11 +6,11 @@ import AvatarContainer from "./AvatarContainer";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import "react-modern-drawer/dist/index.css";
-import logo from "../assets/logo2.png";
-import textLogo from "../assets/Studucky.png";
 import Sidebar from "./Sidebar";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import StuduckyLogo from "../assets/StuduckyIcon.svg";
+import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -34,19 +33,22 @@ const NavigationMenu = () => {
 
   return (
     <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-dark-2">
-      <div className="flex justify-between px-4 py-3 mx-auto max-w-[1200px]">
-        <div className="flex md:hidden relative">
+      <div className="flex justify-between px-4 py-1 pb-3 mx-auto max-w-[1200px]">
+        <div className="flex md:hidden relative justify-center items-center space-x-4">
           <Sidebar />
         </div>
-
-        <div className="space-x-4 items-center hidden md:flex">
+        <div className="md:hidden"> </div>
+        <div className="md:hidden">
+          <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" />
+        </div>
+        <div className="items-center hidden md:flex">
           <button className="flex items-center" onClick={() => navigate("/")}>
-            <img src={textLogo} alt="Logo" className="w-20 hidden lg:block" />
+            {/* <StuduckyLogo /> */}
 
-            <img src={logo} alt="Logo" className="w-10" />
-            <Chip className="mx-2 h-6 px-0 bg-dark-2 text-white dark:bg-white dark:text-black rounded-[4px]">
+            <img src={StuduckyLogo} alt="Logo" className="w-36" />
+            {/* <Chip className="mx-2 h-6 px-0 bg-dark-2 text-white dark:bg-white dark:text-black rounded-[4px]">
               <p className="font-semibold  text-xs">Beta</p>
-            </Chip>
+            </Chip> */}
           </button>
 
           <div className="space-x-2">
@@ -72,7 +74,7 @@ const NavigationMenu = () => {
               Create
             </Button>
           </div>
-          <div className="flex items-center relative">
+          <div className="flex items-center relative mx-4">
             <form onSubmit={handleSubmit}>
               <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
               <input
