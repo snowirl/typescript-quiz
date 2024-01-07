@@ -14,7 +14,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import "react-modern-drawer/dist/index.css";
 import Sidebar from "./Sidebar";
-import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import StuduckyLogo from "../assets/StuduckyIcon.svg";
 import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
@@ -28,7 +27,6 @@ const NavigationMenu = () => {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const { user } = useUserContext();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
