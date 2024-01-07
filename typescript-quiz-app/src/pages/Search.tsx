@@ -29,7 +29,7 @@ interface HitProps {
 
 function Hit({ hit }: HitProps) {
   return (
-    <div className="w-full flex-grow py-2">
+    <div className="w-full flex-grow my-3">
       <SearchCard
         title={hit.title}
         description={hit.description}
@@ -102,9 +102,9 @@ const Search = () => {
     return (
       <>
         <Pagination
+          variant="bordered"
           className={`${nbPages > 1 ? "block" : "hidden"}`}
-          total={nbPages - 1}
-          initialPage={1}
+          total={nbPages > 1 ? nbPages - 1 : 1}
           onChange={(e: number) => refine(e)}
         />
       </>
@@ -126,16 +126,16 @@ const Search = () => {
           <Configure filters="private:false" />
           <Tabs
             aria-label="Options"
-            variant="light"
+            variant="bordered"
+            color="default"
             // selectedKey={tab}
             // onSelectionChange={changeTab}
-            radius="lg"
-            className="font-semibold py-4 rounded-md"
+            className="font-semibold py-2 rounded-md"
           >
             <Tab key="folders" title="Study Sets"></Tab>
             <Tab key="created" title="Users"></Tab>
           </Tabs>
-          <Hits hitComponent={Hit} className="w-full py-3" />
+          <Hits hitComponent={Hit} className="w-full py-2" />
           {/* <Pagination className="text-black w-full bg-red-200 flex items-center" /> */}
           <CustomPagination />
           <HitsPerPage

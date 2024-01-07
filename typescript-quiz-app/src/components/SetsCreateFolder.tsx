@@ -45,7 +45,7 @@ const SetsCreateFolder = () => {
     } else {
       return;
     }
-    const userID: string = auth.currentUser?.uid ?? "Error";
+    const userID: string = auth.currentUser?.displayName ?? "Error";
     try {
       await addDoc(collection(db, "users", userID, "folders"), {
         folderName: folderName,
@@ -63,10 +63,10 @@ const SetsCreateFolder = () => {
     func(); // runs the on close function
   };
   return (
-    <div>
-      <Button onClick={onOpen} color="primary" className="font-semibold">
-        Create new folder
+    <div className="">
+      <Button onClick={onOpen} color="default" className="font-semibold">
         <FaFolderPlus />
+        New Folder
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
         <ModalContent className="text-black dark:text-gray-100">

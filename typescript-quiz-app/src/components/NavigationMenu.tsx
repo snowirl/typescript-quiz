@@ -3,7 +3,14 @@ import SignUpModal from "./SignUpModal";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import AvatarContainer from "./AvatarContainer";
-import { Button } from "@nextui-org/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@nextui-org/react";
+
 import { useNavigate } from "react-router-dom";
 import "react-modern-drawer/dist/index.css";
 import Sidebar from "./Sidebar";
@@ -11,6 +18,9 @@ import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import StuduckyLogo from "../assets/StuduckyIcon.svg";
 import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
+import { FaFolder } from "react-icons/fa6";
+import { HiSquare2Stack } from "react-icons/hi2";
+import { FaPlus } from "react-icons/fa";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -52,29 +62,73 @@ const NavigationMenu = () => {
           </button>
 
           <div className="space-x-2">
-            <Button
-              color={`${
-                location.pathname.includes("sets/") ? "primary" : "default"
-              }`}
+            {/* <Button
+              // color={`${
+              //   location.pathname.includes("sets/") ? "primary" : "default"
+              // }`}
               onClick={() => navigate("/sets/recents")}
               className="font-semibold"
               variant="light"
             >
-              Sets
+              Your Sets
             </Button>
 
             <Button
               color={"primary"}
               variant={`${
-                location.pathname.includes("create/") ? "flat" : "flat"
+                location.pathname.includes("create/") ? "light" : "light"
               }`}
               onPress={() => navigate("/create/new")}
               className="font-semibold"
             >
               Create
-            </Button>
+            </Button> */}
+            <div className="px-4 flex space-x-6">
+              <button
+                className="font-semibold text-sm flex items-center"
+                onClick={() => navigate("/sets/recents")}
+              >
+                Your Sets
+              </button>
+
+              <Dropdown>
+                <DropdownTrigger>
+                  {/* <button className="font-semibold text-sm flex items-center ">
+                    Create <FaAngleDown className="text-sm ml-1" />
+                  </button> */}
+                  <Button
+                    isIconOnly
+                    color="primary"
+                    className="rounded-full"
+                    variant="solid"
+                  >
+                    <FaPlus className="w-4 h-4" />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Static Actions"
+                  className="text-black/80 dark:text-white/80"
+                >
+                  <DropdownItem
+                    key="new"
+                    onClick={() => navigate("/create/new")}
+                  >
+                    <div className="flex space-x-2 items-center">
+                      <HiSquare2Stack className="w-4 h-4" />
+                      <p>Study Set</p>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem key="copy">
+                    <div className="flex space-x-2 items-center">
+                      <FaFolder className="w-4 h-4" />
+                      <p>Folder</p>
+                    </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           </div>
-          <div className="flex items-center relative mx-4">
+          <div className="flex items-center relative mx-2">
             <form onSubmit={handleSubmit}>
               <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
               <input

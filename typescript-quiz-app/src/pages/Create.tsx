@@ -342,11 +342,10 @@ const Create = () => {
                 color="primary"
                 variant="flat"
                 size="lg"
-                className="font-semibold w-full h-14 text-base"
+                className=" w-full h-14 text-base"
                 onClick={() => handleCardAdd()}
               >
-                <FaPlus className="w-5 h-5" />
-                Add Card
+                <FaPlus />
               </Button>
             ) : null}
           </div>

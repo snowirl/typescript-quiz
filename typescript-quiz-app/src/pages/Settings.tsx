@@ -1,13 +1,13 @@
-import { Card, CardBody, Avatar, Badge } from "@nextui-org/react";
-import { FaEdit } from "react-icons/fa";
+import { Card, CardBody, Avatar, Button, Checkbox } from "@nextui-org/react";
+import { FaEdit, FaLock } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
-import ProfileStats from "../components/ProfileStats";
-import { useRef, ChangeEvent } from "react";
+import { useRef, ChangeEvent, useState } from "react";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [tab, setTab] = useState("preferences");
 
   const handleButtonClick = () => {
     // Trigger the file input when the button is clicked
@@ -113,29 +113,107 @@ const Settings = () => {
                 {/* <p className="font-semibold text-sm">
                   {auth.currentUser?.displayName}
                 </p> */}
-                <div className="flex flex-col justify-center items-center space-y-3 w-full">
-                  <p className="font-bold text-xl">Thundersalad</p>
-                  <Badge
-                    content={<FaEdit />}
-                    color="primary"
-                    className="w-8 h-8 bottom-3 cursor-pointer"
-                    placement="bottom-right"
-                    onClick={handleButtonClick}
-                  >
-                    <Avatar
-                      src={auth.currentUser?.photoURL ?? ""}
-                      className="w-20 h-20 text-large"
-                    />
-                  </Badge>
-                  <input
-                    type="file"
-                    accept=".jpg, .jpeg, .png"
-                    style={{ display: "none" }}
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                  />
-                  <ProfileStats />
+                <div className="">
+                  <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[140px] pr-2 border-black/10 dark:border-white/10">
+                    <Button
+                      variant="light"
+                      color={tab === "account" ? "primary" : "default"}
+                      className="w-full font-semibold justify-start"
+                      onClick={() => setTab("account")}
+                    >
+                      Account
+                    </Button>
+                    <Button
+                      variant="light"
+                      color={tab === "preferences" ? "primary" : "default"}
+                      className="w-full font-semibold justify-start"
+                      onClick={() => setTab("preferences")}
+                    >
+                      Preferences
+                    </Button>
+                    <Button
+                      variant="light"
+                      color={tab === "privacy" ? "primary" : "default"}
+                      className="w-full font-semibold justify-start"
+                      onClick={() => setTab("privacy")}
+                    >
+                      Privacy
+                    </Button>
+                    <Button
+                      variant="light"
+                      color={tab === "password" ? "primary" : "default"}
+                      className="w-full font-semibold justify-start"
+                      onClick={() => setTab("password")}
+                    >
+                      Password
+                    </Button>
+                  </div>
                 </div>
+                {tab === "account" ? (
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                    <p className="text-sm">
+                      Username: {auth.currentUser?.displayName}
+                    </p>
+                    <div className="flex space-x-2 items-center">
+                      <p className="text-sm">
+                        Email: {auth.currentUser?.email}
+                      </p>
+                      <Button variant="flat" size="sm">
+                        <FaEdit /> Change Email
+                      </Button>
+                    </div>
+
+                    <div className="items-center flex space-x-2">
+                      <Avatar
+                        src={auth.currentUser?.photoURL ?? ""}
+                        size="lg"
+                      />
+                      <Button
+                        variant="flat"
+                        size="sm"
+                        onClick={handleButtonClick}
+                      >
+                        <FaEdit /> Change Profile Picture
+                      </Button>
+                    </div>
+
+                    <input
+                      type="file"
+                      accept=".jpg, .jpeg, .png"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                    />
+                    {/* <ProfileStats /> */}
+                    <div className="space-y-2">
+                      <Checkbox defaultSelected>
+                        <p className="text-sm flex items-center">
+                          <FaLock className="mx-1" />
+                          Private Account
+                        </p>
+                        <p className="text-xs text-black/50 dark:text-white/50">
+                          Toggling on will hide your account and sets from
+                          search
+                        </p>
+                      </Checkbox>
+                    </div>
+                  </div>
+                ) : null}
+                {tab === "preferences" ? (
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                    <p>Preferences</p>
+                  </div>
+                ) : null}
+                {tab === "privacy" ? (
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                    <p>Privacy</p>
+                  </div>
+                ) : null}
+                {tab === "password" ? (
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                    <p>Password</p>
+                  </div>
+                ) : null}
               </div>
             </CardBody>
           </Card>
