@@ -13,6 +13,7 @@ import { useUserContext } from "../context/userContext";
 import { useRef, useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 interface SignUpModalProps {
   isLogInModalOpen: boolean;
@@ -28,6 +29,8 @@ const SignUpModal = (props: SignUpModalProps) => {
 
   const [didSearch, setDidSearch] = useState(false);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const usernameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -149,6 +152,7 @@ const SignUpModal = (props: SignUpModalProps) => {
                 ) : null}
 
                 <Input
+                  isRequired
                   type="text"
                   label="Username"
                   labelPlacement="inside"
@@ -161,6 +165,7 @@ const SignUpModal = (props: SignUpModalProps) => {
                 />
 
                 <Input
+                  isRequired
                   type="email"
                   label="Email"
                   labelPlacement="inside"
@@ -169,12 +174,26 @@ const SignUpModal = (props: SignUpModalProps) => {
                   ref={emailRef}
                 />
                 <Input
-                  type="password"
+                  isRequired
+                  type={isVisible ? "text" : "password"}
                   label="Password"
                   labelPlacement="inside"
                   size="sm"
                   variant="flat"
                   ref={passRef}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <FaEye className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
                 />
                 <div className="flex items-center text-gray-500 dark:text-gray-300">
                   <div className="flex-1 border-t border-gray-300"></div>

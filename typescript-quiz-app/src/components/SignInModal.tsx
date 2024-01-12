@@ -11,7 +11,8 @@ import {
   Link,
 } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 interface SignInModalProps {
   isLogInModalOpen: boolean;
@@ -27,6 +28,9 @@ const SignInModal = (props: SignInModalProps) => {
   const passRef = useRef<HTMLInputElement | null>(null);
 
   const { signInUser, error } = useUserContext();
+
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   useEffect(() => {
     if (props.isLogInModalOpen) {
@@ -78,23 +82,37 @@ const SignInModal = (props: SignInModalProps) => {
                 Log in to your account
               </ModalHeader>
               <ModalBody className="pt-2 pb-2 space-y-2">
-                <form className="space-y-2">
+                <form className="space-y-2" id="signup" action="#">
                   <Input
+                    isRequired
                     type="email"
                     label="Email"
                     labelPlacement="inside"
                     variant="flat"
                     size="sm"
                     ref={emailRef}
-                    autoFocus
                   />
                   <Input
-                    type="password"
+                    isRequired
+                    type={isVisible ? "text" : "password"}
                     label="Password"
                     labelPlacement="inside"
                     variant="flat"
                     size="sm"
                     ref={passRef}
+                    endContent={
+                      <button
+                        className="focus:outline-none"
+                        type="button"
+                        onClick={toggleVisibility}
+                      >
+                        {isVisible ? (
+                          <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                          <FaEye className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                      </button>
+                    }
                   />
                 </form>
                 <div className="flex justify-between text-xs">

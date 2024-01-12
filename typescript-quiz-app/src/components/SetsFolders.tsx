@@ -92,7 +92,7 @@ const SetsFolders = () => {
           <div className="mx-4 flex justify-start">
             <SetsCreateFolder />
           </div>
-          <div className="mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 items-center">
+          <div className="mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start">
             {folderList !== null
               ? folderList
                   // .slice(recentsIndex * 5, recentsIndex * 5 + 5)

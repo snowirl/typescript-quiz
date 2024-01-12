@@ -7,7 +7,7 @@ import { useRef, ChangeEvent, useState } from "react";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [tab, setTab] = useState("preferences");
+  const [tab, setTab] = useState("account");
 
   const handleButtonClick = () => {
     // Trigger the file input when the button is clicked
