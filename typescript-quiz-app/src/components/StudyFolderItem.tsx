@@ -1,14 +1,5 @@
 import { FaFolder } from "react-icons/fa6";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  colors,
-} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 interface StudyFolderItemProps {
   folderName: string;
