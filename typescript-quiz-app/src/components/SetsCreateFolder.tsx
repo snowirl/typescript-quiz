@@ -13,7 +13,11 @@ import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { FaFolderPlus } from "react-icons/fa6";
 
-const SetsCreateFolder = () => {
+interface SetsCreateFolderProps {
+  refreshFolders: () => void;
+}
+
+const SetsCreateFolder = (props: SetsCreateFolderProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [colorSelected, setColorSelected] = useState("zinc");
   const [folderName, setFolderName] = useState("");
@@ -61,6 +65,7 @@ const SetsCreateFolder = () => {
     setColorSelected("zinc");
     setFolderName("");
     func(); // runs the on close function
+    props.refreshFolders();
   };
   return (
     <div className="">

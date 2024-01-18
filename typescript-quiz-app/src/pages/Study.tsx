@@ -309,13 +309,13 @@ const Study = () => {
             ? parsedActivityData.isFavorited !== undefined
               ? parsedActivityData.isFavorited
               : isFavoritedRef.current
-            : isFavoritedRef.current,
+            : isFavoritedRef.current ?? null,
 
           starred: parsedActivityData
             ? parsedActivityData.starredList !== undefined
               ? parsedActivityData.starredList
               : starredListRef.current
-            : starredListRef.current,
+            : starredListRef.current ?? null,
           timestamp: serverTimestamp(),
         },
         { merge: true }
@@ -657,6 +657,7 @@ const Study = () => {
               username={deckData?.username}
               description={deckData?.description}
               profilePictureURL={profilePictureURL}
+              deckId={pageID}
             />
 
             <p className="text-left font-semibold pt-4">

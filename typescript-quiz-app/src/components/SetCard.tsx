@@ -34,7 +34,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { motion } from "framer-motion";
 
 interface SetCardProps {
-  deckId?: string;
+  deckId?: string | null;
 }
 
 const SetCard = (props: SetCardProps) => {

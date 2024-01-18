@@ -13,14 +13,18 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useUserContext } from "../context/userContext";
+import SetsFolderContents from "./SetsFolderContents";
+import { Button } from "@nextui-org/react";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { Toaster } from "react-hot-toast";
 
 const SetsFolders = () => {
-  // const [folderCount, setFolderCount] = useState<number>(0);
   const [_isLoading, setIsLoading] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [lastFolder, setLastFolder] = useState<DocumentData | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<number>(0);
   const userID = auth.currentUser?.displayName ?? "Error";
   const { user } = useUserContext();
 
@@ -31,6 +35,11 @@ const SetsFolders = () => {
     handleFindFolders(0);
     // getDeckCount();
   }, [user]);
+
+  const refreshFolders = async () => {
+    setIsLoading(true);
+    handleFindFolders(0);
+  };
 
   const handleFindFolders = async (whichWay: number) => {
     // -1 go back one, 0 initialize, 1 next page
@@ -87,24 +96,57 @@ const SetsFolders = () => {
 
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 min-h-screen dark:bg-dark-2 pt-6">
+      <Toaster />
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <div className="mx-4 flex justify-start">
-            <SetsCreateFolder />
+            {selectedFolder === 0 ? (
+              <SetsCreateFolder refreshFolders={refreshFolders} />
+            ) : (
+              <Button
+                className="font-semibold"
+                onClick={() => setSelectedFolder(0)}
+              >
+                <IoIosArrowRoundBack className="w-7 h-7" /> Back
+              </Button>
+            )}
           </div>
-          <div className="mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start">
-            {folderList !== null
-              ? folderList
-                  // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
-                  .map((folder: DocumentData, index: number) => (
-                    <SetsFolderItem
-                      folderName={folder.folderName}
-                      folderColor={folder.folderColor}
-                      key={index}
-                      folderID={folderIDs !== null ? folderIDs[index] : "Error"}
-                    />
-                  ))
-              : null}
+          <div>
+            <div
+              className={
+                selectedFolder === 0
+                  ? "mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start"
+                  : "hidden"
+              }
+            >
+              {folderList !== null
+                ? folderList
+                    // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
+                    .map((folder: DocumentData, index: number) => (
+                      <SetsFolderItem
+                        folderName={folder.folderName}
+                        folderColor={folder.folderColor}
+                        key={index}
+                        folderID={
+                          folderIDs !== null ? folderIDs[index] : "Error"
+                        }
+                        sets={folder.sets}
+                        setSelectedFolder={setSelectedFolder}
+                        index={index + 1}
+                        refreshFolders={refreshFolders}
+                      />
+                    ))
+                : null}
+            </div>
+            <div className={selectedFolder === 0 ? "hidden" : "block"}>
+              {folderList === null ? (
+                <div></div>
+              ) : (
+                <SetsFolderContents
+                  selectedFolderData={folderList[selectedFolder - 1]}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
