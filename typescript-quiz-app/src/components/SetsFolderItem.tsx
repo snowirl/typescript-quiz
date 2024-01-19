@@ -145,7 +145,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
                   <DropdownItem
                     key="new"
                     startContent={<FaEdit />}
-                    onClick={onOpen}
+                    onPress={onOpen}
                   >
                     Edit
                   </DropdownItem>
@@ -154,7 +154,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
                     className="text-danger"
                     color="danger"
                     startContent={<FaTrash />}
-                    onClick={() => setIsModalOpen(true)}
+                    onPress={() => setIsModalOpen(true)}
                   >
                     Delete
                   </DropdownItem>
