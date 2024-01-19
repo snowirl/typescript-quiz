@@ -70,10 +70,16 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
     setIsCreating(true);
 
     try {
-      await setDoc(doc(db, "users", userID, "folders", props.folderID), {
-        folderName: folderName,
-        folderColor: colorSelected,
-      });
+      const folderRef = doc(db, "users", userID, "folders", props.folderID);
+
+      await setDoc(
+        folderRef,
+        {
+          folderName: folderName,
+          folderColor: colorSelected,
+        },
+        { merge: true }
+      );
 
       toast.success("Folder updated!");
     } catch (e) {

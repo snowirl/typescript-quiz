@@ -2,6 +2,11 @@ import { Button } from "@nextui-org/react";
 import { FaDiscord } from "react-icons/fa";
 
 const Footer = () => {
+  const discordButtonLink = () => {
+    // Navigate to the desired path
+    window.open("https://discord.gg/yEwc9fjk37", "_blank");
+  };
+
   return (
     <footer className="bg-white dark:bg-[#18181B]">
       <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
@@ -34,7 +39,10 @@ const Footer = () => {
             </a>
           </li>
         </ul>
-        <Button className="bg-[#5865F2] text-white font-semibold">
+        <Button
+          className="bg-[#5865F2] text-white font-semibold"
+          onClick={discordButtonLink}
+        >
           <FaDiscord />
           Join Our Discord!
         </Button>
