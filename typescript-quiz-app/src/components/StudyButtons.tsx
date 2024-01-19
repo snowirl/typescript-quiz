@@ -16,14 +16,14 @@ const StudyButtons = (props: StudyButtonsProps) => {
       <div className="flex flex-grow">
         <ButtonGroup className="flex-grow">
           <Button
-            className="flex-grow h-20"
+            className="flex-grow h-[72px]"
             variant="light"
             onClick={() => props.decrementIndex()}
           >
             <BsArrowLeft className="w-10 h-10 " />
           </Button>
           <Button
-            className="flex-grow h-20"
+            className="flex-grow h-[72px]"
             variant="light"
             onClick={() => props.incrementIndex()}
           >

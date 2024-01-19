@@ -33,7 +33,7 @@ const SetsPage = () => {
 
             <Tabs
               aria-label="Options"
-              variant="bordered"
+              variant="underlined"
               selectedKey={tab}
               onSelectionChange={changeTab}
               className="font-semibold"

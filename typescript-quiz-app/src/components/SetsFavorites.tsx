@@ -13,6 +13,7 @@ import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
 import { Pagination } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
+import { Spinner } from "@nextui-org/react";
 
 const SetsFavorites = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -97,8 +98,9 @@ const SetsFavorites = () => {
       <div className="bg-gray-100 text-black dark:text-gray-100 min-h-screen dark:bg-dark-2 pt-6">
         <div className="flex justify-center flex-col  items-center">
           <div className="flex-grow space-y-4 px-4 min-h-[540px] w-full max-w-[800px]">
-            {deckList !== null
-              ? deckList
+            {!isLoading ? (
+              deckList !== null ? (
+                deckList
                   .slice(
                     pageIndex * displayPerPage,
                     (pageIndex + 1) * displayPerPage
@@ -106,7 +108,10 @@ const SetsFavorites = () => {
                   .map((deck: DocumentData, index: number) => (
                     <SetCard key={index} deckId={deck.docId} />
                   ))
-              : null}
+              ) : null
+            ) : (
+              <Spinner />
+            )}
           </div>
           <div className="flex-grow">
             {isLoading || Math.ceil(deckCount / displayPerPage) < 2 ? null : (

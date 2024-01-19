@@ -34,6 +34,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import StudyFolderItem from "./StudyFolderItem";
+import { useNavigate } from "react-router-dom";
 
 interface StudyInfoProps {
   username: string;
@@ -44,11 +45,12 @@ interface StudyInfoProps {
 
 const StudyInfo = (props: StudyInfoProps) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const userID = auth.currentUser?.displayName ?? null;
   const [_isLoading, setIsLoading] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const userID = auth.currentUser?.displayName ?? null;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -109,6 +111,10 @@ const StudyInfo = (props: StudyInfoProps) => {
     onClose();
   };
 
+  const editLink = () => {
+    navigate(`/create/${props.deckId}`);
+  };
+
   return (
     <Card radius="lg" className="p-1" shadow="md">
       <CardHeader>
@@ -134,7 +140,12 @@ const StudyInfo = (props: StudyInfoProps) => {
                 aria-label="Static Actions"
                 className="text-black dark:text-white space-y-0"
               >
-                <DropdownItem key="edit" startContent={<FaEdit />}>
+                <DropdownItem
+                  key="edit"
+                  startContent={<FaEdit />}
+                  className={userID === props.username ? "flex" : "hidden"}
+                  onPress={editLink}
+                >
                   Edit
                 </DropdownItem>
                 <DropdownItem
@@ -160,7 +171,9 @@ const StudyInfo = (props: StudyInfoProps) => {
                 </DropdownItem>
                 <DropdownItem
                   key="delete"
-                  className="text-danger"
+                  className={
+                    userID === props.username ? "flex text-danger" : "hidden"
+                  }
                   color="danger"
                   startContent={<FaTrash />}
                 >

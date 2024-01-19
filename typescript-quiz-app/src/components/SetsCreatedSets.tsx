@@ -13,6 +13,7 @@ import SetCard from "./SetCard";
 import { Pagination } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import { useUserContext } from "../context/userContext";
+import { Spinner } from "@nextui-org/react";
 
 const SetsCreatedSets = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -96,8 +97,9 @@ const SetsCreatedSets = () => {
       <div className="bg-gray-100 text-black dark:text-gray-100 min-h-screen dark:bg-dark-2 pt-6">
         <div className="flex justify-center flex-col  items-center">
           <div className="flex-grow space-y-4 px-4 h-[540px] w-full max-w-[800px]">
-            {deckList !== null
-              ? deckList
+            {!isLoading ? (
+              deckList !== null ? (
+                deckList
                   .slice(
                     pageIndex * displayPerPage,
                     (pageIndex + 1) * displayPerPage
@@ -105,7 +107,10 @@ const SetsCreatedSets = () => {
                   .map((deck: DocumentData, index: number) => (
                     <SetCard key={index} deckId={deck.id} />
                   ))
-              : null}
+              ) : null
+            ) : (
+              <Spinner />
+            )}
           </div>
           <div className="flex-grow">
             {isLoading || Math.ceil(deckCount / displayPerPage) < 2 ? null : (

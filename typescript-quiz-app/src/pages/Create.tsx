@@ -227,7 +227,7 @@ const Create = () => {
     try {
       const docRef = await getDocs(q);
 
-      if (docRef.docs[0].data().owner !== auth.currentUser?.uid) {
+      if (docRef.docs[0].data().owner !== auth.currentUser?.displayName) {
         setHasError(true);
         navigate("/create/new");
         setErrorText("Error: Cannot edit a deck you do not own.");

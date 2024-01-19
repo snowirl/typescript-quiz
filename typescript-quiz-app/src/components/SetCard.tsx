@@ -44,7 +44,7 @@ const SetCard = (props: SetCardProps) => {
   const [isPicLoading, setIsPicLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid ?? "Error";
+  const userId = auth.currentUser?.uid ?? null;
   const deckId = props?.deckId ?? null;
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const SetCard = (props: SetCardProps) => {
   };
 
   const handleDeleteActivitySet = async () => {
-    if (deckId === null) {
+    if (deckId === null || userId === null) {
       return;
     }
     // deletes reents set when there is an undefined error retrieving it, so most likely deleted or privated.
@@ -141,7 +141,7 @@ const SetCard = (props: SetCardProps) => {
   };
 
   const deleteSet = async () => {
-    if (deckId === null) {
+    if (deckId === null || userId === null) {
       return;
     }
     const setRef = doc(db, "users", userId, "decks", deckId);
@@ -194,7 +194,9 @@ const SetCard = (props: SetCardProps) => {
               {isLoading ? null : (
                 <div
                   className={
-                    deck?.owner === auth.currentUser?.uid ? "" : "hidden"
+                    deck?.owner === auth.currentUser?.displayName
+                      ? ""
+                      : "hidden"
                   }
                 >
                   <Button
