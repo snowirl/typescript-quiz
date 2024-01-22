@@ -2,6 +2,10 @@ import { Button } from "@nextui-org/button";
 import quizScreenshot from "../assets/quiz-screenshot.png";
 import { Image } from "@nextui-org/react";
 import { motion, Variants, useScroll, useTransform } from "framer-motion";
+import SignUpModal from "../components/SignUpModal";
+import { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const cardVariants: Variants = {
   offscreen: {
@@ -22,6 +26,40 @@ const cardVariants: Variants = {
 const Home = () => {
   let { scrollYProgress } = useScroll();
   let y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsUserSignedIn(true);
+      } else {
+        setIsUserSignedIn(false);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription when the component unmounts
+  }, []);
+
+  const handleOpenSignUpModal = () => {
+    if (auth.currentUser === null) {
+      setIsSignUpModalOpen(true);
+    }
+  };
+
+  const navigateToCreate = () => {
+    navigate("/create/new");
+  };
+
+  useEffect(() => {
+    if (auth.currentUser === null) {
+      setIsUserSignedIn(false);
+    } else {
+      setIsUserSignedIn(true);
+    }
+  }, [auth.currentUser]);
+
   return (
     <>
       <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
@@ -50,9 +88,25 @@ const Home = () => {
                 className="w-72 h-72 rounded-full bg-primary top-0 -left-20 absolute blur-2xl opacity-30"
               ></motion.div>
               <div className="py-2">
-                <Button size="lg" color="primary" className="font-semibold">
-                  Sign up for free
-                </Button>
+                {!isUserSignedIn ? (
+                  <Button
+                    size="lg"
+                    color="primary"
+                    className="font-semibold"
+                    onPress={() => handleOpenSignUpModal()}
+                  >
+                    Sign up for free
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    color="primary"
+                    className="font-semibold"
+                    onPress={() => navigateToCreate()}
+                  >
+                    Create a new set
+                  </Button>
+                )}
               </div>
             </motion.div>
           </div>
@@ -113,6 +167,10 @@ const Home = () => {
           </div>
         </motion.div>
         <div className="bg-gray-100 dark:bg-dark-2 w-full h-[800px]"></div>
+        <SignUpModal
+          isSignUpModalOpen={isSignUpModalOpen}
+          setIsSignUpModalOpen={setIsSignUpModalOpen}
+        />
       </div>
     </>
   );

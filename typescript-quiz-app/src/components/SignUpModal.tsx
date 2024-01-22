@@ -16,8 +16,8 @@ import { db } from "../firebase";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 interface SignUpModalProps {
-  isLogInModalOpen: boolean;
-  setIsLogInModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLogInModalOpen?: boolean;
+  setIsLogInModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   isSignUpModalOpen: boolean;
   setIsSignUpModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -118,8 +118,8 @@ const SignUpModal = (props: SignUpModalProps) => {
   };
 
   const handleOpenLogInModal = () => {
-    props.setIsLogInModalOpen(true);
-    console.log(props.setIsLogInModalOpen);
+    props?.setIsLogInModalOpen?.(true);
+    console.log(props?.setIsLogInModalOpen);
   };
   return (
     <>

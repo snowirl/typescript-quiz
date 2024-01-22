@@ -60,27 +60,6 @@ const NavigationMenu = () => {
           </button>
 
           <div className="space-x-2">
-            {/* <Button
-              // color={`${
-              //   location.pathname.includes("sets/") ? "primary" : "default"
-              // }`}
-              onClick={() => navigate("/sets/recents")}
-              className="font-semibold"
-              variant="light"
-            >
-              Your Sets
-            </Button>
-
-            <Button
-              color={"primary"}
-              variant={`${
-                location.pathname.includes("create/") ? "light" : "light"
-              }`}
-              onPress={() => navigate("/create/new")}
-              className="font-semibold"
-            >
-              Create
-            </Button> */}
             <div className="px-4 flex space-x-6">
               <button
                 className="font-semibold text-sm flex items-center"
