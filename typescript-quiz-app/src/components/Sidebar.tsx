@@ -2,7 +2,6 @@ import Drawer from "react-modern-drawer";
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import { FaXmark, FaBars } from "react-icons/fa6";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
@@ -14,12 +13,24 @@ const Sidebar = () => {
     navigate("create/new");
   };
 
+  const handleYourSetsButton = () => {
+    setOpen(false);
+    navigate("sets/recents");
+  };
+
+  const handleHome = () => {
+    setOpen(false);
+    navigate("/");
+  };
+
   return (
     <div>
       <Button
         isIconOnly
         variant="light"
         radius="full"
+        size="lg"
+        className=""
         onClick={() => setOpen((prev) => !prev)}
       >
         <FaBars className="w-5 h-5" />
@@ -27,38 +38,43 @@ const Sidebar = () => {
 
       <Drawer open={open} direction="left" className="">
         <div className="text-left text-base px-4 bg-white dark:bg-dark-1 h-full">
-          <div className="text-left pt-2">
-            <button className="icon-btn" onClick={() => setOpen(false)}>
-              <FaXmark className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="w-full">
-            <Link to="/">
-              <button
-                className=" px-4 py-3 font-semibold"
-                onClick={() => setOpen(false)}
-              >
-                Home
-              </button>
-            </Link>
-          </div>
-          <div>
-            <Link to="/sets/recents">
-              <button
-                className=" px-4 py-3 font-semibold"
-                onClick={() => setOpen(false)}
-              >
-                Sets
-              </button>
-            </Link>
-          </div>
-          <div className="w-full">
+          <div className="text-left pt-2 pb-4">
             <Button
-              color="primary"
-              className="px-4 py-3 font-semibold w-full text-base"
-              onClick={handleCreateButtonMenu}
+              className="icon-btn"
+              onClick={() => setOpen(false)}
+              isIconOnly
+              variant="light"
+              radius="full"
+              size="lg"
             >
-              Create
+              <FaXmark className="w-5 h-5" />
+            </Button>
+          </div>
+          <div className="w-full space-y-3">
+            <Button
+              className="font-semibold w-full text-left justify-start"
+              onClick={() => handleHome()}
+              variant="light"
+              size="lg"
+            >
+              Home
+            </Button>
+            <Button
+              className="font-semibold w-full text-left justify-start"
+              onClick={() => handleYourSetsButton()}
+              variant="light"
+              size="lg"
+            >
+              Your sets
+            </Button>
+            <Button
+              className="font-semibold w-full text-left justify-start"
+              onClick={() => handleCreateButtonMenu()}
+              variant="solid"
+              color="primary"
+              size="lg"
+            >
+              Create new set
             </Button>
           </div>
         </div>

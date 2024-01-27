@@ -25,15 +25,17 @@ import { db } from "../firebase";
 import { setDoc, doc, deleteDoc } from "firebase/firestore";
 import { auth } from "../firebase";
 import { toast } from "react-hot-toast";
+import { useEffect } from "react";
 
 interface SetsFolderItemProps {
   folderName: string;
   folderColor: string;
   folderID: string;
   sets: string[];
-  setSelectedFolder: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedFolder: React.Dispatch<React.SetStateAction<string | null>>;
   index: number;
   refreshFolders: () => void;
+  pageIndex: number;
 }
 
 const SetsFolderItem = (props: SetsFolderItemProps) => {
@@ -62,6 +64,10 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
     "rose",
   ];
 
+  useEffect(() => {
+    toast.remove();
+  }, []);
+
   const editFolder = async () => {
     if (userID === null) {
       console.log("No user found. Cannot edit folder.");
@@ -88,7 +94,6 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
     }
     setIsCreating(false);
     onOpenChange();
-    props.refreshFolders();
   };
 
   const deleteFolder = async () => {
@@ -115,7 +120,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
     <div className="mx-2 my-2">
       <button
         className="w-full"
-        onClick={() => props.setSelectedFolder(props.index)}
+        onClick={() => props.setSelectedFolder(props.folderID)}
       >
         <Card shadow="sm">
           <CardBody className="py-3 flex space-y-3">

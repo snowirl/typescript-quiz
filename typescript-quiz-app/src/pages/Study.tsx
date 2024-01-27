@@ -535,11 +535,11 @@ const Study = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       <Toaster
-        position={"bottom-right"}
+        position={"top-center"}
         reverseOrder={true}
         toastOptions={{
           className:
-            "dark:bg-dark-1 dark:text-white p-2 text-sm font-semibold shadow-md outline outline-1 outline-black/10  rounded-lg",
+            "dark:bg-dark-1 dark:text-white px-3 py-2 text-sm font-semibold shadow- outline outline-1 outline-black/20  rounded-xl",
         }}
       >
         {(t) => (

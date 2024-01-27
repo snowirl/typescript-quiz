@@ -9,6 +9,13 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
 } from "@nextui-org/react";
 
 import { useNavigate } from "react-router-dom";
@@ -25,8 +32,29 @@ const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
   const [isLogInModalOpen, setIsLogInModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [colorSelected, setColorSelected] = useState("zinc");
   const { user } = useUserContext();
   const navigate = useNavigate();
+
+  const colors = [
+    "zinc",
+    "red",
+    "orange",
+    "amber",
+    "yellow",
+    "lime",
+    "green",
+    "teal",
+    "cyan",
+    "blue",
+    "indigo",
+    "violet",
+    "fuchsia",
+    "pink",
+    "rose",
+  ];
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -95,7 +123,7 @@ const NavigationMenu = () => {
                       <p>Study Set</p>
                     </div>
                   </DropdownItem>
-                  <DropdownItem key="copy">
+                  <DropdownItem key="copy" onPress={onOpen}>
                     <div className="flex space-x-2 items-center">
                       <FaFolder className="w-4 h-4" />
                       <p>Folder</p>
@@ -103,6 +131,60 @@ const NavigationMenu = () => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
+              <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
+                <ModalContent className="text-black dark:text-gray-100">
+                  {(onClose) => (
+                    <>
+                      <ModalHeader className="flex flex-col gap-1">
+                        Create new folder
+                      </ModalHeader>
+                      <ModalBody>
+                        {/* <p className="text-sm font-semibold">Folder name</p> */}
+                        <Input
+                          type="text"
+                          labelPlacement="outside"
+                          placeholder="Folder name"
+                          // value={folderName}
+                          variant="faded"
+                          color="primary"
+                          // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          //   setFolderName(e.target.value)
+                          // }
+                        />
+                        <div></div>
+                        <div className="flex flex-wrap justify-start">
+                          {colors.map((color, num) => (
+                            <button
+                              key={num}
+                              onClick={() => setColorSelected(color)}
+                              className={`bg-${color}-500 h-7 w-7 my-1 rounded-full mx-1 mb-1 ${
+                                colorSelected === color
+                                  ? "outline outline-4 outline-yellow-400 duration-100"
+                                  : "outline-yellow-400"
+                              }`}
+                            ></button>
+                          ))}
+                        </div>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button
+                          color="danger"
+                          variant="light"
+                          onPress={onClose}
+                        >
+                          Close
+                        </Button>
+                        <Button
+                          color="primary"
+                          // onPress={() => createNewFolder(onClose)}
+                        >
+                          Create
+                        </Button>
+                      </ModalFooter>
+                    </>
+                  )}
+                </ModalContent>
+              </Modal>
             </div>
           </div>
           <div className="flex items-center relative mx-2">

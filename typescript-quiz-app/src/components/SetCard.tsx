@@ -32,9 +32,12 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { motion } from "framer-motion";
+import { IoIosRemove } from "react-icons/io";
+import SetOptionsButton from "./SetOptionsButton";
 
 interface SetCardProps {
   deckId?: string | null;
+  removeSetFromFolder?: (set: string) => void;
 }
 
 const SetCard = (props: SetCardProps) => {
@@ -44,7 +47,7 @@ const SetCard = (props: SetCardProps) => {
   const [isPicLoading, setIsPicLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
-  const userId = auth.currentUser?.uid ?? null;
+  const userId = auth.currentUser?.displayName ?? null;
   const deckId = props?.deckId ?? null;
 
   useEffect(() => {
@@ -168,6 +171,7 @@ const SetCard = (props: SetCardProps) => {
 
     onClose();
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, translateY: 5 }}
@@ -191,7 +195,7 @@ const SetCard = (props: SetCardProps) => {
                   </div>
                 )}
               </div>
-              {isLoading ? null : (
+              {isLoading || props.removeSetFromFolder ? null : (
                 <div
                   className={
                     deck?.owner === auth.currentUser?.displayName
@@ -220,7 +224,26 @@ const SetCard = (props: SetCardProps) => {
                   </Button>
                 </div>
               )}
+              {props.removeSetFromFolder !== undefined &&
+              props.deckId !== undefined &&
+              props.deckId !== null ? (
+                <Button
+                  isIconOnly
+                  variant="light"
+                  size="sm"
+                  className="text-rose-600"
+                  onClick={() =>
+                    props.removeSetFromFolder?.(props.deckId ?? "hi")
+                  }
+                  // or use:
+                  // onClick={() => props.removeSetFromFolder && props.removeSetFromFolder(props.deckId)}
+                >
+                  <IoIosRemove className="w-7 h-7" />
+                </Button>
+              ) : // Log a message or add a placeholder if the condition is not met
+              null}
             </div>
+            <SetOptionsButton />
           </CardHeader>
           <CardBody
             className="pt-1 pb-1 px-2 cursor-pointer"
