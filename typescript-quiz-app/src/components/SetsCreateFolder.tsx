@@ -12,6 +12,7 @@ import {
 import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { FaFolderPlus } from "react-icons/fa6";
+import toast from "react-hot-toast";
 
 interface SetsCreateFolderProps {
   refreshFolders: () => void;
@@ -66,6 +67,8 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
     setFolderName("");
     func(); // runs the on close function
     props.refreshFolders();
+    toast.remove();
+    toast.success("Successfully created folder");
   };
   return (
     <div className="">

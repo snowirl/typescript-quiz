@@ -102,8 +102,8 @@ const Search = () => {
     return (
       <>
         <Pagination
-          variant="bordered"
-          className={`${nbPages > 1 ? "block" : "hidden"}`}
+          variant="faded"
+          className={`${nbPages > 1 ? "block pt-6" : "hidden"}`}
           total={nbPages > 1 ? nbPages - 1 : 1}
           onChange={(e: number) => refine(e)}
         />
@@ -126,8 +126,8 @@ const Search = () => {
           <Configure filters="private:false" />
           <Tabs
             aria-label="Options"
-            variant="bordered"
-            color="default"
+            variant="underlined"
+            color="primary"
             // selectedKey={tab}
             // onSelectionChange={changeTab}
             className="font-semibold py-2 rounded-md"

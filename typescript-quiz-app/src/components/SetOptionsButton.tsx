@@ -156,16 +156,22 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
       };
   };
 
+  const copyTextToClipBoard = () => {
+    if (props.deckId !== null) {
+      navigator.clipboard.writeText(
+        window.location.origin + `/study/${props.deckId}`
+      );
+      toast.success("Set link copied to clipboard");
+    } else {
+      toast.error("Unable to copy set link, try again");
+    }
+  };
+
   return (
     <div>
       <Dropdown>
         <DropdownTrigger>
-          <Button
-            isIconOnly
-            variant="light"
-            size="sm"
-            className=" hover:text-blue-600"
-          >
+          <Button isIconOnly variant="light" size="sm">
             <IoEllipsisHorizontalSharp className="w-5 h-5 " />
           </Button>
         </DropdownTrigger>
@@ -191,7 +197,11 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
           <DropdownItem key="copy" startContent={<FaRegCopy />}>
             Create a copy
           </DropdownItem>
-          <DropdownItem key="share" startContent={<IoShareOutline />}>
+          <DropdownItem
+            key="share"
+            startContent={<IoShareOutline />}
+            onClick={copyTextToClipBoard}
+          >
             Share
           </DropdownItem>
           <DropdownItem
@@ -199,6 +209,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
             key="report"
             variant="flat"
             startContent={<IoWarningOutline />}
+            isDisabled={true}
           >
             Report
           </DropdownItem>

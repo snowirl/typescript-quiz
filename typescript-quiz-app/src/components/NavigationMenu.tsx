@@ -29,6 +29,7 @@ import { HiSquare2Stack } from "react-icons/hi2";
 import { FaPlus } from "react-icons/fa";
 import { auth, db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
+import toast from "react-hot-toast";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -102,6 +103,7 @@ const NavigationMenu = () => {
     setFolderName("");
     func();
     navigate("/sets/folders");
+    toast.success("Successfully created folder");
   };
 
   return (

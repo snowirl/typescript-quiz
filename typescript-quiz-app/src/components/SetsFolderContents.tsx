@@ -104,6 +104,11 @@ const SetsFolderContents = (props: SetsFoldersContentsProps) => {
                 ></SetCard>
               ))
             : null}
+          {folderData?.sets?.length === 0 || folderData?.sets === undefined ? (
+            <p className="text-2xl text-center font-semibold dark:text-white/40 text-black/40 py-6">
+              No study sets found in this folder
+            </p>
+          ) : null}
         </div>
       )}
     </>

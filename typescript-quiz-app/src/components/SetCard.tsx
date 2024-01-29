@@ -5,8 +5,8 @@ import {
   CardFooter,
   Chip,
   Avatar,
+  Tooltip,
 } from "@nextui-org/react";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import {
@@ -203,7 +203,7 @@ const SetCard = (props: SetCardProps) => {
                       : "hidden"
                   }
                 >
-                  <Button
+                  {/* <Button
                     isIconOnly
                     variant="light"
                     size="sm"
@@ -221,29 +221,46 @@ const SetCard = (props: SetCardProps) => {
                     onClick={() => onOpen()}
                   >
                     <FaTrash className="w-4 h-4 " />
-                  </Button>
+                  </Button> */}
                 </div>
               )}
               {props.removeSetFromFolder !== undefined &&
               props.deckId !== undefined &&
               props.deckId !== null ? (
-                <Button
-                  isIconOnly
-                  variant="light"
-                  size="sm"
-                  className="text-rose-600"
-                  onClick={() =>
-                    props.removeSetFromFolder?.(props.deckId ?? "hi")
-                  }
-                  // or use:
-                  // onClick={() => props.removeSetFromFolder && props.removeSetFromFolder(props.deckId)}
-                >
-                  <IoIosRemove className="w-7 h-7" />
-                </Button>
-              ) : // Log a message or add a placeholder if the condition is not met
-              null}
+                <div className="flex">
+                  <Tooltip
+                    content="Remove set from folder"
+                    delay={750}
+                    className="text-black dark:text-white"
+                  >
+                    <Button
+                      isIconOnly
+                      variant="light"
+                      size="sm"
+                      className="text-rose-600"
+                      onClick={() =>
+                        props.removeSetFromFolder?.(props.deckId ?? "hi")
+                      }
+                      // or use:
+                      // onClick={() => props.removeSetFromFolder && props.removeSetFromFolder(props.deckId)}
+                    >
+                      <IoIosRemove className="w-7 h-7" />
+                    </Button>
+                  </Tooltip>
+                  {/* <SetOptionsButton
+                    username={deck?.username}
+                    deckId={props.deckId}
+                  /> */}
+                </div>
+              ) : (
+                // Log a message or add a placeholder if the condition is not met
+                <SetOptionsButton
+                  username={deck?.username}
+                  deckId={props.deckId}
+                />
+              )}
             </div>
-            <SetOptionsButton username={deck?.username} deckId={props.deckId} />
+            {/* {isLoading || props.removeSetFromFolder ? null} */}
           </CardHeader>
           <CardBody
             className="pt-1 pb-1 px-2 cursor-pointer"
