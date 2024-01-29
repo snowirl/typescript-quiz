@@ -106,7 +106,7 @@ const SetsFolders = () => {
       />
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
-          <div className="mx-4 flex justify-start">
+          <div className="mx-4 flex justify-start pb-1">
             {selectedFolder === null ? (
               <SetsCreateFolder refreshFolders={refreshFolders} />
             ) : (
@@ -118,11 +118,11 @@ const SetsFolders = () => {
               </Button>
             )}
           </div>
-          <div>
+          <div className="relative">
             <div
               className={
                 selectedFolder === null
-                  ? "mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start"
+                  ? "md:h-[300px] mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start"
                   : "hidden"
               }
             >
@@ -162,7 +162,7 @@ const SetsFolders = () => {
             {isLoading ||
             selectedFolder !== null ||
             Math.ceil(folderCount / displayPerPage) < 1 ? null : (
-              <div className="flex justify-center py-4">
+              <div className="flex justify-center py-8">
                 <Pagination
                   size="lg"
                   total={Math.max(1, Math.ceil(folderCount / displayPerPage))}
@@ -170,6 +170,11 @@ const SetsFolders = () => {
                   variant="faded"
                   onChange={(num: number) => setPageIndex(num - 1)}
                   page={pageIndex + 1}
+                  className={
+                    Math.ceil(folderCount / displayPerPage) > 1
+                      ? "block"
+                      : "hidden"
+                  }
                 />
               </div>
             )}

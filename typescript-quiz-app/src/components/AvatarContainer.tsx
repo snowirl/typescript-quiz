@@ -50,7 +50,9 @@ const AvatarContainer = () => {
             <DropdownItem
               key="new"
               className="font-semibold"
-              onClick={() => navigate(`/profile/${auth.currentUser?.uid}`)}
+              onClick={() =>
+                navigate(`/profile/${auth.currentUser?.displayName}`)
+              }
             >
               <div className="flex items-center space-x-2">
                 <LuUserCircle />

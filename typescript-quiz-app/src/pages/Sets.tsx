@@ -19,7 +19,7 @@ const Sets = () => {
       />
       <SetsPage />
       <Routes>
-        <Route index path="recents" element={<SetsRecentSets />} />
+        <Route path="recents" element={<SetsRecentSets />} />
         <Route path="favorites" element={<SetsFavorites />} />
         <Route path="created" element={<SetsCreatedSets />} />
         <Route path="folders" element={<SetsFolders />} />

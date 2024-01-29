@@ -336,7 +336,7 @@ const Create = () => {
               </div>
             ))}
           </div>
-          <div className="justify-center w-full py-2 flex pb-6">
+          <div className="justify-center w-full py-2 flex pb-16">
             {flashcardList.length <= 249 ? (
               <Button
                 color="primary"

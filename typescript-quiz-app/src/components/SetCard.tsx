@@ -237,6 +237,7 @@ const SetCard = (props: SetCardProps) => {
                       isIconOnly
                       variant="light"
                       size="sm"
+                      radius="md"
                       className="text-rose-600"
                       onClick={() =>
                         props.removeSetFromFolder?.(props.deckId ?? "hi")

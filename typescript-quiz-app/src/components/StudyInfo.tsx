@@ -36,6 +36,7 @@ import { db, auth } from "../firebase";
 import StudyFolderItem from "./StudyFolderItem";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import SetOptionsButton from "./SetOptionsButton";
 
 interface StudyInfoProps {
   username: string;
@@ -136,57 +137,10 @@ const StudyInfo = (props: StudyInfoProps) => {
               </div>
             </div>
             <div className="flex-grow flex justify-end">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button isIconOnly size="md" radius="full" variant="light">
-                    <IoEllipsisHorizontalSharp className="w-5 h-5" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Static Actions"
-                  className="text-black dark:text-white space-y-0"
-                >
-                  <DropdownItem
-                    key="edit"
-                    startContent={<FaEdit />}
-                    className={userID === props.username ? "flex" : "hidden"}
-                    onPress={editLink}
-                  >
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem
-                    key="folder"
-                    startContent={<FaFolderPlus />}
-                    onPress={onOpen}
-                  >
-                    Add to folder
-                  </DropdownItem>
-                  <DropdownItem key="copy" startContent={<FaRegCopy />}>
-                    Create a copy
-                  </DropdownItem>
-                  <DropdownItem key="share" startContent={<IoShareOutline />}>
-                    Share
-                  </DropdownItem>
-                  <DropdownItem
-                    color="warning"
-                    key="report"
-                    variant="flat"
-                    startContent={<IoWarningOutline />}
-                  >
-                    Report
-                  </DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    className={
-                      userID === props.username ? "flex text-danger" : "hidden"
-                    }
-                    color="danger"
-                    startContent={<FaTrash />}
-                  >
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <SetOptionsButton
+                username={props.username}
+                deckId={props.deckId}
+              />
 
               <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>

@@ -35,7 +35,7 @@ const SetsFavorites = () => {
       if (location.pathname === "/sets/favorites") {
       }
     };
-  }, [location.pathname]);
+  }, [location.pathname, user]);
 
   useEffect(() => {
     if (location.pathname === "/sets/favorites" && user) {
