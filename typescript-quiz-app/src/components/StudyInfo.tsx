@@ -1,12 +1,5 @@
 import { Card, CardHeader, CardBody, Spinner } from "@nextui-org/react";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Avatar,
-} from "@nextui-org/react";
+import { Button, Avatar } from "@nextui-org/react";
 import {
   Modal,
   ModalContent,
@@ -27,7 +20,6 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import StudyFolderItem from "./StudyFolderItem";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SetOptionsButton from "./SetOptionsButton";
 
@@ -45,7 +37,6 @@ const StudyInfo = (props: StudyInfoProps) => {
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const userID = auth.currentUser?.displayName ?? null;
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -108,10 +99,6 @@ const StudyInfo = (props: StudyInfoProps) => {
       {
         toastId: "success1",
       };
-  };
-
-  const editLink = () => {
-    navigate(`/create/${props.deckId}`);
   };
 
   return (
