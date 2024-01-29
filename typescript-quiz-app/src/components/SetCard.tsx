@@ -45,7 +45,7 @@ const SetCard = (props: SetCardProps) => {
   const [deck, setDeck] = useState<DocumentData | null>(null);
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [isPicLoading, setIsPicLoading] = useState(true);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const userId = auth.currentUser?.displayName ?? null;
   const deckId = props?.deckId ?? null;

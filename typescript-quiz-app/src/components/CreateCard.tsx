@@ -116,8 +116,7 @@ const CreateCard = (props: CreateCardProps) => {
             {props.index > 0 ? (
               <Tooltip
                 content="Delete"
-                showArrow
-                delay={1000}
+                delay={750}
                 className="text-black dark:text-white"
               >
                 <Button
