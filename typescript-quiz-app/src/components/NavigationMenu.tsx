@@ -27,12 +27,16 @@ import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
 import { FaFolder } from "react-icons/fa6";
 import { HiSquare2Stack } from "react-icons/hi2";
 import { FaPlus } from "react-icons/fa";
+import { auth, db } from "../firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
   const [isLogInModalOpen, setIsLogInModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [colorSelected, setColorSelected] = useState("zinc");
+  const [isCreating, setIsCreating] = useState(false);
+  const [folderName, setFolderName] = useState("");
   const { user } = useUserContext();
   const navigate = useNavigate();
 
@@ -65,6 +69,39 @@ const NavigationMenu = () => {
     e.preventDefault();
     // Additional handling, such as triggering the search
     navigate(`/search/${searchInput}`);
+  };
+
+  const createNewFolder = async (func: () => void) => {
+    console.log("Create folder");
+
+    if (!isCreating) {
+      setIsCreating(true);
+    } else {
+      return;
+    }
+
+    const userID: string | null = auth.currentUser?.displayName ?? null;
+
+    if (userID === null) {
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "users", userID, "folders"), {
+        folderName: folderName,
+        folderColor: colorSelected,
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+
+      return;
+    }
+
+    setIsCreating(false);
+    setColorSelected("zinc");
+    setFolderName("");
+    func();
+    navigate("/sets/folders");
   };
 
   return (
@@ -147,9 +184,9 @@ const NavigationMenu = () => {
                           // value={folderName}
                           variant="faded"
                           color="primary"
-                          // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          //   setFolderName(e.target.value)
-                          // }
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setFolderName(e.target.value)
+                          }
                         />
                         <div></div>
                         <div className="flex flex-wrap justify-start">
@@ -176,7 +213,7 @@ const NavigationMenu = () => {
                         </Button>
                         <Button
                           color="primary"
-                          // onPress={() => createNewFolder(onClose)}
+                          onPress={() => createNewFolder(onClose)}
                         >
                           Create
                         </Button>

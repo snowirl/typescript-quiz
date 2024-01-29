@@ -49,8 +49,8 @@ const SetsFolders = () => {
   }, [pageIndex]);
 
   const refreshFolders = () => {
-    getFolderCount();
     setPageIndex(0);
+    getFolderCount();
   };
 
   const getFolderCount = async () => {

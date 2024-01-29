@@ -243,7 +243,7 @@ const SetCard = (props: SetCardProps) => {
               ) : // Log a message or add a placeholder if the condition is not met
               null}
             </div>
-            <SetOptionsButton />
+            <SetOptionsButton username={deck?.username} deckId={props.deckId} />
           </CardHeader>
           <CardBody
             className="pt-1 pb-1 px-2 cursor-pointer"
