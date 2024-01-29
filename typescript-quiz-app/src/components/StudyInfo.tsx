@@ -1,10 +1,5 @@
 import { Card, CardHeader, CardBody, Spinner } from "@nextui-org/react";
 import {
-  IoEllipsisHorizontalSharp,
-  IoShareOutline,
-  IoWarningOutline,
-} from "react-icons/io5";
-import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -12,8 +7,6 @@ import {
   Button,
   Avatar,
 } from "@nextui-org/react";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import { FaFolderPlus, FaRegCopy } from "react-icons/fa6";
 import {
   Modal,
   ModalContent,
@@ -46,7 +39,7 @@ interface StudyInfoProps {
 }
 
 const StudyInfo = (props: StudyInfoProps) => {
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { isOpen, onOpenChange, onClose } = useDisclosure();
   const [_isLoading, setIsLoading] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
