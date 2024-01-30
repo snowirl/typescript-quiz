@@ -27,6 +27,9 @@ const SearchCard = (props: SearchCardProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (props.ownerId === undefined) {
+      return;
+    }
     if (props.ownerId.length > 0) {
       getImageByUserId(props.ownerId);
     }
