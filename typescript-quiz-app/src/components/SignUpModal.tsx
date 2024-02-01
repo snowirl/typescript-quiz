@@ -196,17 +196,17 @@ const SignUpModal = (props: SignUpModalProps) => {
                   }
                 />
                 <div className="flex items-center text-gray-500 dark:text-gray-300">
-                  <div className="flex-1 border-t border-gray-300"></div>
+                  {/* <div className="flex-1 border-t border-gray-300"></div>
                   <div className="mx-4">or</div>
-                  <div className="flex-1 border-t border-gray-300"></div>
+                  <div className="flex-1 border-t border-gray-300"></div> */}
                 </div>
-                <Button className="font-semibold" variant="bordered">
+                {/* <Button className="font-semibold" variant="bordered">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
                     alt="Google G logo"
                   />
                   Sign up with Google
-                </Button>
+                </Button> */}
                 <Checkbox className="text-semibold">
                   <p className="text-xs">
                     By signing up, you are creating a Studucky account, and you

@@ -128,9 +128,7 @@ const Profile = () => {
               <Avatar src={profilePictureURL ?? ""} size="lg" />
               <p className="text-xl font-semibold">{id}</p>
             </div>
-            <div>
-              <p className="text-base">Here is my bio...</p>
-            </div>
+            <div>{/* <p className="text-base">Here is my bio...</p> */}</div>
           </div>
         </Card>
         <div className="space-y-2">
@@ -159,6 +157,7 @@ const Profile = () => {
             initialPage={1}
             variant="faded"
             onChange={(num: number) => setPageIndex(num - 1)}
+            className={deckCount / displayPerPage <= 1 ? "hidden" : "block"}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { Avatar, Card } from "@nextui-org/react";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileCardProps {
   username: string;
@@ -9,6 +10,7 @@ interface ProfileCardProps {
 const ProfileCard = (props: ProfileCardProps) => {
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [_isPicLoading, setIsPicLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (props.username) {
@@ -58,7 +60,10 @@ const ProfileCard = (props: ProfileCardProps) => {
 
   return (
     <Card className="w-full p-1 my-2" shadow="sm" radius="lg">
-      <div className="flex items-center space-x-2 p-2">
+      <div
+        className="flex items-center space-x-2 p-2 cursor-pointer font-semibold"
+        onClick={() => navigate(`/profile/${props.username}`)}
+      >
         <Avatar src={profilePictureURL} />
         <p>{props.username}</p>
       </div>

@@ -34,6 +34,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { motion } from "framer-motion";
 import { IoIosRemove } from "react-icons/io";
 import SetOptionsButton from "./SetOptionsButton";
+import { FaLock } from "react-icons/fa";
 
 interface SetCardProps {
   deckId?: string | null;
@@ -195,6 +196,7 @@ const SetCard = (props: SetCardProps) => {
                   </div>
                 )}
               </div>
+
               {isLoading || props.removeSetFromFolder ? null : (
                 <div
                   className={
@@ -224,6 +226,7 @@ const SetCard = (props: SetCardProps) => {
                   </Button> */}
                 </div>
               )}
+
               {props.removeSetFromFolder !== undefined &&
               props.deckId !== undefined &&
               props.deckId !== null ? (
@@ -255,12 +258,26 @@ const SetCard = (props: SetCardProps) => {
                 </div>
               ) : (
                 // Log a message or add a placeholder if the condition is not met
-                <SetOptionsButton
-                  username={deck?.username}
-                  deckId={props.deckId}
-                />
+                <div className="flex items-center space-x-2">
+                  {deck.private ? (
+                    <Tooltip
+                      content="This set is private"
+                      className="text-black dark:text-gray-100"
+                      delay={500}
+                    >
+                      <div className="">
+                        <FaLock className="w-3 h-3 text-black/80 dark:text-gray-100" />
+                      </div>
+                    </Tooltip>
+                  ) : null}
+                  <SetOptionsButton
+                    username={deck?.username}
+                    deckId={props.deckId}
+                  />
+                </div>
               )}
             </div>
+
             {/* {isLoading || props.removeSetFromFolder ? null} */}
           </CardHeader>
           <CardBody
