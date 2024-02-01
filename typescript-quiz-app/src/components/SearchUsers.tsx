@@ -2,11 +2,9 @@ import algoliasearch from "algoliasearch/lite";
 import {
   InstantSearch,
   Hits,
-  Configure,
   useSearchBox,
   HitsPerPage,
 } from "react-instantsearch";
-import SearchCard from "../components/SearchCard";
 import type { PaginationProps, SearchBoxProps } from "react-instantsearch";
 import { usePagination } from "react-instantsearch";
 import { useState, useEffect } from "react";
