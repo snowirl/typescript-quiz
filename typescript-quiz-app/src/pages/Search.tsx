@@ -1,5 +1,4 @@
 import { Tabs, Tab } from "@nextui-org/react";
-    private: boolean;
 import { useState, Key } from "react";
 import SearchSets from "../components/SearchSets";
 import SearchUsers from "../components/SearchUsers";
