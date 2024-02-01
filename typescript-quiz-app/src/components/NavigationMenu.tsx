@@ -23,6 +23,8 @@ import "react-modern-drawer/dist/index.css";
 import Sidebar from "./Sidebar";
 import { useState } from "react";
 import StuduckyLogo from "../assets/StuduckyIcon.svg";
+import StuduckyLogoDark from "../assets/studuckylogo-dark.svg";
+
 import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
 import { FaFolder } from "react-icons/fa6";
 import { HiSquare2Stack } from "react-icons/hi2";
@@ -120,7 +122,12 @@ const NavigationMenu = () => {
           <button className="flex items-center" onClick={() => navigate("/")}>
             {/* <StuduckyLogo /> */}
 
-            <img src={StuduckyLogo} alt="Logo" className="w-36" />
+            <img
+              src={StuduckyLogoDark}
+              alt="Logo"
+              className="w-36 hidden dark:block"
+            />
+            <img src={StuduckyLogo} alt="Logo" className="w-36 dark:hidden" />
             {/* <Chip className="mx-2 h-6 px-0 bg-dark-2 text-white dark:bg-white dark:text-black rounded-[4px]">
               <p className="font-semibold  text-xs">Beta</p>
             </Chip> */}
