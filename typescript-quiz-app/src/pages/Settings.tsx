@@ -4,7 +4,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
 import { useRef, ChangeEvent, useState } from "react";
-
+import { Switch } from "@nextui-org/react";
+import { LuMoon, LuSun } from "react-icons/lu";
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState("account");
@@ -196,6 +197,20 @@ const Settings = () => {
                           search
                         </p>
                       </Checkbox>
+                    </div>
+                    <div className="py-2">
+                      <Switch
+                        defaultSelected
+                        size="sm"
+                        color="primary"
+                        thumbIcon={({ isSelected, className }) =>
+                          isSelected ? (
+                            <LuMoon className={className} />
+                          ) : (
+                            <LuSun className={className} />
+                          )
+                        }
+                      ></Switch>
                     </div>
                   </div>
                 ) : null}
