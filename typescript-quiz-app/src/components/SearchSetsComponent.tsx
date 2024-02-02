@@ -12,12 +12,13 @@ import { usePagination } from "react-instantsearch";
 import { useState, useEffect } from "react";
 import { Pagination } from "@nextui-org/react";
 import { useParams } from "react-router-dom"; // Import from React Router
+import { Spinner } from "@nextui-org/react";
+
+const [myQuery, setMyQuery] = useState("");
 
 const CustomSearchBox = (props: SearchBoxProps) => {
   const { refine } = useSearchBox(props);
   const id = useParams(); // Get the current location
-
-  const [myQuery, setMyQuery] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMyQuery(e.target.value);
@@ -120,17 +121,21 @@ const SearchSetsComponent = () => {
 
   return (
     <div>
-      <InstantSearch searchClient={algoliaClient} indexName="decks">
-        <CustomSearchBox searchAsYouType={false} />
-        <Configure filters="private:false" />
-        <Hits hitComponent={Hit} className="w-full py-2" />
+      {myQuery ? (
+        <InstantSearch searchClient={algoliaClient} indexName="decks">
+          <CustomSearchBox searchAsYouType={false} />
+          <Configure filters="private:false" />
+          <Hits hitComponent={Hit} className="w-full py-2" />
 
-        <CustomPagination />
-        <HitsPerPage
-          className="hidden"
-          items={[{ label: "3 hits per page", value: 3, default: true }]}
-        />
-      </InstantSearch>
+          <CustomPagination />
+          <HitsPerPage
+            className="hidden"
+            items={[{ label: "3 hits per page", value: 3, default: true }]}
+          />
+        </InstantSearch>
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 };
