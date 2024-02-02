@@ -73,7 +73,7 @@ function UserHit({ hit }: UserProps) {
   );
 }
 
-const SearchUsers = () => {
+const SearchUsersComponent = () => {
   const searchClient = algoliasearch(
     "1GUAKQV47F",
     "02a87f36136ca5f67302432b104bb80c"
@@ -110,4 +110,4 @@ const SearchUsers = () => {
   );
 };
 
-export default SearchUsers;
+export default SearchUsersComponent;

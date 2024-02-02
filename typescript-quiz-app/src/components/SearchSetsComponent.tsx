@@ -6,7 +6,7 @@ import {
   useSearchBox,
   HitsPerPage,
 } from "react-instantsearch";
-import SearchCard from "../components/SearchCard";
+import SearchCard from "./SearchCard";
 import type { PaginationProps, SearchBoxProps } from "react-instantsearch";
 import { usePagination } from "react-instantsearch";
 import { useState, useEffect } from "react";
@@ -34,15 +34,18 @@ const CustomSearchBox = (props: SearchBoxProps) => {
   };
 
   useEffect(() => {
-    console.log(id.query);
     if (id.query && id.query !== undefined) {
       setMyQuery(id.query);
       refine(id.query);
-      console.log("ran");
+      console.log(id.query);
     } else {
       console.log("NO QUERY...");
     }
   }, [id.query]);
+
+  useEffect(() => {
+    console.log("QUERY: " + id.query);
+  }, []);
 
   return (
     <form
@@ -94,8 +97,8 @@ function Hit({ hit }: HitProps) {
   );
 }
 
-const SearchSets = () => {
-  const searchClient = algoliasearch(
+const SearchSetsComponent = () => {
+  const algoliaClient = algoliasearch(
     "1GUAKQV47F",
     "02a87f36136ca5f67302432b104bb80c"
   );
@@ -117,7 +120,7 @@ const SearchSets = () => {
 
   return (
     <div>
-      <InstantSearch searchClient={searchClient} indexName="decks">
+      <InstantSearch searchClient={algoliaClient} indexName="decks">
         <CustomSearchBox searchAsYouType={false} />
         <Configure filters="private:false" />
         <Hits hitComponent={Hit} className="w-full py-2" />
@@ -132,4 +135,4 @@ const SearchSets = () => {
   );
 };
 
-export default SearchSets;
+export default SearchSetsComponent;

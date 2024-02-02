@@ -71,7 +71,16 @@ const NavigationMenu = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Additional handling, such as triggering the search
-    navigate(`/search/${searchInput}`);
+    const containsSearch = location.pathname.includes("search");
+    if (!containsSearch) {
+      navigate(`/search/sets/${searchInput}`);
+    } else {
+      if (location.pathname.includes("sets")) {
+        navigate(`/search/sets/${searchInput}`);
+      } else if (location.pathname.includes("users")) {
+        navigate(`/search/users/${searchInput}`);
+      }
+    }
   };
 
   const createNewFolder = async (func: () => void) => {
