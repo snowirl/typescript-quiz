@@ -24,8 +24,8 @@ import { useState } from "react";
 import { db } from "../firebase";
 import { setDoc, doc, deleteDoc } from "firebase/firestore";
 import { auth } from "../firebase";
-import { toast } from "react-hot-toast";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 interface SetsFolderItemProps {
   folderName: string;
@@ -65,8 +65,12 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   ];
 
   useEffect(() => {
-    toast.remove();
-  }, []);
+    setColorSelected(props.folderColor);
+  }, [props.folderColor]);
+
+  useEffect(() => {
+    setFolderName(props.folderName);
+  }, [props.folderName]);
 
   const editFolder = async () => {
     if (userID === null) {
@@ -94,6 +98,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
     }
     setIsCreating(false);
     onOpenChange();
+    props.refreshFolders();
   };
 
   const deleteFolder = async () => {
@@ -109,7 +114,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
       toast.success("Folder deleted!");
     } catch (e) {
       console.log(e);
-      toast.success("Could not delete folder.");
+      toast.error("Could not delete folder.");
     }
     setIsCreating(false);
     setIsModalOpen(false);

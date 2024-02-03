@@ -12,6 +12,11 @@ import { Pagination } from "@nextui-org/react";
 import { useParams } from "react-router-dom"; // Import from React Router
 import ProfileCard from "./ProfileCard";
 
+const searchClient = algoliasearch(
+  "1GUAKQV47F",
+  "02a87f36136ca5f67302432b104bb80c"
+);
+
 const CustomSearchBox = (props: SearchBoxProps) => {
   const { refine } = useSearchBox(props);
   const id = useParams(); // Get the current location
@@ -74,11 +79,6 @@ function UserHit({ hit }: UserProps) {
 }
 
 const SearchUsersComponent = () => {
-  const searchClient = algoliasearch(
-    "1GUAKQV47F",
-    "02a87f36136ca5f67302432b104bb80c"
-  );
-
   const CustomPagination = (props: PaginationProps) => {
     const { nbPages, refine } = usePagination(props);
 

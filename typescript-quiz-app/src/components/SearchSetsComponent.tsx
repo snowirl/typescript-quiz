@@ -12,11 +12,14 @@ import { usePagination } from "react-instantsearch";
 import { useState, useEffect } from "react";
 import { Pagination } from "@nextui-org/react";
 import { useParams } from "react-router-dom"; // Import from React Router
-import { Spinner } from "@nextui-org/react";
 
-const [myQuery, setMyQuery] = useState("");
+const algoliaClient = algoliasearch(
+  "1GUAKQV47F",
+  "02a87f36136ca5f67302432b104bb80c"
+);
 
 const CustomSearchBox = (props: SearchBoxProps) => {
+  const [myQuery, setMyQuery] = useState("");
   const { refine } = useSearchBox(props);
   const id = useParams(); // Get the current location
 
@@ -99,11 +102,6 @@ function Hit({ hit }: HitProps) {
 }
 
 const SearchSetsComponent = () => {
-  const algoliaClient = algoliasearch(
-    "1GUAKQV47F",
-    "02a87f36136ca5f67302432b104bb80c"
-  );
-
   const CustomPagination = (props: PaginationProps) => {
     const { nbPages, refine } = usePagination(props);
 
@@ -121,21 +119,17 @@ const SearchSetsComponent = () => {
 
   return (
     <div>
-      {myQuery ? (
-        <InstantSearch searchClient={algoliaClient} indexName="decks">
-          <CustomSearchBox searchAsYouType={false} />
-          <Configure filters="private:false" />
-          <Hits hitComponent={Hit} className="w-full py-2" />
+      <InstantSearch searchClient={algoliaClient} indexName="decks">
+        <CustomSearchBox searchAsYouType={false} />
+        <Configure filters="private:false" />
+        <Hits hitComponent={Hit} className="w-full py-2" />
 
-          <CustomPagination />
-          <HitsPerPage
-            className="hidden"
-            items={[{ label: "3 hits per page", value: 3, default: true }]}
-          />
-        </InstantSearch>
-      ) : (
-        <Spinner />
-      )}
+        <CustomPagination />
+        <HitsPerPage
+          className="hidden"
+          items={[{ label: "3 hits per page", value: 3, default: true }]}
+        />
+      </InstantSearch>
     </div>
   );
 };

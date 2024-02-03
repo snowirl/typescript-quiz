@@ -31,7 +31,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { useDisclosure } from "@nextui-org/react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useState } from "react";
 import StudyFolderItem from "./StudyFolderItem";
 import { useEffect } from "react";

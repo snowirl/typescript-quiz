@@ -7,6 +7,9 @@ import {
   signOut,
   sendPasswordResetEmail,
   User,
+  browserSessionPersistence,
+  inMemoryPersistence,
+  setPersistence,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { ReactNode } from "react";
@@ -17,7 +20,7 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   registerUser: (email: string, username: string, password: string) => void;
-  signInUser: (email: string, password: string) => void;
+  signInUser: (email: string, password: string, rememberMe: boolean) => void;
   logOutUser: () => void;
   forgotPassword: (email: string) => Promise<void>;
 }
@@ -83,12 +86,23 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
     }
   };
 
-  const signInUser = (email: string, password: string) => {
+  const signInUser = (email: string, password: string, rememberMe: boolean) => {
     setLoading(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((res) => console.log(res))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+
+    const remember = rememberMe
+      ? browserSessionPersistence
+      : inMemoryPersistence;
+
+    setPersistence(auth, remember)
+      .then(() => {
+        signInWithEmailAndPassword(auth, email, password)
+          .then((res) => console.log(res))
+          .catch((err) => setError(err.message))
+          .finally(() => setLoading(false));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const logOutUser = () => {

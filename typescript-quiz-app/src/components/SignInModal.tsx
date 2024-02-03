@@ -27,9 +27,10 @@ const SignInModal = (props: SignInModalProps) => {
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passRef = useRef<HTMLInputElement | null>(null);
 
-  const { signInUser, error } = useUserContext();
+  const { signInUser, error, forgotPassword } = useUserContext();
 
   const [isVisible, setIsVisible] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const SignInModal = (props: SignInModalProps) => {
     const password = passRef.current?.value;
 
     if (email && password) {
-      signInUser(email, password);
+      signInUser(email, password, rememberMe);
     }
   };
 
@@ -116,8 +117,21 @@ const SignInModal = (props: SignInModalProps) => {
                   />
                 </form>
                 <div className="flex justify-between text-xs">
-                  <Checkbox>Remember me</Checkbox>
-                  <Link href="#" className="font-semibold">
+                  <Checkbox
+                    isSelected={rememberMe}
+                    onValueChange={setRememberMe}
+                  >
+                    Remember me
+                  </Checkbox>
+                  <Link
+                    href="#"
+                    className="font-semibold"
+                    onClick={() =>
+                      forgotPassword(
+                        emailRef?.current?.value ? emailRef.current.value : ""
+                      )
+                    }
+                  >
                     Forgot password?
                   </Link>
                 </div>

@@ -14,10 +14,10 @@ import { useUserContext } from "../context/userContext";
 import SetsFolderContents from "./SetsFolderContents";
 import { Button, Pagination } from "@nextui-org/react";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { Toaster } from "react-hot-toast";
 
 const SetsFolders = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isInitial, setIsInitial] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
@@ -36,9 +36,9 @@ const SetsFolders = () => {
   }, [user]);
 
   useEffect(() => {
-    if (folderCount > 0) {
+    if (folderCount > 0 && isInitial) {
       handleFindFolders(pageIndex);
-      // setPageIndex(0);
+      setIsInitial(false);
     }
   }, [folderCount]);
 
@@ -51,6 +51,7 @@ const SetsFolders = () => {
   const refreshFolders = () => {
     setPageIndex(0);
     getFolderCount();
+    handleFindFolders(pageIndex);
   };
 
   const getFolderCount = async () => {
@@ -96,14 +97,6 @@ const SetsFolders = () => {
 
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 min-h-screen dark:bg-dark-2 pt-6">
-      <Toaster
-        position={"top-center"}
-        reverseOrder={true}
-        toastOptions={{
-          className:
-            "dark:bg-dark-1 dark:text-white px-3 py-2 text-sm font-semibold shadow-lg outline outline-1 outline-black/20  rounded-xl",
-        }}
-      />
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <div className="mx-4 flex justify-start pb-1">
@@ -122,7 +115,7 @@ const SetsFolders = () => {
             <div
               className={
                 selectedFolder === null
-                  ? "md:h-[300px] mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start"
+                  ? " mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2  items-start"
                   : "hidden"
               }
             >

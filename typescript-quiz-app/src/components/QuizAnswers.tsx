@@ -1,6 +1,6 @@
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { Flashcard } from "../assets/globalTypes";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import QuizAnswerItem from "./QuizAnswerItem";
 
 interface QuizAnswersProps {

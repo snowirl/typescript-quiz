@@ -43,6 +43,10 @@ const NavigationMenu = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   auth.currentUser.
+  // }, [user])
+
   const colors = [
     "zinc",
     "red",

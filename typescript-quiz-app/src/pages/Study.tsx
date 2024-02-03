@@ -37,7 +37,7 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@nextui-org/react";
 import { useAnimationControls } from "framer-motion";
 import StudyNav from "../components/StudyNav";
-import { Toaster, toast, ToastBar } from "react-hot-toast";
+import { toast } from "sonner";
 import LoadingContainer from "../components/LoadingContainer";
 
 const flashcards: Flashcard[] = [
@@ -80,7 +80,6 @@ const Study = () => {
   const starredListRef = useRef(starredList);
 
   useEffect(() => {
-    toast.remove();
     initializeDeckInfo();
   }, []);
 
@@ -152,7 +151,26 @@ const Study = () => {
 
   useEffect(() => {
     if (shouldSaveData && user && !isInitial) {
-      toast("Unsaved changes", { duration: Infinity });
+      toast.dismiss();
+
+      toast(
+        <div className="flex text-base items-center justify-between w-full dark:bg-dark-1 dark:text-white">
+          <div className="w-full flex justify-start">
+            <p className="font-semibold">Unsaved changes</p>
+          </div>
+          <div className="w-full flex justify-end">
+            <Button
+              color="primary"
+              className="font-bold h-9 w-9"
+              onClick={() => handleSaveData()}
+              radius="sm"
+            >
+              Save
+            </Button>
+          </div>
+        </div>,
+        { duration: 5000 }
+      );
       console.log("ran....");
     } else {
     }
@@ -285,6 +303,7 @@ const Study = () => {
       return;
     } else {
       setIsSaving(true);
+      toast.dismiss();
     }
 
     if (isFavoritedRef === undefined || starredListRef === undefined) {
@@ -301,6 +320,11 @@ const Study = () => {
       console.log("found local storage.");
     }
     try {
+      const starredValue =
+        parsedActivityData?.starredList !== undefined
+          ? parsedActivityData.starredList
+          : starredListRef.current ?? null;
+
       await setDoc(
         doc(db, "users", userID, "activity", pageID),
         {
@@ -311,11 +335,7 @@ const Study = () => {
               : isFavoritedRef.current
             : isFavoritedRef.current ?? null,
 
-          starred: parsedActivityData
-            ? parsedActivityData.starredList !== undefined
-              ? parsedActivityData.starredList
-              : starredListRef.current
-            : starredListRef.current ?? null,
+          starred: starredValue,
           timestamp: serverTimestamp(),
         },
         { merge: true }
@@ -330,7 +350,6 @@ const Study = () => {
     console.log("Saved.");
 
     if (!isInitial) {
-      toast.remove();
       toast.success("Saved!");
     } else {
     }
@@ -534,39 +553,6 @@ const Study = () => {
 
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
-      <Toaster
-        position={"top-center"}
-        reverseOrder={true}
-        toastOptions={{
-          className:
-            "dark:bg-dark-1 dark:text-white px-3 py-2 text-sm font-semibold shadow- outline outline-1 outline-black/20  rounded-xl",
-        }}
-      >
-        {(t) => (
-          <ToastBar toast={t}>
-            {({ icon, message }) => (
-              <>
-                {icon}
-                {message}
-                {t.type !== "loading" &&
-                  t.type !== "error" &&
-                  t.type !== "success" && (
-                    <Button
-                      color="primary"
-                      size="sm"
-                      className="font-semibold"
-                      // onClick={() => toast.dismiss(t.id)}
-                      onClick={() => handleSaveData()}
-                    >
-                      Save
-                    </Button>
-                  )}
-              </>
-            )}
-          </ToastBar>
-        )}
-      </Toaster>
-
       <div className="flex justify-center">
         {isLoading ? (
           <LoadingContainer />

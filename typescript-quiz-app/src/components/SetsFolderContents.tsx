@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { useEffect } from "react";
 import { auth, db } from "../firebase";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useState } from "react";
 import { Spinner } from "@nextui-org/react";
 

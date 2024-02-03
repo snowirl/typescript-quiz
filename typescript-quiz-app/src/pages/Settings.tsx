@@ -6,9 +6,12 @@ import { updateProfile } from "firebase/auth";
 import { useRef, ChangeEvent, useState } from "react";
 import { Switch } from "@nextui-org/react";
 import { LuMoon, LuSun } from "react-icons/lu";
+import { useTheme } from "next-themes";
+
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState("account");
+  const { theme, setTheme } = useTheme();
 
   const handleButtonClick = () => {
     // Trigger the file input when the button is clicked
@@ -79,30 +82,13 @@ const Settings = () => {
     }
   };
 
-  // const getImageByUserId = async (userId: string) => {
-  //   const storage = getStorage();
-  //   const jpgImagePath = `/profilePictures/${userId}`;
-  //   const pngImagePath = `profilePictures/${userId}`;
-
-  //   try {
-  //     // Check if the image is a JPG
-  //     const jpgImageRef = ref(storage, jpgImagePath);
-  //     const jpgDownloadUrl = await getDownloadURL(jpgImageRef);
-  //     setProfilePicture(jpgDownloadUrl);
-  //   } catch (jpgError) {
-  //     console.log(jpgError);
-  //     // If JPG fetch fails, check if the image is a PNG
-  //     try {
-  //       const pngImageRef = ref(storage, pngImagePath);
-  //       const pngDownloadUrl = await getDownloadURL(pngImageRef);
-  //       setProfilePicture(pngDownloadUrl);
-  //     } catch (pngError) {
-  //       // Handle the case when no image is found for the given user ID
-  //       console.log(pngError);
-  //       return null;
-  //     }
-  //   }
-  // };
+  const changeTheme = () => {
+    if (theme === "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
+  };
 
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
@@ -111,9 +97,6 @@ const Settings = () => {
           <Card>
             <CardBody>
               <div className="flex justify-center">
-                {/* <p className="font-semibold text-sm">
-                  {auth.currentUser?.displayName}
-                </p> */}
                 <div className="">
                   <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[140px] pr-2 border-black/10 dark:border-white/10">
                     <Button
@@ -151,7 +134,7 @@ const Settings = () => {
                   </div>
                 </div>
                 {tab === "account" ? (
-                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                  <div className="flex flex-col justify-start items-start space-y-4 w-full mx-4 my-4">
                     <p className="text-sm">
                       Username: {auth.currentUser?.displayName}
                     </p>
@@ -210,7 +193,11 @@ const Settings = () => {
                             <LuSun className={className} />
                           )
                         }
-                      ></Switch>
+                        isSelected={theme === "dark" ? true : false}
+                        onChange={() => changeTheme()}
+                      >
+                        Dark mode
+                      </Switch>
                     </div>
                   </div>
                 ) : null}
