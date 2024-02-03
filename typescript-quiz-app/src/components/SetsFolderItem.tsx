@@ -123,8 +123,8 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
 
   return (
     <div className="mx-2 my-2">
-      <button
-        className="w-full"
+      <div
+        className="w-full cursor-pointer"
         onClick={() => props.setSelectedFolder(props.folderID)}
       >
         <Card shadow="sm">
@@ -177,7 +177,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
             </Chip>
           </CardBody>
         </Card>
-      </button>
+      </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
         <ModalContent className="text-black dark:text-gray-100">
           {(onClose) => (

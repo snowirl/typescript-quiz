@@ -2,10 +2,10 @@ import { Button } from "@nextui-org/button";
 import quizScreenshot from "../assets/quiz-screenshot.png";
 import { Image } from "@nextui-org/react";
 import { motion, Variants, useScroll, useTransform } from "framer-motion";
-import SignUpModal from "../components/SignUpModal";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/userContext";
 
 const cardVariants: Variants = {
   offscreen: {
@@ -26,9 +26,9 @@ const cardVariants: Variants = {
 const Home = () => {
   let { scrollYProgress } = useScroll();
   let y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const navigate = useNavigate();
+  const { onOpen, setWhichModal } = useUserContext();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -41,12 +41,6 @@ const Home = () => {
 
     return () => unsubscribe(); // Cleanup the subscription when the component unmounts
   }, []);
-
-  const handleOpenSignUpModal = () => {
-    if (auth.currentUser === null) {
-      setIsSignUpModalOpen(true);
-    }
-  };
 
   const navigateToCreate = () => {
     navigate("/create/new");
@@ -93,7 +87,9 @@ const Home = () => {
                     size="lg"
                     color="primary"
                     className="font-semibold"
-                    onPress={() => handleOpenSignUpModal()}
+                    onPress={() => {
+                      onOpen(), setWhichModal("signup");
+                    }}
                   >
                     Sign up for free
                   </Button>
@@ -167,10 +163,6 @@ const Home = () => {
           </div>
         </motion.div>
         <div className="bg-gray-100 dark:bg-dark-2 w-full h-[800px]"></div>
-        <SignUpModal
-          isSignUpModalOpen={isSignUpModalOpen}
-          setIsSignUpModalOpen={setIsSignUpModalOpen}
-        />
       </div>
     </>
   );

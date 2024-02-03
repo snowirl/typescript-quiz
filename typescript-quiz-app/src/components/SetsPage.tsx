@@ -39,7 +39,7 @@ const SetsPage = () => {
           <div className="max-w-[800px] flex-grow space-y-4 px-4 pb-4">
             <div className="flex items-center justify-center w-full">
               {!user ? (
-                <p className="text-lg font-semibold dark:text-white/70 text-yellow-800 dark:bg-yellow-800 bg-yellow-400/20  rounded-xl px-6 py-2 flex items-center justify-center">
+                <p className="text-base font-semibold border-yellow-800/40 border dark:text-white/70 text-yellow-800 dark:bg-yellow-800 bg-yellow-400/20  rounded-lg px-6 py-2 flex items-center justify-center">
                   <FaExclamationTriangle className="mr-2" />
                   Please log in to see your sets
                 </p>

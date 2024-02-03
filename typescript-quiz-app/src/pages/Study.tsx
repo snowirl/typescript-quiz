@@ -68,6 +68,7 @@ const Study = () => {
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
   const [isInitial, setIsInitial] = useState(true);
   const controls = useAnimationControls(); // for card animation
+  const [error, setError] = useState<string>("");
 
   let { id } = useParams();
   const pageID: string = id ?? "";
@@ -169,7 +170,7 @@ const Study = () => {
             </Button>
           </div>
         </div>,
-        { duration: 5000 }
+        { duration: Infinity }
       );
       console.log("ran....");
     } else {
@@ -237,6 +238,8 @@ const Study = () => {
       // console.log(docRef.docs[0].data());
     } catch (e) {
       console.log("error occurred: " + e);
+      setError("undefined");
+      onOpen();
       setIsLoading(false);
     }
   };
@@ -244,6 +247,7 @@ const Study = () => {
   const initializeDeck = async () => {
     if (deckData?.private && deckData.owner !== userID) {
       console.log("ERROR... DECK IS PRIVATE!");
+      setError("private");
       onOpen();
       setIsLoading(false);
       return;
@@ -261,6 +265,7 @@ const Study = () => {
       setCurrentCard(docRef.docs[0].data().cards[index]);
     } catch (e) {
       console.log("error occurred: " + e);
+
       setIsLoading(false);
     }
 
@@ -666,16 +671,25 @@ const Study = () => {
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
-                Private Flashcard Set
+                {error === "private" ? "Private Flashcard Set" : null}
+                {error === "undefined" ? "No Set Found" : null}
               </ModalHeader>
               <ModalBody>
                 <p className="text-black dark:text-gray-200">
-                  This flashcard set is private and the owner must change it to
-                  public for access.
+                  {error === "private"
+                    ? "This flashcard set is private and the owner must change it to public for access."
+                    : null}
+                  {error === "undefined"
+                    ? "This flashcard set is possibly deleted or unable to be found."
+                    : null}
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={() => navigate("/")}>
+                <Button
+                  color="primary"
+                  onPress={() => navigate(-1)}
+                  className="font-semibold"
+                >
                   Go back
                 </Button>
               </ModalFooter>

@@ -1,5 +1,3 @@
-import SignInModal from "./SignInModal";
-import SignUpModal from "./SignUpModal";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import AvatarContainer from "./AvatarContainer";
@@ -35,17 +33,17 @@ import { toast } from "sonner";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [isLogInModalOpen, setIsLogInModalOpen] = useState(false);
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [colorSelected, setColorSelected] = useState("zinc");
   const [isCreating, setIsCreating] = useState(false);
   const [folderName, setFolderName] = useState("");
-  const { user } = useUserContext();
+  const { user, onOpen, setWhichModal } = useUserContext();
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   auth.currentUser.
-  // }, [user])
+  const {
+    isOpen: isOpenReportModal,
+    onOpen: onOpenReportModal,
+    onOpenChange: onOpenChangeReportModal,
+    onClose: OnCloseReportModal,
+  } = useDisclosure();
 
   const colors = [
     "zinc",
@@ -64,8 +62,6 @@ const NavigationMenu = () => {
     "pink",
     "rose",
   ];
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -87,12 +83,13 @@ const NavigationMenu = () => {
     }
   };
 
-  const createNewFolder = async (func: () => void) => {
+  const createNewFolder = async () => {
     console.log("Create folder");
 
     if (!isCreating) {
-      setIsCreating(true);
+      setIsCreating(false);
     } else {
+      console.log(isCreating);
       return;
     }
 
@@ -116,9 +113,25 @@ const NavigationMenu = () => {
     setIsCreating(false);
     setColorSelected("zinc");
     setFolderName("");
-    func();
     navigate("/sets/folders");
     toast.success("Successfully created folder");
+    OnCloseReportModal();
+  };
+
+  const handleOpenFolderModal = () => {
+    if (user) {
+      onOpenReportModal();
+    } else {
+      toast.warning("Please log in to create a new folder");
+    }
+  };
+
+  const handleCreateStudySet = () => {
+    if (user) {
+      navigate("/create/new");
+    } else {
+      toast.warning("Please log in to create a new set");
+    }
   };
 
   return (
@@ -175,14 +188,14 @@ const NavigationMenu = () => {
                 >
                   <DropdownItem
                     key="new"
-                    onClick={() => navigate("/create/new")}
+                    onClick={() => handleCreateStudySet()}
                   >
                     <div className="flex space-x-2 items-center">
                       <HiSquare2Stack className="w-4 h-4" />
                       <p>Study Set</p>
                     </div>
                   </DropdownItem>
-                  <DropdownItem key="copy" onPress={onOpen}>
+                  <DropdownItem key="copy" onPress={handleOpenFolderModal}>
                     <div className="flex space-x-2 items-center">
                       <FaFolder className="w-4 h-4" />
                       <p>Folder</p>
@@ -190,7 +203,11 @@ const NavigationMenu = () => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
+              <Modal
+                isOpen={isOpenReportModal}
+                onOpenChange={onOpenChangeReportModal}
+                size="sm"
+              >
                 <ModalContent className="text-black dark:text-gray-100">
                   {(onClose) => (
                     <>
@@ -235,7 +252,7 @@ const NavigationMenu = () => {
                         </Button>
                         <Button
                           color="primary"
-                          onPress={() => createNewFolder(onClose)}
+                          onPress={() => createNewFolder()}
                         >
                           Create
                         </Button>
@@ -265,18 +282,27 @@ const NavigationMenu = () => {
             <AvatarContainer />
           ) : (
             <div className="space-x-2">
-              <SignInModal
-                isLogInModalOpen={isLogInModalOpen}
-                setIsLogInModalOpen={setIsLogInModalOpen}
-                isSignUpModalOpen={isSignUpModalOpen}
-                setIsSignUpModalOpen={setIsSignUpModalOpen}
-              />
-              <SignUpModal
-                isLogInModalOpen={isLogInModalOpen}
-                setIsLogInModalOpen={setIsLogInModalOpen}
-                isSignUpModalOpen={isSignUpModalOpen}
-                setIsSignUpModalOpen={setIsSignUpModalOpen}
-              />
+              <Button
+                color="default"
+                variant="light"
+                className="font-semibold"
+                radius="md"
+                onPress={() => {
+                  onOpen(), setWhichModal("login");
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                color="primary"
+                className="font-semibold px-5"
+                size="md"
+                onPress={() => {
+                  onOpen(), setWhichModal("signup");
+                }}
+              >
+                Sign up
+              </Button>
             </div>
           )}
         </div>

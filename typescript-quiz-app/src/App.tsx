@@ -21,12 +21,12 @@ function App() {
       <Toaster
         toastOptions={{
           className:
-            "text-base border-none dark:bg-dark-1 dark:shadow-lg dark:shadow-white/5",
+            "text-base border-none dark:bg-dark-1 dark:shadow-lg dark:shadow-white/5 dark:text-white",
           classNames: {
             error: "dark:text-rose-300 dark:bg-rose-900 bg-white text-rose-500",
             success:
               "dark:text-green-400 dark:bg-green-900 bg-white text-green-600",
-            warning: "text-yellow-400",
+            warning: "text-yellow-600 bg-yellow-50 dark:bg-yellow-700",
             info: "bg-blue-400",
           },
         }}

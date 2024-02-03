@@ -23,12 +23,13 @@ const SetsRecentSets = () => {
 
   const displayPerPage = 3;
   const { user } = useUserContext();
-  const userID = auth.currentUser?.displayName ?? "Error";
+  const userID = auth.currentUser?.displayName ?? null;
 
   const location = useLocation();
 
   useEffect(() => {
     if (user) {
+      setIsLoading(true);
       handleFindSets(0);
       getDeckCount();
     }
@@ -41,7 +42,7 @@ const SetsRecentSets = () => {
   }, [pageIndex]);
 
   const getDeckCount = async () => {
-    if (deckCount > 0) {
+    if (deckCount > 0 || userID === null) {
       return;
     }
     try {
@@ -54,7 +55,8 @@ const SetsRecentSets = () => {
   };
 
   const handleFindSets = async (pageNum: number) => {
-    if (user === null) {
+    if (user === null || userID === null) {
+      setIsLoading(false);
       return;
     }
 
