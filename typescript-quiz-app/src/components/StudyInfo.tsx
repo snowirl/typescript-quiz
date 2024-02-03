@@ -20,7 +20,6 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import StudyFolderItem from "./StudyFolderItem";
-import toast from "react-hot-toast";
 import SetOptionsButton from "./SetOptionsButton";
 
 interface StudyInfoProps {
