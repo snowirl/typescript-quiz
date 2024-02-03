@@ -160,7 +160,27 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
         addUserToDatabase(username);
         onClose();
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        if (err.code) {
+          // Check for specific Firebase error codes
+          switch (err.code) {
+            case "auth/email-already-in-use":
+              setError("Email already in use");
+              break;
+            case "auth/invalid-email":
+              setError("Invalid email");
+              break;
+            case "auth/weak-password":
+              setError("Password should be at least 6 characters");
+              break;
+            default:
+              setError(err.toString());
+              console.log(err);
+          }
+        } else {
+          setLoginError(err.message);
+        }
+      })
       .finally(() => setLoading(false));
   };
 
@@ -196,7 +216,23 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
             console.log(res);
             onClose();
           })
-          .catch((err) => setLoginError(err.message))
+          .catch((err) => {
+            if (err.code) {
+              // Check for specific Firebase error codes
+              switch (err.code) {
+                case "auth/invalid-email":
+                  setLoginError("Invalid email address");
+                  break;
+                case "auth/invalid-login-credentials":
+                  setLoginError("Invalid login credentials");
+                  break;
+                default:
+                  setLoginError("Invalid email address");
+              }
+            } else {
+              setLoginError(err.message);
+            }
+          })
           .finally(() => {
             setLoading(false);
             // onClose();

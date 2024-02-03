@@ -15,9 +15,9 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import Alert from "../components/Alert";
 import { query, collectionGroup, where, getDocs } from "firebase/firestore";
 import { useUserContext } from "../context/userContext";
+import { toast } from "sonner";
 
 const Create = () => {
   const flashcard: Flashcard = {
@@ -33,10 +33,6 @@ const Create = () => {
   const [isPrivate, setIsPrivate] = useState(false);
   const [flashcardList, setFlashcardList] = useState<Flashcard[]>([]);
   const [isCreating, setIsCreating] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [errorText, setErrorText] = useState(
-    "An error occurred. Please try again."
-  );
   const [scrollTimeoutId, setScrollTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
@@ -92,27 +88,23 @@ const Create = () => {
   const handleCreateSet = async () => {
     if (user === null) {
       console.log("No user signed in...");
-      setHasError(true);
-      setErrorText("No user signed in.");
+      toast.error("No user signed in.");
       return;
     }
 
     if (title.trim() === "") {
       // String is empty or contains only whitespace
-      setHasError(true);
-      setErrorText("Title cannot be empty.");
+      toast.error("Title cannot be empty.");
       return;
     }
 
     if (flashcardList.length <= 4) {
-      setHasError(true);
-      setErrorText("You must have at least 5 cards to make a set.");
+      toast.error("At least 5 cards are required for a set");
       return;
     }
 
     if (!isCreating) {
       setIsCreating(true);
-      setHasError(false);
     } else {
       console.log("Already trying to create set.");
       return;
@@ -132,7 +124,6 @@ const Create = () => {
       try {
         await setDoc(doc(db, "users", userID), {});
       } catch (e) {
-        setHasError(true);
         console.error("Error adding document: ", e);
         setIsCreating(false);
         return;
@@ -156,7 +147,6 @@ const Create = () => {
         console.log("Document written with ID: ", docRef.id);
         docId = docRef.id;
       } catch (e) {
-        setHasError(true);
         console.error("Error adding document: ", e);
         setIsCreating(false);
         return;
@@ -173,7 +163,6 @@ const Create = () => {
           { merge: true }
         );
       } catch (e) {
-        setHasError(true);
         console.error("Error adding document: ", e);
         setIsCreating(false);
 
@@ -196,7 +185,6 @@ const Create = () => {
         );
         console.log("Edited!");
       } catch (e) {
-        setHasError(true);
         console.error("Error adding document: ", e);
         setIsCreating(false);
         return;
@@ -211,7 +199,6 @@ const Create = () => {
         cards: flashcardList,
       });
     } catch (e) {
-      setHasError(true);
       console.error("Error adding document: ", e);
       setIsCreating(false);
     }
@@ -228,9 +215,8 @@ const Create = () => {
       const docRef = await getDocs(q);
 
       if (docRef.docs[0].data().owner !== auth.currentUser?.displayName) {
-        setHasError(true);
         navigate("/create/new");
-        setErrorText("Error: Cannot edit a deck you do not own.");
+        toast.error("Error: Cannot edit a deck you do not own.");
         throw new Error("You do not own this deck.");
       } else {
         setTitle(docRef.docs[0].data().title);
@@ -275,7 +261,6 @@ const Create = () => {
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
-          <Alert isHidden={!hasError} text={errorText} />
           <div className="flex justify-between items-center py-1">
             <p className="text-left font-bold text-xl">Create New Set 🔥</p>
             <Button
