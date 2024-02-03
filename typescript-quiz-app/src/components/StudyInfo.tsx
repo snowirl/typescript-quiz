@@ -21,6 +21,7 @@ import {
 import { db, auth } from "../firebase";
 import StudyFolderItem from "./StudyFolderItem";
 import SetOptionsButton from "./SetOptionsButton";
+import { toast } from "sonner";
 
 interface StudyInfoProps {
   username: string;

@@ -31,6 +31,7 @@ import { HiSquare2Stack } from "react-icons/hi2";
 import { FaPlus } from "react-icons/fa";
 import { auth, db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { toast } from "sonner";
 
 const NavigationMenu = () => {
   const [searchInput, setSearchInput] = useState("");
