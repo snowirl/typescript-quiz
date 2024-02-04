@@ -138,9 +138,8 @@ const NavigationMenu = () => {
     <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-dark-2">
       <div className="flex justify-between px-4 py-1 pb-3 mx-auto max-w-[1200px]">
         <div className="flex md:hidden relative justify-center items-center space-x-4">
-          <Sidebar />
-          <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" />
-          <div className="flex md:hidden relative py-2 w-[260px]">
+          <img src={StuduckyCircleLogo} alt="Logo" className="w-11" />
+          <div className="flex md:hidden relative w-[235px]">
             <form onSubmit={handleSubmit}>
               <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
               <input
@@ -152,6 +151,9 @@ const NavigationMenu = () => {
               <input type="submit" className="hidden" />
             </form>
           </div>
+          {/* <Button isIconOnly radius="full">
+            <FaMagnifyingGlass />
+          </Button> */}
         </div>
         <div className="md:hidden"> </div>
         {/* <div className="md:hidden">
@@ -289,8 +291,10 @@ const NavigationMenu = () => {
             </form>
           </div>
         </div>
-        <div></div>
-        <div className="space-x-2 flex items-center">
+        <div className="flex md:hidden">
+          <Sidebar />
+        </div>
+        <div className="space-x-2 md:flex items-center hidden">
           {user ? (
             <AvatarContainer />
           ) : (
