@@ -36,7 +36,7 @@ const Sidebar = () => {
         <FaBars className="w-5 h-5" />
       </Button>
 
-      <Drawer open={open} direction="left" className="">
+      <Drawer open={open} direction="right" className="">
         <div className="text-left text-base px-4 bg-white dark:bg-dark-1 h-full">
           <div className="text-left pt-2 pb-4">
             <Button
