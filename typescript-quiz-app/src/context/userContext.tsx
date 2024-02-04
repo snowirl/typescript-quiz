@@ -277,7 +277,12 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
   return (
     <UserContext.Provider value={contextValue}>
       {props.children}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        backdrop="blur"
+        isDismissable={false}
+      >
         <ModalContent className="w-[425px] p-2 text-black dark:text-white rounded-md">
           {whichModal === "login" ? (
             <>

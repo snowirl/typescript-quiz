@@ -73,9 +73,9 @@ const Study = () => {
   let { id } = useParams();
   const pageID: string = id ?? "";
   let userID: string = auth.currentUser?.displayName ?? "Error";
-  const { user } = useUserContext();
+  const { user, onOpen, setWhichModal } = useUserContext();
   const navigate = useNavigate();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure(); // for locked modal
+  const { isOpen, onOpen: onOpenLockedModal, onOpenChange } = useDisclosure(); // for locked modal
 
   const isFavoritedRef = useRef(isFavorited); // to get the most updated version // This took forever to figure out, dont brek
   const starredListRef = useRef(starredList);
@@ -239,7 +239,7 @@ const Study = () => {
     } catch (e) {
       console.log("error occurred: " + e);
       setError("undefined");
-      onOpen();
+      onOpenLockedModal();
       setIsLoading(false);
     }
   };
@@ -248,7 +248,7 @@ const Study = () => {
     if (deckData?.private && deckData.owner !== userID) {
       console.log("ERROR... DECK IS PRIVATE!");
       setError("private");
-      onOpen();
+      onOpenLockedModal();
       setIsLoading(false);
       return;
     }
@@ -284,6 +284,12 @@ const Study = () => {
   };
 
   const handleStarCard = (flashcard: Flashcard) => {
+    if (user === null) {
+      setWhichModal("signup");
+      onOpen();
+      toast.error("No user signed in");
+      return;
+    }
     if (starredList !== undefined && starredList !== null) {
       if (starredList.indexOf(flashcard.cardId) > -1) {
         let index = starredList.indexOf(flashcard.cardId);
@@ -524,7 +530,10 @@ const Study = () => {
 
   const handleFavorite = () => {
     if (user === null) {
+      setWhichModal("signup");
+      onOpen();
       console.log("No user signed in...");
+      toast.error("No user signed in");
       return;
     }
     setIsFavorited((prev) => !prev);

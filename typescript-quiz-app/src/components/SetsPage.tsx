@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { useUserContext } from "../context/userContext";
 import { useLocation } from "react-router-dom";
+import { auth } from "../firebase";
 
 const SetsPage = () => {
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [tab, setTab] = useState("recents");
   const navigate = useNavigate();
-  const { user } = useUserContext();
+  const { user, setWhichModal, onOpen } = useUserContext();
   const location = useLocation();
 
   useEffect(() => {
@@ -28,6 +29,16 @@ const SetsPage = () => {
     // console.log(location.pathname);
   }, [tab]);
 
+  useEffect(() => {
+    return auth.onAuthStateChanged((user) => {
+      console.log(user);
+      if (user === null) {
+        setWhichModal("signup");
+        onOpen();
+      }
+    });
+  }, []);
+
   const changeTab = (key: Key) => {
     setTab(key.toString());
   };
@@ -39,7 +50,7 @@ const SetsPage = () => {
           <div className="max-w-[800px] flex-grow space-y-4 px-4 pb-4">
             <div className="flex items-center justify-center w-full">
               {!user ? (
-                <p className="text-base font-semibold border-yellow-800/40 border dark:text-white/70 text-yellow-800 dark:bg-yellow-800 bg-yellow-400/20  rounded-lg px-6 py-2 flex items-center justify-center">
+                <p className="w-full text-sm font-semibold border-yellow-800/40 border dark:text-white/70 text-yellow-800 dark:bg-yellow-800 bg-yellow-400/20  rounded-lg px-6 py-2 flex items-center justify-center">
                   <FaExclamationTriangle className="mr-2" />
                   Please log in to see your sets
                 </p>

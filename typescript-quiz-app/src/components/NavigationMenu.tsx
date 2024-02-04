@@ -139,11 +139,24 @@ const NavigationMenu = () => {
       <div className="flex justify-between px-4 py-1 pb-3 mx-auto max-w-[1200px]">
         <div className="flex md:hidden relative justify-center items-center space-x-4">
           <Sidebar />
+          <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" />
+          <div className="flex md:hidden relative py-2 w-[260px]">
+            <form onSubmit={handleSubmit}>
+              <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
+              <input
+                placeholder="Search sets, users"
+                className="description md:w-[280px] xl:w-[400px] rounded-full pl-12"
+                type="text"
+                onChange={handleInputChange}
+              />
+              <input type="submit" className="hidden" />
+            </form>
+          </div>
         </div>
         <div className="md:hidden"> </div>
-        <div className="md:hidden">
-          <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" />
-        </div>
+        {/* <div className="md:hidden">
+          {/* <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" /> */}
+        {/* </div> */}
         <div className="items-center hidden md:flex">
           <button className="flex items-center" onClick={() => navigate("/")}>
             {/* <StuduckyLogo /> */}

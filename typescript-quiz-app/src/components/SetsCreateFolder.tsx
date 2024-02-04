@@ -13,6 +13,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { FaFolderPlus } from "react-icons/fa6";
 import { toast } from "sonner";
+import { useUserContext } from "../context/userContext";
 
 interface SetsCreateFolderProps {
   refreshFolders: () => void;
@@ -23,6 +24,8 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
   const [colorSelected, setColorSelected] = useState("zinc");
   const [folderName, setFolderName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
+
+  const { user } = useUserContext();
 
   const colors = [
     "zinc",
@@ -45,6 +48,10 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
   // to add new colors, make sure to add them in the safelist in tailwind.config.js
 
   const createNewFolder = async (func: () => void) => {
+    if (user === null) {
+      toast.error("No user signed in");
+      return;
+    }
     if (!isCreating) {
       setIsCreating(true);
     } else {
@@ -111,12 +118,18 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  className="font-semibold"
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
                   onPress={() => createNewFolder(onClose)}
+                  className="font-semibold"
                 >
                   Create
                 </Button>
