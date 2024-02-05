@@ -43,8 +43,15 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   const [colorSelected, setColorSelected] = useState(props.folderColor);
   const [folderName, setFolderName] = useState(props.folderName);
   const [_isCreating, setIsCreating] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const userID = auth.currentUser?.displayName ?? null;
+
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onOpenChange: onOpenChangeDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
 
   const colors = [
     "zinc",
@@ -117,7 +124,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
       toast.error("Could not delete folder.");
     }
     setIsCreating(false);
-    setIsModalOpen(false);
+    onCloseDelete();
     props.refreshFolders();
   };
 
@@ -164,7 +171,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
                     className="text-danger"
                     color="danger"
                     startContent={<FaTrash />}
-                    onPress={() => setIsModalOpen(true)}
+                    onPress={onOpenDelete}
                   >
                     Delete
                   </DropdownItem>
@@ -214,10 +221,19 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  className="font-semibold"
+                >
                   Close
                 </Button>
-                <Button color="primary" onPress={editFolder}>
+                <Button
+                  color="primary"
+                  onPress={editFolder}
+                  className="font-semibold"
+                >
                   Save
                 </Button>
               </ModalFooter>
@@ -225,7 +241,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
           )}
         </ModalContent>
       </Modal>
-      <Modal isOpen={isModalOpen} hideCloseButton={true}>
+      <Modal isOpen={isOpenDelete} onOpenChange={onOpenChangeDelete}>
         <ModalContent>
           {() => (
             <>
@@ -250,7 +266,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
                 <Button
                   color="danger"
                   variant="light"
-                  onPress={() => setIsModalOpen(false)}
+                  onPress={onCloseDelete}
                   className="font-semibold"
                 >
                   Close

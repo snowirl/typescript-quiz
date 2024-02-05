@@ -297,12 +297,14 @@ const NavigationMenu = () => {
                           color="danger"
                           variant="light"
                           onPress={onClose}
+                          className="font-semibold"
                         >
                           Close
                         </Button>
                         <Button
                           color="primary"
                           onPress={() => createNewFolder()}
+                          className="font-semibold"
                         >
                           Create
                         </Button>

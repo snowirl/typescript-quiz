@@ -12,7 +12,7 @@ import {
 import { auth, db } from "../firebase";
 import { useUserContext } from "../context/userContext";
 import SetsFolderContents from "./SetsFolderContents";
-import { Button, Pagination } from "@nextui-org/react";
+import { Button, Pagination, Spinner } from "@nextui-org/react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 const SetsFolders = () => {
@@ -111,67 +111,71 @@ const SetsFolders = () => {
               </Button>
             )}
           </div>
-          <div className="relative">
-            <div
-              className={
-                selectedFolder === null
-                  ? " mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2  items-start"
-                  : "hidden"
-              }
-            >
-              {folderList !== null
-                ? folderList
-                    .slice(
-                      pageIndex * displayPerPage,
-                      (pageIndex + 1) * displayPerPage
-                    )
-                    // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
-                    .map((folder: DocumentData, index: number) => (
-                      <SetsFolderItem
-                        folderName={folder.folderName}
-                        folderColor={folder.folderColor}
-                        key={index}
-                        folderID={
-                          folderIDs !== null
-                            ? folderIDs[index + pageIndex * displayPerPage]
-                            : "Error"
-                        }
-                        sets={folder.sets}
-                        setSelectedFolder={setSelectedFolder}
-                        index={index + 1}
-                        refreshFolders={refreshFolders}
-                        pageIndex={pageIndex}
-                      />
-                    ))
-                : null}
-            </div>
-            <div className={selectedFolder === null ? "hidden" : "block"}>
-              {folderList === null ? (
-                <div></div>
-              ) : (
-                <SetsFolderContents folderId={selectedFolder} />
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div className="relative">
+              <div
+                className={
+                  selectedFolder === null
+                    ? " mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2  items-start"
+                    : "hidden"
+                }
+              >
+                {folderList !== null
+                  ? folderList
+                      .slice(
+                        pageIndex * displayPerPage,
+                        (pageIndex + 1) * displayPerPage
+                      )
+                      // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
+                      .map((folder: DocumentData, index: number) => (
+                        <SetsFolderItem
+                          folderName={folder.folderName}
+                          folderColor={folder.folderColor}
+                          key={index}
+                          folderID={
+                            folderIDs !== null
+                              ? folderIDs[index + pageIndex * displayPerPage]
+                              : "Error"
+                          }
+                          sets={folder.sets}
+                          setSelectedFolder={setSelectedFolder}
+                          index={index + 1}
+                          refreshFolders={refreshFolders}
+                          pageIndex={pageIndex}
+                        />
+                      ))
+                  : null}
+              </div>
+              <div className={selectedFolder === null ? "hidden" : "block"}>
+                {folderList === null ? (
+                  <div></div>
+                ) : (
+                  <SetsFolderContents folderId={selectedFolder} />
+                )}
+              </div>
+              {isLoading ||
+              selectedFolder !== null ||
+              Math.ceil(folderCount / displayPerPage) < 1 ? null : (
+                <div className="flex justify-center py-8">
+                  <Pagination
+                    size="lg"
+                    total={Math.max(1, Math.ceil(folderCount / displayPerPage))}
+                    initialPage={pageIndex + 1}
+                    variant="faded"
+                    onChange={(num: number) => setPageIndex(num - 1)}
+                    page={pageIndex + 1}
+                    className={
+                      Math.ceil(folderCount / displayPerPage) > 1
+                        ? "block"
+                        : "hidden"
+                    }
+                  />
+                </div>
               )}
             </div>
-            {isLoading ||
-            selectedFolder !== null ||
-            Math.ceil(folderCount / displayPerPage) < 1 ? null : (
-              <div className="flex justify-center py-8">
-                <Pagination
-                  size="lg"
-                  total={Math.max(1, Math.ceil(folderCount / displayPerPage))}
-                  initialPage={pageIndex + 1}
-                  variant="faded"
-                  onChange={(num: number) => setPageIndex(num - 1)}
-                  page={pageIndex + 1}
-                  className={
-                    Math.ceil(folderCount / displayPerPage) > 1
-                      ? "block"
-                      : "hidden"
-                  }
-                />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>
