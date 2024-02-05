@@ -287,7 +287,7 @@ const Study = () => {
     if (user === null) {
       setWhichModal("signup");
       onOpen();
-      toast.error("No user signed in");
+      toast.warning("No user signed in");
       return;
     }
     if (starredList !== undefined && starredList !== null) {
@@ -536,7 +536,7 @@ const Study = () => {
       setWhichModal("signup");
       onOpen();
       console.log("No user signed in...");
-      toast.error("No user signed in");
+      toast.warning("No user signed in");
       return;
     }
     setIsFavorited((prev) => !prev);

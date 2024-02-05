@@ -86,6 +86,7 @@ const Home = () => {
                   <Button
                     size="lg"
                     color="primary"
+                    variant="shadow"
                     className="font-semibold"
                     onPress={() => {
                       onOpen(), setWhichModal("signup");
@@ -97,6 +98,7 @@ const Home = () => {
                   <Button
                     size="lg"
                     color="primary"
+                    variant="shadow"
                     className="font-semibold"
                     onPress={() => navigateToCreate()}
                   >
