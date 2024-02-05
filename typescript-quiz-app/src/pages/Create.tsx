@@ -266,7 +266,7 @@ const Create = () => {
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <div className="flex justify-between items-center py-1">
-            <p className="text-left font-bold text-xl">Create New Set 🔥</p>
+            <p className="text-left font-bold text-xl">Create New Set</p>
             <Button
               color="primary"
               className="font-bold  text-sm h-11"

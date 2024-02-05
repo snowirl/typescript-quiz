@@ -1,15 +1,13 @@
-import { Button } from "@nextui-org/react";
+import { Card } from "@nextui-org/react";
 
 const GameCard = () => {
   return (
-    <div className="m-1">
-      <Button
-        color="default"
-        variant="faded"
-        className="bg-white dark:bg-dark-1 w-full h-36 text-clip"
-      >
-        Game
-      </Button>
+    <div className="m-1 cursor-pointer">
+      <Card shadow="sm" radius="md">
+        <div className="flex flex-col h-[180px] items-center overflow-y-autorounded-md">
+          <p className="text-[20px] text-center my-auto">hi</p>
+        </div>
+      </Card>
     </div>
   );
 };
