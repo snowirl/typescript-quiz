@@ -146,6 +146,7 @@ const Create = () => {
         });
         console.log("Document written with ID: ", docRef.id);
         docId = docRef.id;
+        toast.success("New study set created");
       } catch (e) {
         console.error("Error adding document: ", e);
         setIsCreating(false);
@@ -164,6 +165,7 @@ const Create = () => {
         );
       } catch (e) {
         console.error("Error adding document: ", e);
+        toast.error("Error creating set");
         setIsCreating(false);
 
         return;
@@ -184,8 +186,10 @@ const Create = () => {
           { merge: true }
         );
         console.log("Edited!");
+        toast.success("Successfully edited set");
       } catch (e) {
         console.error("Error adding document: ", e);
+        toast.error("Error editing set");
         setIsCreating(false);
         return;
       }

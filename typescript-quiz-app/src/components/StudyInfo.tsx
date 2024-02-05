@@ -22,6 +22,7 @@ import { db, auth } from "../firebase";
 import StudyFolderItem from "./StudyFolderItem";
 import SetOptionsButton from "./SetOptionsButton";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface StudyInfoProps {
   username: string;
@@ -37,6 +38,7 @@ const StudyInfo = (props: StudyInfoProps) => {
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const userID = auth.currentUser?.displayName ?? null;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -107,7 +109,10 @@ const StudyInfo = (props: StudyInfoProps) => {
         <CardHeader>
           <div className="flex justify-around flex-grow">
             <div className="flex-grow text-left">
-              <div className="flex space-x-2 items-center">
+              <div
+                className="flex space-x-2 items-center cursor-pointer w-fit"
+                onClick={() => navigate(`/profile/${props.username}`)}
+              >
                 <Avatar
                   showFallback
                   src={props.profilePictureURL}

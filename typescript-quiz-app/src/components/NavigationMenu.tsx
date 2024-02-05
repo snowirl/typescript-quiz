@@ -137,24 +137,58 @@ const NavigationMenu = () => {
   return (
     <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-dark-2">
       <div className="flex justify-between px-4 py-1 pb-3 mx-auto max-w-[1200px]">
-        <div className="flex md:hidden relative justify-center items-center space-x-4">
-          <img src={StuduckyCircleLogo} alt="Logo" className="w-11" />
-          <div className="flex md:hidden relative w-[235px]">
-            <form onSubmit={handleSubmit}>
-              <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
+        <div className=" space-y-2 w-full block md:hidden">
+          <div className="flex md:hidden relative justify-between px-1 py-1 items-center space-x-2 w-full ">
+            <div className="flex space-x-1">
+              <Sidebar />
+              <img src={StuduckyCircleLogo} alt="Logo" className="w-11" />
+            </div>
+            <div>
+              <div className="space-x-2 flex">
+                {user ? (
+                  <AvatarContainer />
+                ) : (
+                  <div className="space-x-2">
+                    <Button
+                      color="default"
+                      variant="light"
+                      className="font-semibold"
+                      radius="md"
+                      onPress={() => {
+                        onOpen(), setWhichModal("login");
+                      }}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      color="primary"
+                      className="font-semibold px-5"
+                      size="md"
+                      onPress={() => {
+                        onOpen(), setWhichModal("signup");
+                      }}
+                    >
+                      Sign up
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex md:hidden relative w-full justify-center">
+            <form onSubmit={handleSubmit} className="w-full mx-2">
+              <FaMagnifyingGlass className="w-4 h-4 absolute left-[25px] top-1/2 transform -translate-y-1/2" />
               <input
                 placeholder="Search sets, users"
-                className="description md:w-[280px] xl:w-[400px] rounded-full pl-12"
+                className="description w-full  rounded-full pl-12"
                 type="text"
                 onChange={handleInputChange}
               />
               <input type="submit" className="hidden" />
             </form>
           </div>
-          {/* <Button isIconOnly radius="full">
-            <FaMagnifyingGlass />
-          </Button> */}
         </div>
+
         <div className="md:hidden"> </div>
         {/* <div className="md:hidden">
           {/* <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" /> */}
@@ -291,9 +325,7 @@ const NavigationMenu = () => {
             </form>
           </div>
         </div>
-        <div className="flex md:hidden">
-          <Sidebar />
-        </div>
+        {/* <div className="flex md:hidden"></div> */}
         <div className="space-x-2 md:flex items-center hidden">
           {user ? (
             <AvatarContainer />

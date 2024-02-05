@@ -314,7 +314,10 @@ const Study = () => {
       return;
     } else {
       setIsSaving(true);
-      toast.dismiss();
+      if (!isInitial) {
+        toast.dismiss();
+      }
+      //
     }
 
     if (isFavoritedRef === undefined || starredListRef === undefined) {

@@ -45,18 +45,23 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
   const userID = auth.currentUser?.displayName ?? null;
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
+  const {
+    isOpen: isOpenFolderModal,
+    onOpen: onOpenFolderModal,
+    onOpenChange: onopenFolderModalChange,
+    onClose: onCloseFolderModal,
+  } = useDisclosure();
   const [_isLoading, setIsLoading] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isFolderModalOpen) {
+    if (!isOpenFolderModal) {
       return;
     }
     handleFindFolders();
-  }, [isFolderModalOpen]);
+  }, [isOpenFolderModal]);
 
   const editLink = () => {
     if (props.deckId) {
@@ -149,7 +154,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
       console.log(e);
     }
 
-    setIsFolderModalOpen(false);
+    onCloseFolderModal();
     toast.success("Added set to folder"),
       {
         toastId: "success1",
@@ -190,7 +195,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
           <DropdownItem
             key="folder"
             startContent={<FaFolderPlus />}
-            onPress={() => setIsFolderModalOpen(true)}
+            onPress={onOpenFolderModal}
           >
             Add to folder
           </DropdownItem>
@@ -226,7 +231,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isDismissable={true}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -260,9 +265,9 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
         </ModalContent>
       </Modal>
       <Modal
-        isOpen={isFolderModalOpen}
-        isDismissable={false}
-        hideCloseButton={true}
+        isOpen={isOpenFolderModal}
+        onOpenChange={onopenFolderModalChange}
+        isDismissable={true}
       >
         <ModalContent>
           {() => (
@@ -296,7 +301,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
                 <Button
                   color="danger"
                   variant="light"
-                  onPress={() => setIsFolderModalOpen(false)}
+                  onPress={onCloseFolderModal}
                 >
                   Close
                 </Button>
