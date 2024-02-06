@@ -1,4 +1,4 @@
-import { Card, Avatar, Spinner, Divider } from "@nextui-org/react";
+import { Card, Avatar, Spinner, Divider, Button } from "@nextui-org/react";
 import { db } from "../firebase";
 import SetCard from "../components/SetCard";
 import { Pagination } from "@nextui-org/react";
@@ -13,9 +13,10 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import { auth } from "../firebase";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const Profile = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -26,6 +27,8 @@ const Profile = () => {
   const { id } = useParams();
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [_isPicLoading, setIsPicLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   if (id !== undefined) {
@@ -150,6 +153,11 @@ const Profile = () => {
       <div className="w-full max-w-[800px] mx-6 text-left space-y-4">
         <Card className="w-full bg-black/0 shadow-none">
           <div className="justify-start text-left space-y-4 items-center pb-10">
+            <div className="py-2">
+              <Button onClick={() => navigate(-1)}>
+                <IoIosArrowRoundBack className="w-7 h-7" /> Back
+              </Button>
+            </div>
             <div className="space-y-2 flex items-center space-x-2">
               <Avatar src={profilePictureURL ?? ""} size="lg" />
               <p className="text-xl font-semibold">{id}</p>

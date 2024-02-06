@@ -29,6 +29,8 @@ import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
 import QuizRoundBreak from "../components/QuizRoundBreak";
 import { motion } from "framer-motion";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +60,7 @@ const Quiz = () => {
   const [cardsStudied, setCardsStudied] = useState(0);
 
   let { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     initializeDeck();
@@ -405,6 +408,12 @@ const Quiz = () => {
       <div className="flex justify-center">
         <div className="max-w-[900px] space-y-2 px-4 flex-grow-1 w-full">
           <div className="flex justify-center relative py-2">
+            <div className="absolute left-0 top-0">
+              <Button onClick={() => navigate(`/study/${id}`)}>
+                <IoIosArrowRoundBack className="w-7 h-7" /> Back
+              </Button>
+            </div>
+
             <div className="flex-grow flex justify-center items-center">
               <p className="text-center text-base font-semibold">Round 1</p>
               {/* <p className="text-center text-base font-semibold">
@@ -414,8 +423,8 @@ const Quiz = () => {
             <div className="flex-grow flex justify-end absolute right-0">
               <Popover placement="top" offset={10}>
                 <PopoverTrigger>
-                  <Button isIconOnly variant="light">
-                    <FaGear className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <Button isIconOnly>
+                    <FaGear />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>

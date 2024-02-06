@@ -298,6 +298,7 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
                     variant="flat"
                     size="sm"
                     ref={emailRef}
+                    required
                   />
                   <Input
                     isRequired

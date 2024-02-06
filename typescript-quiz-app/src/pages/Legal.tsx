@@ -10,7 +10,7 @@ import {
 const Legal = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen w-full pt-6">
-      <div className="flex justify-center items-center space-y-5 mx-4">
+      <div className="flex justify-center items-center space-y-5 mx-4 pb-20">
         <Card className="flex-grow max-w-[1000px]">
           <CardHeader className="justify-center py-6">
             <Tabs

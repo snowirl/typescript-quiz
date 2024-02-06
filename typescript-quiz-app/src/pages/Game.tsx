@@ -353,7 +353,7 @@ const Game = () => {
           </div>
         </div>
         {isGameStarted ? (
-          <div className=" justify-center grid grid-cols-3 md:grid-cols-4 items-center">
+          <div className=" justify-center grid grid-cols-3 md:grid-cols-4 items-center pb-10">
             {gameCards.map((card, index) => (
               <GameCard
                 key={index}
