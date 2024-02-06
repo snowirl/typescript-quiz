@@ -1,6 +1,6 @@
 import GameCard from "../components/GameCard";
 import { useState, useEffect } from "react";
-import { Button, Checkbox, Radio, RadioGroup } from "@nextui-org/react";
+import { Button, Checkbox } from "@nextui-org/react";
 import { FaArrowRotateLeft } from "react-icons/fa6";
 import { FaGear } from "react-icons/fa6";
 import { IoIosArrowRoundBack } from "react-icons/io";
