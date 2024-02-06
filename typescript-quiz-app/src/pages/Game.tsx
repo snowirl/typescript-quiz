@@ -308,7 +308,7 @@ const Game = () => {
       <div className="w-full max-w-[1000px] mx-6 text-left space-y-4">
         <div className="space-x-2 flex justify-between mx-1">
           <div className="w-1/3 space-x-2 flex items-center">
-            <Button onClick={() => navigate(-1)}>
+            <Button onClick={() => navigate(`/study/${id}`)}>
               <IoIosArrowRoundBack className="w-7 h-7" /> Back
             </Button>
           </div>

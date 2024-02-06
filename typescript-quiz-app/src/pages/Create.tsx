@@ -31,7 +31,13 @@ const Create = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
-  const [flashcardList, setFlashcardList] = useState<Flashcard[]>([]);
+  const [flashcardList, setFlashcardList] = useState<Flashcard[]>([
+    {
+      front: "",
+      back: "",
+      cardId: uid(),
+    },
+  ]);
   const [isCreating, setIsCreating] = useState(false);
   const [scrollTimeoutId, setScrollTimeoutId] = useState<NodeJS.Timeout | null>(
     null

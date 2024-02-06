@@ -10,10 +10,12 @@ import {
   limit,
   getDocs,
   getCountFromServer,
+  where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
+import { auth } from "../firebase";
 
 const Profile = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -25,13 +27,31 @@ const Profile = () => {
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [_isPicLoading, setIsPicLoading] = useState(true);
 
+  // useEffect(() => {
+  //   if (id !== undefined) {
+  //     getImageByUserId(id);
+  //     handleFindSets(0);
+  //     getDeckCount();
+  //   }
+  // }, [id]);
+
   useEffect(() => {
-    if (id !== undefined) {
-      getImageByUserId(id);
-      handleFindSets(0);
-      getDeckCount();
-    }
-  }, [id]);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("Signed in.");
+      } else {
+        console.log("Nope in.");
+      }
+
+      if (id !== undefined) {
+        getImageByUserId(id);
+        handleFindSets(0);
+        getDeckCount();
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription when the component unmounts
+  }, []);
 
   useEffect(() => {
     if (id !== undefined) {
@@ -60,11 +80,17 @@ const Profile = () => {
 
     let list: DocumentData = [];
     const setsRef = collection(db, "users", id, "decks");
+
     let q = query(
       setsRef,
       orderBy("created", "desc"),
+      where("private", "==", false),
       limit(5 * (pageNum + 1))
     );
+
+    if (auth.currentUser?.displayName === id) {
+      q = query(setsRef, orderBy("created", "desc"), limit(5 * (pageNum + 1)));
+    }
 
     if ((pageNum + 1) * displayPerPage - deckList?.length < pageNum) {
       return;
@@ -132,7 +158,12 @@ const Profile = () => {
           </div>
         </Card>
         <div className="space-y-2">
-          <p className="font-semibold text-base">Public Sets</p>
+          {id === auth.currentUser?.displayName ? (
+            <p className="font-semibold text-base">Your Sets</p>
+          ) : (
+            <p className="font-semibold text-base">Public Sets</p>
+          )}
+
           <Divider orientation="horizontal" />
         </div>
 
