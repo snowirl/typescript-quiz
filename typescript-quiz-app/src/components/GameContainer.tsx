@@ -75,7 +75,9 @@ const GameContainer = (props: GameContainerProps) => {
           </Button>
 
           <div className={isExploding ? "absolute left-1/2 top-1/3" : "hidden"}>
-            {isExploding && <ConfettiExplosion />}
+            {isExploding && (
+              <ConfettiExplosion duration={2200} particleCount={24} />
+            )}
           </div>
         </div>
       )}

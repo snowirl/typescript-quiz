@@ -7,9 +7,9 @@ import {
   signOut,
   sendPasswordResetEmail,
   User,
-  browserSessionPersistence,
   inMemoryPersistence,
   setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { ReactNode } from "react";
@@ -24,9 +24,9 @@ import {
   useDisclosure,
   Checkbox,
   Input,
-  Link,
 } from "@nextui-org/react";
 import { FaEyeSlash, FaEye } from "react-icons/fa6";
+import { toast } from "sonner";
 
 interface UserContextType {
   user: User | null;
@@ -205,9 +205,7 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
   const signInUser = (email: string, password: string, rememberMe: boolean) => {
     setLoading(true);
 
-    const remember = rememberMe
-      ? browserSessionPersistence
-      : inMemoryPersistence;
+    const remember = rememberMe ? browserLocalPersistence : inMemoryPersistence;
 
     setPersistence(auth, remember)
       .then(() => {
@@ -249,7 +247,8 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
   };
 
   const forgotPassword = (email: string) => {
-    onOpen();
+    onClose();
+    toast.success("Sent password reset email");
     return sendPasswordResetEmail(auth, email);
   };
 
@@ -330,17 +329,14 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
                   >
                     Remember me
                   </Checkbox>
-                  <Link
-                    href="#"
-                    className="font-semibold"
-                    onClick={() =>
-                      forgotPassword(
-                        emailRef?.current?.value ? emailRef.current.value : ""
-                      )
-                    }
+                  <button
+                    className="font-semibold text-base underline"
+                    onClick={() => {
+                      setWhichModal("forgot");
+                    }}
                   >
                     Forgot password?
-                  </Link>
+                  </button>
                 </div>
               </ModalBody>
               <ModalFooter className="py-4">
@@ -478,6 +474,55 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
                       </p>
                     </div>
                   ) : null}
+                  <div className="justify-center text-center items-center">
+                    <button
+                      className="font-semibold"
+                      onClick={() => {
+                        setWhichModal("login");
+                      }}
+                    >
+                      Have an account?
+                    </button>
+                  </div>
+                </div>
+              </ModalFooter>
+            </>
+          ) : null}
+          {whichModal === "forgot" ? (
+            <>
+              <ModalHeader className="flex flex-col gap-1 dark">
+                Reset your password
+              </ModalHeader>
+              <ModalBody className="pt-2 pb-2 space-y-2">
+                <form className="space-y-3" id="restart" action="#">
+                  <Input
+                    isRequired
+                    type="email"
+                    label="Email"
+                    labelPlacement="inside"
+                    variant="flat"
+                    size="sm"
+                    ref={emailRef}
+                  />
+                </form>
+              </ModalBody>
+              <ModalFooter className="py-4">
+                <div className="flex-grow space-y-4">
+                  <div>
+                    <Button
+                      color="primary"
+                      variant="solid"
+                      className="w-full font-semibold"
+                      radius="md"
+                      onPress={() =>
+                        forgotPassword(
+                          emailRef?.current?.value ? emailRef.current.value : ""
+                        )
+                      }
+                    >
+                      Send email
+                    </Button>
+                  </div>
                   <div className="justify-center text-center items-center">
                     <button
                       className="font-semibold"

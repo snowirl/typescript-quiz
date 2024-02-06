@@ -667,7 +667,12 @@ const Study = () => {
               All cards ({originalDeck.length})
             </p>
             {originalDeck.map((flashcard) => (
-              <StudyCardPreview key={flashcard.cardId} flashcard={flashcard} />
+              <StudyCardPreview
+                key={flashcard.cardId}
+                flashcard={flashcard}
+                isStarred={starredList?.includes(flashcard.cardId)}
+                handleStarCard={handleStarCard}
+              />
             ))}
             <div className="pt-10"></div>
           </div>
