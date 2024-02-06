@@ -16,10 +16,23 @@ const GameContainer = (props: GameContainerProps) => {
   useEffect(() => {
     if (props.newHighScore) {
       setIsExploding(true);
+
+      // Set a timeout to stop the explosion after a certain duration
+      const timeoutId = setTimeout(() => {
+        setIsExploding(false);
+      }, 3000); // Adjust the duration as needed
+
+      // Cleanup function to clear the timeout when the component unmounts
+      return () => clearTimeout(timeoutId);
     } else {
       setIsExploding(false);
     }
   }, [props.newHighScore]);
+
+  const playAgain = () => {
+    setIsExploding(false);
+    props.setIsGameStarted(true);
+  };
 
   return (
     <motion.div
@@ -56,19 +69,13 @@ const GameContainer = (props: GameContainerProps) => {
             color="primary"
             className="font-semibold"
             size="lg"
-            onClick={() => props.setIsGameStarted(true)}
+            onClick={() => playAgain()}
           >
             Play Again
           </Button>
-          <div className="absolute left-1/2 top-1/3">
-            {isExploding ? (
-              <ConfettiExplosion
-                force={0.4}
-                duration={2200}
-                width={1000}
-                particleCount={30}
-              />
-            ) : null}
+
+          <div className={isExploding ? "absolute left-1/2 top-1/3" : "hidden"}>
+            {isExploding && <ConfettiExplosion />}
           </div>
         </div>
       )}

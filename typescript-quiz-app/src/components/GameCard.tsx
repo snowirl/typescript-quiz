@@ -5,6 +5,7 @@ import { useEffect } from "react";
 interface GameFlashCard {
   cardId: string;
   content: string;
+  image?: string;
 }
 
 interface GameCardProps {
@@ -55,10 +56,18 @@ const GameCard = (props: GameCardProps) => {
             : "ring-0"
         }
       >
-        <div className="flex flex-col h-[180px] items-center overflow-y-autorounded-md">
-          <p className="text-sm md:text-[20px] text-center my-auto">
+        <div className="flex flex-col h-[180px] items-center overflow-y-autorounded-md overflow-y-auto">
+          <p className="text-sm md:text-[20px] text-center my-auto px-2 py-2 ">
             {props.card.content}
           </p>
+          {props.card.image ? (
+            <img
+              className="max-w-[100px] pb-4"
+              // width={imageWidth}
+              alt="card image"
+              src={props.card.image}
+            />
+          ) : null}
         </div>
       </Card>
     </motion.div>
