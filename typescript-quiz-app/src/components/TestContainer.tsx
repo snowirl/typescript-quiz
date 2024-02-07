@@ -15,10 +15,10 @@ interface TestContainerProps {
   handleReview: () => void;
   handleOpenModal: () => void;
   numberOfCards: number;
+  score: number;
 }
 
 const TestContainer = (props: TestContainerProps) => {
-  const [score, setScore] = useState(0);
   const [text, setText] = useState("");
   const getIndicatorColorClass = (value: number) => {
     if (value >= 80) {
@@ -33,22 +33,8 @@ const TestContainer = (props: TestContainerProps) => {
   };
 
   useEffect(() => {
-    const totalCards = props.wrongCards.length + props.correctCards.length;
-
-    if (totalCards > 0) {
-      const calculatedScore = (props.correctCards.length / totalCards) * 100;
-      setScore(calculatedScore);
-    } else {
-      // Handle the case where there are no cards (to prevent division by zero)
-      setScore(0);
-    }
-  }, [props.wrongCards, props.correctCards]);
-
-  useEffect(() => {
-    changeText(score);
-
-    console.log(score);
-  }, [score]);
+    changeText(props.score);
+  }, [props.score]);
 
   const getRandomEncouragement = (encouragementOptions: string[]): string => {
     const randomIndex = Math.floor(Math.random() * encouragementOptions.length);
@@ -79,7 +65,7 @@ const TestContainer = (props: TestContainerProps) => {
         "You're making progress. Keep it up!",
         "Nice work! You're on the right path. Keep the momentum going!",
         "You're getting there! Stay focused and keep progressing.",
-        "Your hard work is paying off. Keep up the good effort!",
+        "Your hard work will pay off. Keep up the good effort!",
       ];
       encouragementText = getRandomEncouragement(options);
     } else if (val > 60 && val <= 80) {
@@ -109,7 +95,7 @@ const TestContainer = (props: TestContainerProps) => {
     <div>
       <Card>
         <CardHeader className="px-4">
-          <p className="text-2xl font-semibold">Test Results</p>
+          <p className="text-xl font-semibold">Test Results</p>
         </CardHeader>
         <CardBody className="px-4">
           <div className="space-y-4 text-center">
@@ -119,11 +105,11 @@ const TestContainer = (props: TestContainerProps) => {
                 aria-label="Loading..."
                 classNames={{
                   svg: "w-36 h-36 drop-shadow-md",
-                  indicator: getIndicatorColorClass(score),
+                  indicator: getIndicatorColorClass(props.score),
                   track: "stroke-black/10 dark:stroke-white/10",
                   value: "text-3xl font-semibold",
                 }}
-                value={score}
+                value={props.score}
                 strokeWidth={4}
                 showValueLabel={true}
               />

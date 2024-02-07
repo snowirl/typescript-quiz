@@ -575,7 +575,11 @@ const Study = () => {
         {isLoading ? (
           <LoadingContainer />
         ) : (
-          <div className="max-w-[825px] w-full flex-grow space-y-3 px-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="max-w-[825px] w-full flex-grow space-y-3 px-4"
+          >
             <p className="font-bold text-2xl">{deckData?.title}</p>
             <div className="flex justify-between relative">
               <div></div>
@@ -687,7 +691,7 @@ const Study = () => {
               />
             ))}
             <div className="pt-10"></div>
-          </div>
+          </motion.div>
         )}
       </div>
       <Modal

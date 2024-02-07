@@ -1,6 +1,15 @@
 import GameCard from "../components/GameCard";
 import { useState, useEffect } from "react";
-import { Button, Checkbox } from "@nextui-org/react";
+import {
+  Button,
+  Checkbox,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import { FaArrowRotateLeft } from "react-icons/fa6";
 import { FaGear } from "react-icons/fa6";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -11,6 +20,7 @@ import {
   getDocs,
   doc,
   getDoc,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
@@ -39,7 +49,8 @@ const Game = () => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  // const [deckData, setDeckData] = useState<DocumentData | null>(null);
+  const [deckData, setDeckData] = useState<DocumentData | null>(null);
+  const [error, setError] = useState("");
   const [_originalDeck, setOriginalDeck] = useState(flashcards); // original deck
   const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
   const [_isLoading, setIsLoading] = useState(true); // currently using card
@@ -61,16 +72,47 @@ const Game = () => {
   const navigate = useNavigate();
   const controls = useAnimation();
 
+  const {
+    isOpen: lockedIsOpen,
+    onOpen: lockedOnOpen,
+    onOpenChange: lockedOnOpenChange,
+  } = useDisclosure();
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
       if (id !== undefined) {
-        initializeDeck();
-        initializeActivity();
+        initializeDeckInfo();
       }
     });
 
     return () => unsubscribe(); // Cleanup the subscription when the component unmounts
   }, []);
+
+  useEffect(() => {
+    if (deckData) {
+      initializeDeck();
+      initializeActivity();
+    }
+  }, [deckData]);
+
+  const initializeDeckInfo = async () => {
+    setIsLoading(true);
+
+    const q = query(collectionGroup(db, "decks"), where("id", "==", id));
+
+    try {
+      const docRef = await getDocs(q);
+
+      setDeckData(docRef.docs[0].data());
+
+      // console.log(docRef.docs[0].data());
+    } catch (e) {
+      console.log("error occurred: " + e);
+      setError("undefined");
+      lockedOnOpen();
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -163,12 +205,13 @@ const Game = () => {
   }, [gameState]);
 
   const initializeDeck = async () => {
-    // if (deckData?.private && deckData.owner !== userID) {
-    //   console.log("ERROR... DECK IS PRIVATE!");
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // different function because cards are in a different place for preview purposes
+    if (deckData?.private && deckData.owner !== userID) {
+      setError("private");
+      lockedOnOpen();
+      setIsLoading(false);
+      return;
+    }
+
     const q = query(collectionGroup(db, "cards"), where("id", "==", id));
 
     try {
@@ -180,6 +223,8 @@ const Game = () => {
       setCurrentDeck(docRef.docs[0].data().cards);
     } catch (e) {
       console.log("error occurred: " + e);
+      setError("undefined");
+      lockedOnOpen();
 
       setIsLoading(false);
     }
@@ -307,6 +352,42 @@ const Game = () => {
 
   return (
     <div className="flex justify-center bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
+      <Modal
+        isOpen={lockedIsOpen}
+        onOpenChange={lockedOnOpenChange}
+        isDismissable={false}
+        hideCloseButton={true}
+      >
+        <ModalContent>
+          {() => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
+                {error === "private" ? "Private Flashcard Set" : null}
+                {error === "undefined" ? "No Set Found" : null}
+              </ModalHeader>
+              <ModalBody>
+                <p className="text-black dark:text-gray-200">
+                  {error === "private"
+                    ? "This flashcard set is private and the owner must change it to public for access."
+                    : null}
+                  {error === "undefined"
+                    ? "This flashcard set is possibly deleted or does not exist."
+                    : null}
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="primary"
+                  onPress={() => navigate("/")}
+                  className="font-semibold"
+                >
+                  Go back
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <div className="w-full max-w-[1000px] mx-6 text-left space-y-4">
         <div className="space-x-2 flex justify-between mx-1">
           <div className="w-1/3 space-x-2 flex items-center">

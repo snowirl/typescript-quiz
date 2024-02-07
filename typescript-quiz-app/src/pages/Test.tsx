@@ -1,5 +1,5 @@
 import TestQuestion from "../components/TestQuestion";
-import { Button, Checkbox, Divider } from "@nextui-org/react";
+import { Button, Checkbox, Chip, Divider, Tooltip } from "@nextui-org/react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -22,6 +22,7 @@ import {
   getDocs,
   doc,
   getDoc,
+  DocumentData,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
@@ -45,13 +46,22 @@ const Test = () => {
     onOpenChange: sureOnOpenChange,
     onClose: sureOnClose,
   } = useDisclosure();
+  const {
+    isOpen: lockedIsOpen,
+    onOpen: lockedOnOpen,
+    onOpenChange: lockedOnOpenChange,
+  } = useDisclosure();
   const navigate = useNavigate();
   const { id } = useParams();
   const userID = auth.currentUser?.displayName ?? null;
 
+  const [deckData, setDeckData] = useState<DocumentData | null>(null);
+  const [score, setScore] = useState(0);
+  const [numberOfCards, setNumberOfCards] = useState(0);
+  const [error, setError] = useState("");
   const [initialDeck, setInitialDeck] = useState(flashcards);
   const [currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
-  const [_isLoading, setIsLoading] = useState(true); // currently using card
+  const [isLoading, setIsLoading] = useState(true); // currently using card
   const [starredList, setStarredList] = useState<string[]>([]);
   const [didStartTest, setDidStartTest] = useState(false);
   const [numberOfQuestions, setNumberOfQuestions] = useState(20);
@@ -70,22 +80,48 @@ const Test = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
       if (id !== undefined) {
-        initializeDeck();
-        initializeActivity();
-        onOpen();
+        initializeDeckInfo();
       }
     });
 
     return () => unsubscribe(); // Cleanup the subscription when the component unmounts
   }, []);
 
+  useEffect(() => {
+    if (deckData) {
+      initializeDeck();
+      initializeActivity();
+    }
+  }, [deckData]);
+
+  const initializeDeckInfo = async () => {
+    setIsLoading(true);
+
+    const q = query(collectionGroup(db, "decks"), where("id", "==", id));
+
+    try {
+      const docRef = await getDocs(q);
+
+      setDeckData(docRef.docs[0].data());
+
+      // console.log(docRef.docs[0].data());
+    } catch (e) {
+      console.log("error occurred: " + e);
+      setError("undefined");
+      lockedOnOpen();
+      setIsLoading(false);
+    }
+  };
+
   const initializeDeck = async () => {
-    // if (deckData?.private && deckData.owner !== userID) {
-    //   console.log("ERROR... DECK IS PRIVATE!");
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // different function because cards are in a different place for preview purposes
+    if (deckData?.private && deckData.owner !== userID) {
+      lockedOnOpen();
+
+      setIsLoading(false);
+      setError("private");
+      return;
+    }
+
     const q = query(collectionGroup(db, "cards"), where("id", "==", id));
 
     try {
@@ -94,6 +130,7 @@ const Test = () => {
       setInitialDeck(docRef.docs[0].data().cards);
     } catch (e) {
       console.log("error occurred: " + e);
+      setError("undefined");
 
       setIsLoading(false);
     }
@@ -115,7 +152,15 @@ const Test = () => {
   };
 
   const handleCreateNewTest = () => {
-    setDidStartTest(true);
+    setDidStartTest(false);
+    setIsLoading(true);
+
+    const timeOutId = setTimeout(() => {
+      // so test doesn't flicker when we make a new one.
+      setDidStartTest(true);
+      setIsLoading(false);
+    }, 300);
+
     shuffleDeck();
     setWrongCards([]);
     setCorrectCards([]);
@@ -126,19 +171,13 @@ const Test = () => {
     setTriedToSubmit(false);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
-  // useEffect(() => {
-  //   if (didStartTest && initialDeck.length > 1) {
-  //     shuffleDeck();
-  //     setWrongCards([]);
-  //     setCorrectCards([]);
-  //   } else {
-  //     if (initialDeck.length > 1) {
-  //       setDidStartTest(true);
-  //     }
-  //   }
-  // }, [didStartTest]);
+    useEffect(() => {
+      return () => {
+        clearTimeout(timeOutId);
+      };
+    }, []); // Empty dependency array means it will only run on mount and unmount
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
@@ -253,6 +292,25 @@ const Test = () => {
     onOpen();
   };
 
+  useEffect(() => {
+    // handles the score
+    const totalCards = wrongCards.length + correctCards.length;
+    const numberOfCards = Math.min(numberOfQuestions, currentDeck.length);
+
+    if (totalCards > 0) {
+      const calculatedScore = (correctCards.length / numberOfCards) * 100;
+      setScore(calculatedScore);
+    } else {
+      // Handle the case where there are no cards (to prevent division by zero)
+      setScore(0);
+    }
+  }, [wrongCards, correctCards]);
+
+  useEffect(() => {
+    // set the number of cards
+    setNumberOfCards(Math.min(numberOfQuestions, currentDeck?.length));
+  }, [numberOfQuestions, currentDeck]);
+
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="space-y-5 flex justify-center items-center ">
@@ -263,9 +321,15 @@ const Test = () => {
                 <IoIosArrowRoundBack className="w-7 h-7" /> Back
               </Button>
               <div></div>
-              <div className="absolute w-full">
-                <p className="font-semibold">Set Title</p>
-              </div>
+              {deckData ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="absolute w-full"
+                >
+                  <p className="font-semibold">{deckData?.title}</p>
+                </motion.div>
+              ) : null}
 
               <Button isIconOnly onClick={() => onOpen()}>
                 <FaGear />
@@ -295,11 +359,25 @@ const Test = () => {
                               size="lg"
                               isSelected={isStarredOnly}
                               onValueChange={setIsStarredOnly}
-                              isDisabled={starredList.length < 5}
+                              isDisabled={
+                                starredList?.length > 4 ? false : true
+                              }
                             >
                               <p className="text-base">Starred only</p>
                             </Checkbox>
+                            <p>
+                              <Chip
+                                color="warning"
+                                size="sm"
+                                className="font-semibold opacity-60 ml-2"
+                              >
+                                <p className="font-semibold">
+                                  At least 5 starred cards to select this option
+                                </p>
+                              </Chip>
+                            </p>
                           </div>
+
                           <div className="py-1">
                             <Select
                               label="Answer with"
@@ -315,7 +393,7 @@ const Test = () => {
                                 key="term"
                                 value="term"
                                 isDisabled={
-                                  answerWith === "term" ? true : false
+                                  answerWithPending === "term" ? true : false
                                 }
                                 className="text-black dark:text-white"
                               >
@@ -324,7 +402,9 @@ const Test = () => {
                               <SelectItem
                                 key="def"
                                 value="definition"
-                                isDisabled={answerWith === "def" ? true : false}
+                                isDisabled={
+                                  answerWithPending === "def" ? true : false
+                                }
                                 className="text-black dark:text-white"
                               >
                                 Definition
@@ -333,7 +413,7 @@ const Test = () => {
                                 key="mixed"
                                 value="mixed"
                                 isDisabled={
-                                  answerWith === "mixed" ? true : false
+                                  answerWithPending === "mixed" ? true : false
                                 }
                                 className="text-black dark:text-white"
                               >
@@ -399,8 +479,73 @@ const Test = () => {
                   )}
                 </ModalContent>
               </Modal>
+              <Modal
+                isOpen={lockedIsOpen}
+                onOpenChange={lockedOnOpenChange}
+                isDismissable={false}
+                hideCloseButton={true}
+              >
+                <ModalContent>
+                  {() => (
+                    <>
+                      <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
+                        {error === "private" ? "Private Flashcard Set" : null}
+                        {error === "undefined" ? "No Set Found" : null}
+                      </ModalHeader>
+                      <ModalBody>
+                        <p className="text-black dark:text-gray-200">
+                          {error === "private"
+                            ? "This flashcard set is private and the owner must change it to public for access."
+                            : null}
+                          {error === "undefined"
+                            ? "This flashcard set is possibly deleted or does not exist."
+                            : null}
+                        </p>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button
+                          color="primary"
+                          onPress={() => navigate("/")}
+                          className="font-semibold"
+                        >
+                          Go back
+                        </Button>
+                      </ModalFooter>
+                    </>
+                  )}
+                </ModalContent>
+              </Modal>
             </div>
           </div>
+          {finishedTest && isReviewing ? (
+            <div className="relative pb-2">
+              <div className="w-full flex justify-center space-y-2">
+                <div className="py-2">
+                  <p className="font-semibold text-2xl">
+                    {score.toFixed(0)} / 100
+                  </p>
+                </div>
+              </div>
+
+              <div className="absolute items-start justify-start md:flex md:space-x-2 space-y-1 md:space-y-0 top-0 md:top-1/2 left-0">
+                <div>
+                  <Chip color="success" className="font-semibold" size="md">
+                    <p className="font-semibold">
+                      {correctCards.length} Correct
+                    </p>
+                  </Chip>
+                </div>
+                <div>
+                  <Chip color="danger" className="font-semibold" size="md">
+                    <p className="font-semibold">
+                      {numberOfCards - correctCards.length} Wrong
+                    </p>
+                  </Chip>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           <div className={finishedTest ? (!isReviewing ? "hidden" : "") : ""}>
             {didStartTest && initialDeck.length > 1 ? (
               <motion.div
@@ -414,7 +559,7 @@ const Test = () => {
               >
                 <Card shadow="sm">
                   {Array.from({
-                    length: Math.min(numberOfQuestions, currentDeck.length),
+                    length: numberOfCards,
                   }).map((_, index) => (
                     <div key={index}>
                       <TestQuestion
@@ -428,11 +573,7 @@ const Test = () => {
                         triedToSubmit={triedToSubmit}
                       />
                       <div className="px-8">
-                        {index <
-                          Math.min(
-                            numberOfQuestions - 1,
-                            currentDeck.length - 1
-                          ) && (
+                        {index < numberOfCards - 1 && (
                           <div className="px-8">
                             <Divider />
                           </div>
@@ -467,13 +608,18 @@ const Test = () => {
             <TestContainer
               correctCards={correctCards}
               wrongCards={wrongCards}
-              numberOfCards={Math.min(numberOfQuestions, currentDeck.length)}
+              score={score}
+              numberOfCards={numberOfCards}
               handleReview={handleReview}
               handleOpenModal={handleOpenModal}
             />
           ) : null}
-          {!didStartTest && !isReviewing ? (
-            <div className="w-full h-[300px] flex justify-center items-center">
+          {!didStartTest && !isReviewing && !isLoading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="w-full h-[300px] flex justify-center items-center"
+            >
               <Button
                 color="primary"
                 size="lg"
@@ -482,7 +628,7 @@ const Test = () => {
               >
                 Create New Test
               </Button>
-            </div>
+            </motion.div>
           ) : null}
         </div>
       </div>
