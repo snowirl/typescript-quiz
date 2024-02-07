@@ -1,5 +1,5 @@
 import TestQuestion from "../components/TestQuestion";
-import { Button, Checkbox, Chip, Divider, Tooltip } from "@nextui-org/react";
+import { Button, Checkbox, Chip, Divider } from "@nextui-org/react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
