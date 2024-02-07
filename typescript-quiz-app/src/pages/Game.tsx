@@ -15,7 +15,6 @@ import {
 import { db } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
 import { useParams } from "react-router-dom";
-import { useUserContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import GameContainer from "../components/GameContainer";
 import { auth } from "../firebase";
@@ -59,9 +58,19 @@ const Game = () => {
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const userID = auth?.currentUser?.displayName ?? null;
   const { id } = useParams();
-  const { user } = useUserContext();
   const navigate = useNavigate();
   const controls = useAnimation();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      if (id !== undefined) {
+        initializeDeck();
+        initializeActivity();
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription when the component unmounts
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -102,13 +111,6 @@ const Game = () => {
       checkIfHighScore(time);
     }
   }, [isGameStarted]);
-
-  useEffect(() => {
-    if (user) {
-      initializeDeck();
-      initializeActivity();
-    }
-  }, [user]);
 
   useEffect(() => {
     if (currentDeck) {
