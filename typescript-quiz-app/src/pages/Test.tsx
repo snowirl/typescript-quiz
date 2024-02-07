@@ -27,6 +27,7 @@ import { db, auth } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect, ChangeEvent } from "react";
 import TestContainer from "../components/TestContainer";
+import { motion } from "framer-motion";
 
 const flashcards: Flashcard[] = [
   {
@@ -63,6 +64,7 @@ const Test = () => {
       if (id !== undefined) {
         initializeDeck();
         initializeActivity();
+        onOpen();
       }
     });
 
@@ -110,7 +112,10 @@ const Test = () => {
     setWrongCards([]);
     setCorrectCards([]);
     setFinishedTest(false);
+    setIsReviewing(false);
     onClose();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // useEffect(() => {
@@ -211,10 +216,16 @@ const Test = () => {
   const handleSubmitTest = () => {
     setFinishedTest(true);
     setIsReviewing(false);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleReview = () => {
     setIsReviewing(true);
+  };
+
+  const handleOpenModal = () => {
+    onOpen();
   };
 
   return (
@@ -222,10 +233,15 @@ const Test = () => {
       <div className="space-y-5 flex justify-center items-center ">
         <div className="max-w-[800px] flex-grow space-y-4 mx-4 pb-10">
           <div className="space-x-2 flex justify-between mx-1">
-            <div className="w-1/3 space-x-2 flex items-center">
-              <Button onClick={() => navigate(`/study/${id}`)}>
+            <div className="space-x-2 flex items-center relative justify-between w-full">
+              <Button onClick={() => navigate(`/study/${id}`)} className="z-10">
                 <IoIosArrowRoundBack className="w-7 h-7" /> Back
               </Button>
+              <div></div>
+              <div className="absolute w-full">
+                <p className="font-semibold">Set Title</p>
+              </div>
+
               <Button isIconOnly onClick={() => onOpen()}>
                 <FaGear />
               </Button>
@@ -327,7 +343,15 @@ const Test = () => {
           </div>
           <div className={finishedTest ? (!isReviewing ? "hidden" : "") : ""}>
             {didStartTest && initialDeck.length > 1 ? (
-              <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, translateY: 10 }}
+                animate={{
+                  opacity: 1,
+                  translateY: 0,
+                }}
+                transition={{ type: "spring", duration: 0.8 }}
+                className="space-y-4"
+              >
                 <Card shadow="sm">
                   {Array.from({
                     length: Math.min(numberOfQuestions, currentDeck.length),
@@ -356,15 +380,26 @@ const Test = () => {
                     </div>
                   ))}
                 </Card>
-                <Button
-                  color="primary"
-                  size="lg"
-                  className="font-semibold"
-                  onClick={() => handleSubmitTest()}
-                >
-                  Submit Test
-                </Button>
-              </div>
+                {!isReviewing ? (
+                  <Button
+                    color="primary"
+                    size="lg"
+                    className="font-semibold"
+                    onClick={() => handleSubmitTest()}
+                  >
+                    Submit Test
+                  </Button>
+                ) : (
+                  <Button
+                    color="primary"
+                    size="lg"
+                    className="font-semibold"
+                    onClick={() => onOpen()}
+                  >
+                    Create New Test
+                  </Button>
+                )}
+              </motion.div>
             ) : null}
           </div>
           {finishedTest && !isReviewing ? (
@@ -372,6 +407,7 @@ const Test = () => {
               correctCards={correctCards}
               wrongCards={wrongCards}
               handleReview={handleReview}
+              handleOpenModal={handleOpenModal}
             />
           ) : null}
         </div>

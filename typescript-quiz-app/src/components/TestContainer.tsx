@@ -12,6 +12,7 @@ interface TestContainerProps {
   correctCards: Flashcard[];
   wrongCards: Flashcard[];
   handleReview: () => void;
+  handleOpenModal: () => void;
 }
 
 const TestContainer = (props: TestContainerProps) => {
@@ -86,6 +87,7 @@ const TestContainer = (props: TestContainerProps) => {
               variant="light"
               className="font-semibold "
               size="lg"
+              onClick={() => props.handleOpenModal()}
             >
               Create New Test
             </Button>

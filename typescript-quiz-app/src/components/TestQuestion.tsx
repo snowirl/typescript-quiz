@@ -139,7 +139,9 @@ const TestQuestion = (props: TestQuestionProps) => {
         }
         onChange={selectAnswer}
         isDisabled={props.finishedTest}
-        defaultValue={props.finishedTest ? props.selectedAnswer.toString() : ""}
+        defaultValue={
+          props.finishedTest ? props?.selectedAnswer?.toString() : ""
+        }
         value={selectedAnswerIndex?.toString() ?? ""}
       >
         <Radio value="0" className="opacity-100">
