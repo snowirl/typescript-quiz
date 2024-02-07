@@ -1,4 +1,4 @@
-import { Progress } from "@nextui-org/react";
+import { SliderValue } from "@nextui-org/react";
 import StudyButtons from "../components/StudyButtons";
 import StudyCard from "../components/StudyCard";
 import StudyInfo from "../components/StudyInfo";
@@ -39,6 +39,7 @@ import { useAnimationControls } from "framer-motion";
 import StudyNav from "../components/StudyNav";
 import { toast } from "sonner";
 import LoadingContainer from "../components/LoadingContainer";
+import { Slider } from "@nextui-org/react";
 
 const flashcards: Flashcard[] = [
   {
@@ -609,11 +610,22 @@ const Study = () => {
             </div>
             <div className="w-full"></div>
 
-            <Progress
+            {/* <Progress
               aria-label="Loading..."
               value={((index + 1) / currentDeck.length) * 100}
               className=""
               size="sm"
+            /> */}
+            <Slider
+              step={1}
+              maxValue={currentDeck.length - 1}
+              minValue={0}
+              defaultValue={0.4}
+              value={index}
+              className=""
+              size="sm"
+              hideThumb
+              onChange={(value: SliderValue) => setIndex(+value.toString())}
             />
 
             <StudyNav deckId={id ?? "undefined"} />

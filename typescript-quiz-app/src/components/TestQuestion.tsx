@@ -1,12 +1,22 @@
 import { RadioGroup, Radio } from "@nextui-org/react";
 import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect } from "react";
+import { FaCheck } from "react-icons/fa";
+import { FaXmark } from "react-icons/fa6";
 
 interface TestQuestionProps {
   flashcard: Flashcard;
   answerWith: string;
   index: number;
   generateWrongAnswers: (card: Flashcard) => Flashcard[];
+  handleAnswer: (
+    card: Flashcard,
+    isCorrect: boolean,
+    index: number,
+    selectedAnswerIndex: number
+  ) => void;
+  finishedTest: boolean;
+  selectedAnswer: number;
 }
 
 const flashcards: Flashcard[] = [
@@ -36,7 +46,9 @@ const TestQuestion = (props: TestQuestionProps) => {
   const [mixed, setMixed] = useState("");
   const [wrongAnswers, setWrongAnswers] = useState<Flashcard[]>(flashcards);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(0);
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(0);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     if (props.answerWith === "mixed") {
@@ -53,47 +65,95 @@ const TestQuestion = (props: TestQuestionProps) => {
     setCorrectAnswerIndex(randomIndex);
 
     setWrongAnswers(props.generateWrongAnswers(props.flashcard));
+    setSelectedAnswerIndex(null);
   }, [props.flashcard]);
 
   const selectAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.value) {
-      case "a":
+      case "0":
         setSelectedAnswerIndex(0);
         break;
-      case "b":
+      case "1":
         setSelectedAnswerIndex(1);
         break;
-      case "c":
+      case "2":
         setSelectedAnswerIndex(2);
         break;
-      case "d":
+      case "3":
         setSelectedAnswerIndex(3);
         break;
     }
   };
 
+  useEffect(() => {
+    if (selectedAnswerIndex !== null) {
+      const isCorrect =
+        selectedAnswerIndex === correctAnswerIndex ? true : false;
+      props.handleAnswer(
+        props.flashcard,
+        isCorrect,
+        props.index,
+        selectedAnswerIndex
+      );
+    }
+  }, [selectedAnswerIndex]);
+
+  useEffect(() => {
+    if (!props.finishedTest) {
+      setSelectedAnswerIndex(null);
+    }
+  }, [props.finishedTest]);
+
   return (
     <div className="px-8 py-6 text-left space-y-6">
-      <span className="text-base mr-2">{props.index + 1}.</span>
-      {props.answerWith === "term" || mixed === "term" ? (
-        <>
-          <span className="text-base">{props.flashcard.back}</span>
-        </>
-      ) : null}
-      {props.answerWith === "def" || mixed === "def" ? (
-        <>
-          <span className="text-base">{props.flashcard.front}</span>
-        </>
-      ) : null}
+      <div className="flex items-start space-x-2">
+        <div className="flex justify-center items-center space-x-2">
+          {correctAnswerIndex === selectedAnswerIndex && props.finishedTest ? (
+            <FaCheck className="text-green-500" />
+          ) : null}
+          {correctAnswerIndex !== selectedAnswerIndex && props.finishedTest ? (
+            <FaXmark className="text-rose-500" />
+          ) : null}
+          <span className="text-base">{props.index + 1}.</span>
+        </div>
+
+        {props.answerWith === "term" || mixed === "term" ? (
+          <>
+            <span className="text-base">{props.flashcard.back}</span>
+          </>
+        ) : null}
+        {props.answerWith === "def" || mixed === "def" ? (
+          <>
+            <span className="text-base">{props.flashcard.front}</span>
+          </>
+        ) : null}
+      </div>
 
       <RadioGroup
         color={
-          selectedAnswerIndex === correctAnswerIndex ? "success" : "danger"
+          props.finishedTest
+            ? correctAnswerIndex === props.selectedAnswer
+              ? "success"
+              : "danger"
+            : "primary"
         }
         onChange={selectAnswer}
+        isDisabled={props.finishedTest}
+        defaultValue={props.finishedTest ? props.selectedAnswer.toString() : ""}
+        value={selectedAnswerIndex?.toString() ?? ""}
       >
-        <Radio value="a">
-          <p>
+        <Radio value="0" className="opacity-100">
+          <p
+            className={
+              props.finishedTest && correctAnswerIndex === 0
+                ? "text-green-500 font-semibold"
+                : props.finishedTest &&
+                  correctAnswerIndex !== 0 &&
+                  selectedAnswerIndex === 0
+                ? "text-rose-500 font-semibold"
+                : ""
+            }
+          >
             {correctAnswerIndex === 0
               ? props.answerWith === "term" || mixed === "term"
                 ? props.flashcard.front
@@ -103,8 +163,18 @@ const TestQuestion = (props: TestQuestionProps) => {
               : wrongAnswers[0].back}
           </p>
         </Radio>
-        <Radio value="b">
-          <p>
+        <Radio value="1" className="opacity-100">
+          <p
+            className={
+              props.finishedTest && correctAnswerIndex === 1
+                ? "text-green-500 font-semibold"
+                : props.finishedTest &&
+                  correctAnswerIndex !== 1 &&
+                  selectedAnswerIndex === 1
+                ? "text-rose-500 font-semibold"
+                : ""
+            }
+          >
             {correctAnswerIndex === 1
               ? props.answerWith === "term" || mixed === "term"
                 ? props.flashcard.front
@@ -114,8 +184,18 @@ const TestQuestion = (props: TestQuestionProps) => {
               : wrongAnswers[1].back}
           </p>
         </Radio>
-        <Radio value="c">
-          <p>
+        <Radio value="2" className="opacity-100">
+          <p
+            className={
+              props.finishedTest && correctAnswerIndex === 2
+                ? "text-green-500 font-semibold"
+                : props.finishedTest &&
+                  correctAnswerIndex !== 2 &&
+                  selectedAnswerIndex === 2
+                ? "text-rose-500 font-semibold"
+                : ""
+            }
+          >
             {correctAnswerIndex === 2
               ? props.answerWith === "term" || mixed === "term"
                 ? props.flashcard.front
@@ -125,8 +205,18 @@ const TestQuestion = (props: TestQuestionProps) => {
               : wrongAnswers[2].back}
           </p>
         </Radio>
-        <Radio value="d">
-          <p>
+        <Radio value="3" className="opacity-100">
+          <p
+            className={
+              props.finishedTest && correctAnswerIndex === 3
+                ? "text-green-500 font-semibold"
+                : props.finishedTest &&
+                  correctAnswerIndex !== 3 &&
+                  selectedAnswerIndex === 3
+                ? "text-rose-500 font-semibold"
+                : ""
+            }
+          >
             {correctAnswerIndex === 3
               ? props.answerWith === "term" || mixed === "term"
                 ? props.flashcard.front
@@ -137,7 +227,6 @@ const TestQuestion = (props: TestQuestionProps) => {
           </p>
         </Radio>
       </RadioGroup>
-      <p>Correct: {correctAnswerIndex}</p>
     </div>
   );
 };

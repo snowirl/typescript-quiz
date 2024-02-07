@@ -50,6 +50,13 @@ const Test = () => {
   const [numberOfQuestions, setNumberOfQuestions] = useState(20);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const [answerWith, setAnswerWith] = useState("term");
+  const [finishedTest, setFinishedTest] = useState(false);
+  const [correctCards, setCorrectCards] = useState<Flashcard[]>([]);
+  const [wrongCards, setWrongCards] = useState<Flashcard[]>([]);
+  const [selectedAnswerArray, setSelectedAnswerArray] = useState<number[]>(
+    Array.from({ length: 50 })
+  );
+  const [isReviewing, setIsReviewing] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
@@ -73,8 +80,6 @@ const Test = () => {
 
     try {
       const docRef = await getDocs(q);
-
-      console.log(docRef.docs[0].data().cards);
 
       setInitialDeck(docRef.docs[0].data().cards);
     } catch (e) {
@@ -100,10 +105,25 @@ const Test = () => {
   };
 
   const handleCreateNewTest = () => {
-    onClose();
     setDidStartTest(true);
     shuffleDeck();
+    setWrongCards([]);
+    setCorrectCards([]);
+    setFinishedTest(false);
+    onClose();
   };
+
+  // useEffect(() => {
+  //   if (didStartTest && initialDeck.length > 1) {
+  //     shuffleDeck();
+  //     setWrongCards([]);
+  //     setCorrectCards([]);
+  //   } else {
+  //     if (initialDeck.length > 1) {
+  //       setDidStartTest(true);
+  //     }
+  //   }
+  // }, [didStartTest]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
@@ -125,8 +145,6 @@ const Test = () => {
     const starredCards = initialDeck.filter((card) =>
       starredList?.includes(card.cardId)
     );
-
-    console.log(starredCards);
 
     let shuffledDeck: Flashcard[] = [];
 
@@ -157,9 +175,47 @@ const Test = () => {
     return wrongAnswers;
   };
 
-  // useEffect(() => {
-  //   shuffleDeck();
-  // }, [isStarredOnly]);
+  const handleAnswer = (
+    flashcard: Flashcard,
+    isCorrect: boolean,
+    index: number,
+    selectedAnswerIndex: number
+  ) => {
+    if (isCorrect) {
+      // Add the flashcard to the correctCards array
+      setCorrectCards((prevCorrectCards) => [...prevCorrectCards, flashcard]);
+
+      // Remove the flashcard from the wrongCards array if it contains it
+      setWrongCards((prevWrongCards) =>
+        prevWrongCards.filter((card) => card !== flashcard)
+      );
+    } else {
+      // Add the flashcard to the wrongCards array
+      setWrongCards((prevWrongCards) => [...prevWrongCards, flashcard]);
+
+      // Remove the flashcard from the correctCards array if it contains it
+      setCorrectCards((prevCorrectCards) =>
+        prevCorrectCards.filter((card) => card !== flashcard)
+      );
+    }
+
+    setSelectedAnswerArray((prevSelectedAnswerArray) => {
+      const updatedArray = [...prevSelectedAnswerArray];
+      updatedArray[index] = selectedAnswerIndex;
+      return updatedArray;
+    });
+
+    console.log("Ran");
+  };
+
+  const handleSubmitTest = () => {
+    setFinishedTest(true);
+    setIsReviewing(false);
+  };
+
+  const handleReview = () => {
+    setIsReviewing(true);
+  };
 
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
@@ -185,7 +241,6 @@ const Test = () => {
                           <div className="flex items-center space-x-2 justify-start">
                             <input
                               type="number"
-                              placeholder="10"
                               className="w-[72px] h-8 description rounded-lg bg-gray-100 dark:bg-dark-2"
                               min={0}
                               max={50}
@@ -270,40 +325,55 @@ const Test = () => {
               </Modal>
             </div>
           </div>
-          {didStartTest ? (
-            <div className="space-y-4">
-              <Card shadow="sm">
-                {Array.from({
-                  length: Math.min(numberOfQuestions, currentDeck.length),
-                }).map((_, index) => (
-                  <div key={index}>
-                    <TestQuestion
-                      flashcard={currentDeck[index]}
-                      answerWith={answerWith}
-                      index={index}
-                      generateWrongAnswers={generateWrongAnswers}
-                    />
-                    <div className="px-8">
-                      {index <
-                        Math.min(
-                          numberOfQuestions - 1,
-                          currentDeck.length - 1
-                        ) && (
-                        <div className="px-8">
-                          <Divider />
-                        </div>
-                      )}
+          <div className={finishedTest ? (!isReviewing ? "hidden" : "") : ""}>
+            {didStartTest && initialDeck.length > 1 ? (
+              <div className="space-y-4">
+                <Card shadow="sm">
+                  {Array.from({
+                    length: Math.min(numberOfQuestions, currentDeck.length),
+                  }).map((_, index) => (
+                    <div key={index}>
+                      <TestQuestion
+                        flashcard={currentDeck[index]}
+                        answerWith={answerWith}
+                        index={index}
+                        generateWrongAnswers={generateWrongAnswers}
+                        handleAnswer={handleAnswer}
+                        finishedTest={finishedTest}
+                        selectedAnswer={selectedAnswerArray[index]}
+                      />
+                      <div className="px-8">
+                        {index <
+                          Math.min(
+                            numberOfQuestions - 1,
+                            currentDeck.length - 1
+                          ) && (
+                          <div className="px-8">
+                            <Divider />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </Card>
-              <Button color="primary" size="lg" className="font-semibold">
-                Submit Test
-              </Button>
-            </div>
-          ) : (
-            <TestContainer />
-          )}
+                  ))}
+                </Card>
+                <Button
+                  color="primary"
+                  size="lg"
+                  className="font-semibold"
+                  onClick={() => handleSubmitTest()}
+                >
+                  Submit Test
+                </Button>
+              </div>
+            ) : null}
+          </div>
+          {finishedTest && !isReviewing ? (
+            <TestContainer
+              correctCards={correctCards}
+              wrongCards={wrongCards}
+              handleReview={handleReview}
+            />
+          ) : null}
         </div>
       </div>
     </div>
