@@ -39,6 +39,12 @@ const flashcards: Flashcard[] = [
 
 const Test = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const {
+    isOpen: sureIsOpen,
+    onOpen: sureOnOpen,
+    onOpenChange: sureOnOpenChange,
+    onClose: sureOnClose,
+  } = useDisclosure();
   const navigate = useNavigate();
   const { id } = useParams();
   const userID = auth.currentUser?.displayName ?? null;
@@ -51,6 +57,7 @@ const Test = () => {
   const [numberOfQuestions, setNumberOfQuestions] = useState(20);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const [answerWith, setAnswerWith] = useState("term");
+  const [answerWithPending, setAnswerWithPending] = useState("term"); // so we don't change the test automatically
   const [finishedTest, setFinishedTest] = useState(false);
   const [correctCards, setCorrectCards] = useState<Flashcard[]>([]);
   const [wrongCards, setWrongCards] = useState<Flashcard[]>([]);
@@ -58,6 +65,7 @@ const Test = () => {
     Array.from({ length: 50 })
   );
   const [isReviewing, setIsReviewing] = useState(false);
+  const [triedToSubmit, setTriedToSubmit] = useState(false); // let the questions know which ones are missing answers when user submits
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
@@ -114,6 +122,8 @@ const Test = () => {
     setFinishedTest(false);
     setIsReviewing(false);
     onClose();
+    setAnswerWith(answerWithPending);
+    setTriedToSubmit(false);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -142,7 +152,7 @@ const Test = () => {
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value !== "") {
       console.log(e.target.value);
-      setAnswerWith(e.target.value);
+      setAnswerWithPending(e.target.value);
     }
   };
 
@@ -213,7 +223,22 @@ const Test = () => {
     console.log("Ran");
   };
 
-  const handleSubmitTest = () => {
+  const handleSubmitTest = (submitAnyway: boolean) => {
+    if (
+      correctCards.length + wrongCards.length >=
+        Math.min(numberOfQuestions, currentDeck.length) ||
+      submitAnyway
+    ) {
+      console.log("Done");
+      setTriedToSubmit(false);
+      sureOnClose();
+    } else {
+      console.log(currentDeck.length);
+      console.log("not done.");
+      setTriedToSubmit(true);
+      sureOnOpen();
+      return;
+    }
     setFinishedTest(true);
     setIsReviewing(false);
 
@@ -280,8 +305,8 @@ const Test = () => {
                               label="Answer with"
                               labelPlacement="outside"
                               placeholder=""
-                              value={answerWith}
-                              defaultSelectedKeys={[answerWith]}
+                              value={answerWithPending}
+                              defaultSelectedKeys={[answerWithPending]}
                               className="text-base"
                               size="md"
                               onChange={handleSelectChange}
@@ -332,7 +357,42 @@ const Test = () => {
                           onPress={handleCreateNewTest}
                           className="font-semibold"
                         >
-                          Create new test
+                          Create New Test
+                        </Button>
+                      </ModalFooter>
+                    </>
+                  )}
+                </ModalContent>
+              </Modal>
+              <Modal isOpen={sureIsOpen} onOpenChange={sureOnOpenChange}>
+                <ModalContent className="text-black dark:text-white">
+                  {(onClose) => (
+                    <>
+                      <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
+                        Unanswered Questions
+                      </ModalHeader>
+                      <ModalBody>
+                        <p>
+                          It seems you haven't answered all the questions on the
+                          test. Are you sure you want to submit it without
+                          answering all questions?
+                        </p>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button
+                          color="danger"
+                          variant="light"
+                          onPress={onClose}
+                          className="font-semibold"
+                        >
+                          Close
+                        </Button>
+                        <Button
+                          color="primary"
+                          onPress={() => handleSubmitTest(true)}
+                          className="font-semibold"
+                        >
+                          Submit Anyway
                         </Button>
                       </ModalFooter>
                     </>
@@ -365,6 +425,7 @@ const Test = () => {
                         handleAnswer={handleAnswer}
                         finishedTest={finishedTest}
                         selectedAnswer={selectedAnswerArray[index]}
+                        triedToSubmit={triedToSubmit}
                       />
                       <div className="px-8">
                         {index <
@@ -385,7 +446,7 @@ const Test = () => {
                     color="primary"
                     size="lg"
                     className="font-semibold"
-                    onClick={() => handleSubmitTest()}
+                    onClick={() => handleSubmitTest(false)}
                   >
                     Submit Test
                   </Button>
@@ -406,9 +467,22 @@ const Test = () => {
             <TestContainer
               correctCards={correctCards}
               wrongCards={wrongCards}
+              numberOfCards={Math.min(numberOfQuestions, currentDeck.length)}
               handleReview={handleReview}
               handleOpenModal={handleOpenModal}
             />
+          ) : null}
+          {!didStartTest && !isReviewing ? (
+            <div className="w-full h-[300px] flex justify-center items-center">
+              <Button
+                color="primary"
+                size="lg"
+                className="font-semibold"
+                onClick={() => onOpen()}
+              >
+                Create New Test
+              </Button>
+            </div>
           ) : null}
         </div>
       </div>

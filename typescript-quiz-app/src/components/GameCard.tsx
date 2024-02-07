@@ -57,7 +57,7 @@ const GameCard = (props: GameCardProps) => {
         }
       >
         <div className="flex flex-col h-[180px] items-center overflow-y-autorounded-md overflow-y-auto">
-          <p className="text-xs sm:text-sm lg:text-lg text-center my-auto px-2 py-2 leading-5 ">
+          <p className="text-xs sm:text-sm lg:text-base text-center my-auto px-2 py-2 leading-5 ">
             {props.card.content}
           </p>
           {props.card.image ? (
