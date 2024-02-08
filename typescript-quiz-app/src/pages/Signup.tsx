@@ -9,7 +9,7 @@ import {
 import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
 import { FormEvent, useState, useRef, useEffect, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { FaEye, FaEyeSlash, FaXmark } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -156,6 +156,19 @@ const Signup = () => {
           <p className="text-white font-semibold text-sm">{error}</p>
         </div>
       ) : null}
+      <div className="w-full absolute  top-10 justify-center flex pb-0 h-20">
+        <div className="w-full  max-w-[800px] flex justify-end">
+          <Button
+            isIconOnly
+            variant="light"
+            size="md"
+            className="m-4 z-10"
+            onClick={() => navigate("/")}
+          >
+            <FaXmark className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
 
       <div className="md:pt-20 pt-10 space-y-5 flex justify-center items-center">
         <Card
