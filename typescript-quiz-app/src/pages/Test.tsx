@@ -229,12 +229,7 @@ const Test = () => {
     return wrongAnswers;
   };
 
-  const handleAnswer = (
-    flashcard: Flashcard,
-    isCorrect: boolean,
-    index: number,
-    selectedAnswerIndex: number
-  ) => {
+  const handleAnswer = (flashcard: Flashcard, isCorrect: boolean) => {
     if (isCorrect) {
       // Add the flashcard to the correctCards array
       setCorrectCards((prevCorrectCards) => [...prevCorrectCards, flashcard]);

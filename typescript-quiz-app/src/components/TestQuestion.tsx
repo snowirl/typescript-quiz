@@ -9,12 +9,7 @@ interface TestQuestionProps {
   answerWith: string;
   index: number;
   generateWrongAnswers: (card: Flashcard) => Flashcard[];
-  handleAnswer: (
-    card: Flashcard,
-    isCorrect: boolean,
-    index: number,
-    selectedAnswerIndex: number
-  ) => void;
+  handleAnswer: (card: Flashcard, isCorrect: boolean) => void;
   finishedTest: boolean;
   triedToSubmit: boolean;
 }
@@ -89,12 +84,7 @@ const TestQuestion = (props: TestQuestionProps) => {
     if (selectedAnswerIndex !== null) {
       const isCorrect =
         selectedAnswerIndex === correctAnswerIndex ? true : false;
-      props.handleAnswer(
-        props.flashcard,
-        isCorrect,
-        props.index,
-        selectedAnswerIndex
-      );
+      props.handleAnswer(props.flashcard, isCorrect);
     }
   }, [selectedAnswerIndex]);
 

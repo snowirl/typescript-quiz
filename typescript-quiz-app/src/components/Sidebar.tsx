@@ -1,6 +1,6 @@
 import Drawer from "react-modern-drawer";
 import { useState } from "react";
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { FaXmark, FaBars } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
