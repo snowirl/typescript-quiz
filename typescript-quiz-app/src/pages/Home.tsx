@@ -5,7 +5,6 @@ import { motion, Variants, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../context/userContext";
 
 const cardVariants: Variants = {
   offscreen: {
@@ -28,7 +27,6 @@ const Home = () => {
   let y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const navigate = useNavigate();
-  const { onOpen, setWhichModal } = useUserContext();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -88,9 +86,7 @@ const Home = () => {
                     color="primary"
                     variant="shadow"
                     className="font-semibold"
-                    onPress={() => {
-                      onOpen(), setWhichModal("signup");
-                    }}
+                    onPress={() => navigate("/signup")}
                   >
                     Sign Up For Free
                   </Button>

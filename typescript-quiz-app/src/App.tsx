@@ -14,6 +14,8 @@ import Test from "./pages/Test";
 import Search from "./pages/Search";
 import Legal from "./pages/Legal";
 import { Toaster } from "sonner";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -33,8 +35,11 @@ function App() {
         richColors
       />
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+
           <Route path="/study/:id" element={<Study />} />
           <Route path="/learn/:id" element={<Learn />} />
           <Route path="/test/:id" element={<Test />} />

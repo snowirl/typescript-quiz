@@ -74,7 +74,7 @@ const Study = () => {
   let { id } = useParams();
   const pageID: string = id ?? "";
   let userID: string = auth.currentUser?.displayName ?? "Error";
-  const { user, onOpen, setWhichModal } = useUserContext();
+  const { user } = useUserContext();
   const navigate = useNavigate();
   const { isOpen, onOpen: onOpenLockedModal, onOpenChange } = useDisclosure(); // for locked modal
 
@@ -286,8 +286,6 @@ const Study = () => {
 
   const handleStarCard = (flashcard: Flashcard) => {
     if (user === null) {
-      setWhichModal("signup");
-      onOpen();
       toast.warning("No user signed in");
       return;
     }
@@ -530,8 +528,6 @@ const Study = () => {
 
   const handleFavorite = () => {
     if (user === null) {
-      setWhichModal("signup");
-      onOpen();
       console.log("No user signed in...");
       toast.warning("No user signed in");
       return;

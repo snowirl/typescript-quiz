@@ -36,7 +36,7 @@ const NavigationMenu = () => {
   const [colorSelected, setColorSelected] = useState("zinc");
   const [isCreating, setIsCreating] = useState(false);
   const [folderName, setFolderName] = useState("");
-  const { user, onOpen, setWhichModal } = useUserContext();
+  const { user } = useUserContext();
   const navigate = useNavigate();
   const {
     isOpen: isOpenReportModal,
@@ -154,9 +154,7 @@ const NavigationMenu = () => {
                       variant="light"
                       className="font-semibold"
                       radius="md"
-                      onPress={() => {
-                        onOpen(), setWhichModal("login");
-                      }}
+                      onPress={() => navigate("/login")}
                     >
                       Login
                     </Button>
@@ -164,9 +162,7 @@ const NavigationMenu = () => {
                       color="primary"
                       className="font-semibold px-5"
                       size="md"
-                      onPress={() => {
-                        onOpen(), setWhichModal("signup");
-                      }}
+                      onPress={() => navigate("/signup")}
                     >
                       Sign up
                     </Button>
@@ -339,9 +335,7 @@ const NavigationMenu = () => {
                 variant="light"
                 className="font-semibold"
                 radius="md"
-                onPress={() => {
-                  onOpen(), setWhichModal("login");
-                }}
+                onPress={() => navigate("/login")}
               >
                 Login
               </Button>
@@ -349,9 +343,7 @@ const NavigationMenu = () => {
                 color="primary"
                 className="font-semibold px-5"
                 size="md"
-                onPress={() => {
-                  onOpen(), setWhichModal("signup");
-                }}
+                onPress={() => navigate("/signup")}
               >
                 Sign up
               </Button>
