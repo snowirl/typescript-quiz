@@ -363,11 +363,7 @@ const Study = () => {
     }
 
     console.log("Saved.");
-
-    if (!isInitial) {
-      toast.success("Saved!");
-    } else {
-    }
+    toast.success("Saved!");
 
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);

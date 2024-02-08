@@ -282,13 +282,13 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
         backdrop="blur"
         isDismissable={false}
       >
-        <ModalContent className="w-[425px] p-2 text-black dark:text-white rounded-md">
+        <ModalContent className="w-[425px] min-w-[100%] min-h-full p-2 text-black dark:text-white rounded-md">
           {whichModal === "login" ? (
             <>
               <ModalHeader className="flex flex-col gap-1 dark">
                 Log in to your account
               </ModalHeader>
-              <ModalBody className="pt-2 pb-2 space-y-2">
+              <ModalBody className="pt-2 pb-2 space-y-2 bg-red-200">
                 <form className="space-y-3" id="signup" action="#">
                   <Input
                     isRequired
