@@ -33,8 +33,7 @@ const SetsPage = () => {
     return auth.onAuthStateChanged((user) => {
       console.log(user);
       if (user === null) {
-        setWhichModal("signup");
-        onOpen();
+        console.log("Placeholder: log in maybe..");
       }
     });
   }, []);
