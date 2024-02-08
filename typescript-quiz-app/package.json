@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
     "@nextui-org/react": "^2.2.9",
     "algoliasearch": "^4.20.0",
     "array-shuffle": "^3.0.0",

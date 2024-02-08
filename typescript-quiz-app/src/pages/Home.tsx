@@ -2,10 +2,11 @@ import { Button } from "@nextui-org/button";
 import quizScreenshot from "../assets/quiz-screenshot.png";
 import { Image } from "@nextui-org/react";
 import { motion, Variants, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/userContext";
+import { Dialog, Transition } from "@headlessui/react";
 
 const cardVariants: Variants = {
   offscreen: {
@@ -29,6 +30,7 @@ const Home = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const navigate = useNavigate();
   const { onOpen, setWhichModal } = useUserContext();
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -58,6 +60,76 @@ const Home = () => {
     <>
       <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
         <div className="space-y-5 flex justify-center items-center">
+          <Transition appear show={isOpen} as={Fragment}>
+            <Dialog
+              as="div"
+              className="relative z-10"
+              onClose={() => setIsOpen(true)}
+            >
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="fixed inset-0 bg-black/25" />
+              </Transition.Child>
+
+              <div className="fixed inset-0 overflow-y-auto">
+                <div className="flex min-h-full items-center justify-center p-4 text-center">
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                  >
+                    <Dialog.Panel className="w-full h-[90vh] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-lg font-medium leading-6 text-gray-900 flex justify-between"
+                      >
+                        Payment successful
+                        <Button onClick={() => setIsOpen(false)}>X</Button>
+                      </Dialog.Title>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Your payment has been successfully submitted. We’ve
+                          sent you an email with all of the details of your
+                          order.
+                        </p>
+                        <input></input>
+                        <input></input>
+                        <input></input>
+                      </div>
+
+                      <div className="mt-4">
+                        <button
+                          type="button"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Got it, thanks!
+                        </button>
+                        <button
+                          type="button"
+                          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Got it, thanks!
+                        </button>
+                      </div>
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
+              </div>
+            </Dialog>
+          </Transition>
           <div className="space-y-4 max-w-[650px] mt-6 px-6">
             <motion.div
               initial={{ opacity: 0 }}
@@ -165,6 +237,8 @@ const Home = () => {
           </div>
         </motion.div>
         <div className="bg-gray-100 dark:bg-dark-2 w-full h-[800px]"></div>
+
+        <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
       </div>
     </>
   );

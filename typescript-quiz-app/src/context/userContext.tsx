@@ -288,7 +288,7 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
               <ModalHeader className="flex flex-col gap-1 dark">
                 Log in to your account
               </ModalHeader>
-              <ModalBody className="pt-2 pb-2 space-y-2 bg-red-200">
+              <ModalBody className="pt-2 pb-2 space-y-2">
                 <form className="space-y-3" id="signup" action="#">
                   <Input
                     isRequired
