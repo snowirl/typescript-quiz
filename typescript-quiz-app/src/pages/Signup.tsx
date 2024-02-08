@@ -26,6 +26,7 @@ const Signup = () => {
   const [isUserAvailable, setIsUserAvailable] = useState(false);
   let typingTimer: NodeJS.Timeout | null = null;
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [size, setSize] = useState<"md" | "lg">("md"); // Default size is 'md'
 
   const { registerUser, user, error } = useUserContext();
 
@@ -35,6 +36,24 @@ const Signup = () => {
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)"); // Adjust the breakpoint as needed
+
+    // If the media query matches (i.e., it's a mobile device), set the size to 'lg'
+    const handleMediaChange = (event: MediaQueryListEvent) => {
+      setSize(event.matches ? "lg" : "md");
+    };
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+
+    // Set initial size based on the current match
+    setSize(mediaQuery.matches ? "lg" : "md");
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (email === "") {
@@ -114,7 +133,8 @@ const Signup = () => {
     const username = usernameRef.current?.value;
     const password = passRef.current?.value;
 
-    if (emailInvalid) {
+    if (emailInvalid || emailRef.current?.value === "") {
+      setEmailInvalid(true);
       emailRef.current?.focus();
       return;
     }
@@ -143,7 +163,7 @@ const Signup = () => {
           className="w-full max-w-[550px] md:mx-10 mx-4 bg-black/0"
           radius="md"
         >
-          <CardBody className="md:px-12 px-8 md:py-8 py-8">
+          <CardBody className="md:px-12 px-4 md:py-8 py-4">
             <div className="space-y-4 max-w-[1050px] justify-center">
               <div className="flex justify-center items-center h-14">
                 <button onClick={() => navigate("/")}>
@@ -161,7 +181,7 @@ const Signup = () => {
                     type="email"
                     variant="bordered"
                     label="Email address"
-                    size="md"
+                    size={size}
                     labelPlacement="outside"
                     placeholder="Enter your email"
                     isInvalid={emailInvalid}
@@ -175,7 +195,7 @@ const Signup = () => {
                     type="text"
                     variant="bordered"
                     label="Username"
-                    size="md"
+                    size={size}
                     labelPlacement="outside"
                     placeholder="Enter a unique username"
                     isInvalid={!isUserAvailable && didCheckUsername}
@@ -197,7 +217,7 @@ const Signup = () => {
                     type={isPasswordVisible ? "text" : "password"}
                     placeholder="Enter your password"
                     variant="bordered"
-                    size="md"
+                    size={size}
                     ref={passRef}
                     labelPlacement="outside"
                     endContent={
@@ -227,7 +247,7 @@ const Signup = () => {
                   <Button
                     type="submit"
                     color="primary"
-                    size="md"
+                    size={size}
                     className="font-semibold w-full"
                   >
                     Create account

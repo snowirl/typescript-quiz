@@ -21,6 +21,8 @@ const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  const [size, setSize] = useState<"md" | "lg">("md"); // Default size is 'md'
+
   const { signInUser, user, error } = useUserContext();
 
   const navigate = useNavigate();
@@ -29,6 +31,24 @@ const Login = () => {
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)"); // Adjust the breakpoint as needed
+
+    // If the media query matches (i.e., it's a mobile device), set the size to 'lg'
+    const handleMediaChange = (event: MediaQueryListEvent) => {
+      setSize(event.matches ? "lg" : "md");
+    };
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+
+    // Set initial size based on the current match
+    setSize(mediaQuery.matches ? "lg" : "md");
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (email === "") {
@@ -65,7 +85,7 @@ const Login = () => {
   return (
     <div className="bg-white text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       {error ? (
-        <div className="bg-rose-500 w-full h-10 flex justify-center items-center">
+        <div className="bg-rose-500 w-full min-h-10 py-2 px-2 flex justify-center items-center">
           <p className="text-white font-semibold text-sm">{error}</p>
         </div>
       ) : null}
@@ -76,7 +96,7 @@ const Login = () => {
           className="bg-black/0 w-full max-w-[550px] md:mx-10 mx-4"
           radius="md"
         >
-          <CardBody className="md:px-12 px-8 md:py-8 py-8">
+          <CardBody className="md:px-12 px-4 md:py-8 py-4">
             <div className="space-y-4 max-w-[1050px] justify-center">
               <div className="flex justify-center items-center h-14">
                 <button onClick={() => navigate("/")}>
@@ -94,7 +114,7 @@ const Login = () => {
                     type="email"
                     variant="bordered"
                     label="Email address"
-                    size="md"
+                    size={size}
                     labelPlacement="outside"
                     placeholder="Enter your email"
                     isInvalid={emailInvalid}
@@ -109,7 +129,7 @@ const Login = () => {
                     type={isPasswordVisible ? "text" : "password"}
                     placeholder="Enter your password"
                     variant="bordered"
-                    size="md"
+                    size={size}
                     ref={passRef}
                     labelPlacement="outside"
                     endContent={
@@ -131,7 +151,7 @@ const Login = () => {
                   <Button
                     type="submit"
                     color="primary"
-                    size="md"
+                    size={size}
                     className="font-semibold w-full"
                   >
                     Log in

@@ -111,6 +111,7 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
 
   const signInUser = (email: string, password: string, rememberMe: boolean) => {
     setLoading(true);
+    setError(null);
 
     const remember = rememberMe ? browserLocalPersistence : inMemoryPersistence;
 
@@ -123,6 +124,9 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
           .catch((err) => {
             if (err.code) {
               // Check for specific Firebase error codes
+              console.log(err);
+              console.log(err.code);
+
               switch (err.code) {
                 case "auth/invalid-email":
                   setError("Invalid email address");
@@ -130,8 +134,14 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
                 case "auth/invalid-login-credentials":
                   setError("Invalid login credentials");
                   break;
+
+                case "auth/too-many-requests":
+                  setError(
+                    "This account has been temporarily disabled due to many failed login attempts. Please try again later."
+                  );
+                  break;
                 default:
-                  setError("Invalid email address");
+                  setError("An error occurred. Please try again.");
               }
             } else {
               setError(err.message);
