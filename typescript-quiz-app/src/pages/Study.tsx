@@ -597,15 +597,16 @@ const Study = () => {
                   <Button
                     isIconOnly
                     size="md"
-                    radius="full"
-                    variant="light"
                     onClick={() => handleFavorite()}
+                    variant="light"
+                    radius="lg"
+                    color={isFavorited ? "danger" : "default"}
                   >
                     <BsFillHeartFill
                       className={
                         isFavorited
-                          ? "w-5 h-5 text-rose-500"
-                          : "w-5 h-5 text-gray-500"
+                          ? "w-4 h-4 text-danger"
+                          : "w-4 h-4 text-gray-500"
                       }
                     />
                   </Button>

@@ -15,8 +15,9 @@ const StudyCardPreview = (props: StudyCardPreviewProps) => {
         <Button
           isIconOnly
           size="sm"
-          radius="full"
+          radius="lg"
           variant="light"
+          color={props.isStarred ? "warning" : "default"}
           className="z-10"
           onClick={() => props.handleStarCard(props.flashcard)}
         >

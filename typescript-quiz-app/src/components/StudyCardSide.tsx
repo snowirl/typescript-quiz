@@ -77,15 +77,16 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         <Button
           isIconOnly
           size="md"
-          radius="full"
+          radius="lg"
           variant="light"
+          color={props.isStarred ? "warning" : "default"}
           onClick={() => props.handleStarCard(props.flashcard)}
         >
           <FaStar
             className={
               props.isStarred
-                ? "w-5 h-5 text-yellow-500"
-                : "w-5 h-5 text-gray-500"
+                ? "w-4 h-4 text-yellow-500"
+                : "w-4 h-4 text-gray-500"
             }
           />
         </Button>
@@ -118,15 +119,15 @@ const StudyCardSide = (props: StudyCardSideProps) => {
         <Button
           isIconOnly
           size="md"
-          radius="full"
+          radius="lg"
           variant="light"
           className="icon-btn"
           onClick={() => handleSpeak()}
         >
           {speaking ? (
-            <FaVolumeUp className="w-5 h-5" />
+            <FaVolumeUp className="w-4 h-4" />
           ) : (
-            <FaVolumeMute className="w-5 h-5" />
+            <FaVolumeMute className="w-4 h-4" />
           )}
         </Button>
         <Popover placement="top" offset={10}>
@@ -134,7 +135,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
             <Button
               isIconOnly
               size="md"
-              radius="full"
+              radius="lg"
               variant="light"
               className="icon-btn"
             >

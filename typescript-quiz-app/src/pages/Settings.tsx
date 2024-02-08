@@ -98,7 +98,7 @@ const Settings = () => {
             <CardBody>
               <div className="flex justify-center">
                 <div className="">
-                  <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[140px] pr-2 border-black/10 dark:border-white/10">
+                  {/* <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[140px] pr-2 border-black/10 dark:border-white/10">
                     <Button
                       variant="light"
                       color={tab === "account" ? "primary" : "default"}
@@ -131,7 +131,7 @@ const Settings = () => {
                     >
                       Password
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
                 {tab === "account" ? (
                   <div className="flex flex-col justify-start items-start space-y-4 w-full mx-4 my-4">
@@ -168,8 +168,7 @@ const Settings = () => {
                       ref={fileInputRef}
                       onChange={handleFileChange}
                     />
-                    {/* <ProfileStats /> */}
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                       <Checkbox defaultSelected>
                         <p className="text-sm flex items-center">
                           <FaLock className="mx-1" />
@@ -180,7 +179,7 @@ const Settings = () => {
                           search
                         </p>
                       </Checkbox>
-                    </div>
+                    </div> */}
                     <div className="py-2">
                       <Switch
                         defaultSelected
