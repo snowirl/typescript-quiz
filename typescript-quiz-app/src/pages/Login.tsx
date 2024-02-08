@@ -56,7 +56,7 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
+    <div className="bg-white text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       {error ? (
         <div className="bg-rose-500 w-full h-10 flex justify-center items-center">
           <p className="text-white font-semibold text-sm">{error}</p>
@@ -65,8 +65,8 @@ const Login = () => {
 
       <div className="md:pt-20 pt-10 space-y-5 flex justify-center items-center">
         <Card
-          shadow="sm"
-          className="w-full max-w-[550px] md:mx-10 mx-4"
+          shadow="none"
+          className="bg-black/0 w-full max-w-[550px] md:mx-10 mx-4"
           radius="md"
         >
           <CardBody className="md:px-12 px-8 md:py-8 py-8">
