@@ -10,7 +10,7 @@ const SetsPage = () => {
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [tab, setTab] = useState("recents");
   const navigate = useNavigate();
-  const { user, setWhichModal, onOpen } = useUserContext();
+  const { user } = useUserContext();
   const location = useLocation();
 
   useEffect(() => {
