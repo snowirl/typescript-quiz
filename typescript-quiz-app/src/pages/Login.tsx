@@ -1,4 +1,11 @@
-import { Input, Card, CardBody, Button, Checkbox } from "@nextui-org/react";
+import {
+  Input,
+  Card,
+  CardBody,
+  Button,
+  Checkbox,
+  Image,
+} from "@nextui-org/react";
 import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
 import { FormEvent, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -71,9 +78,9 @@ const Login = () => {
         >
           <CardBody className="md:px-12 px-8 md:py-8 py-8">
             <div className="space-y-4 max-w-[1050px] justify-center">
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center h-14">
                 <button onClick={() => navigate("/")}>
-                  <img src={StuduckyCircleLogo} alt="Logo" className="w-14" />
+                  <Image src={StuduckyCircleLogo} alt="Logo" className="w-14" />
                 </button>
               </div>
               <div>
