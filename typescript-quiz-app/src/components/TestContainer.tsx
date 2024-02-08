@@ -5,6 +5,7 @@ import {
   CardHeader,
   Button,
   CircularProgress,
+  Chip,
 } from "@nextui-org/react";
 import { Flashcard } from "../assets/globalTypes";
 import { useState, useEffect } from "react";
@@ -113,13 +114,21 @@ const TestContainer = (props: TestContainerProps) => {
                 strokeWidth={4}
                 showValueLabel={true}
               />
-              <div className="absolute left-2/3">
-                <p className="text-green-500 font-semibold">
-                  Correct: {props.correctCards.length}
-                </p>
-                <p className="text-rose-500 font-semibold">
-                  Wrong: {props.numberOfCards - props.correctCards.length}
-                </p>
+              <div className="absolute left-[70%] space-y-1">
+                <div className="flex justify-start">
+                  <Chip color="success" className="font-semibold" size="md">
+                    <p className="font-semibold">
+                      {props.correctCards.length} Correct
+                    </p>
+                  </Chip>
+                </div>
+                <div className="flex justify-start">
+                  <Chip color="danger" className="font-semibold" size="md">
+                    <p className="font-semibold">
+                      {props.numberOfCards - props.correctCards.length} Wrong
+                    </p>
+                  </Chip>
+                </div>
               </div>
             </div>
           </div>

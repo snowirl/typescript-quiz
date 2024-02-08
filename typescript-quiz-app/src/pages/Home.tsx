@@ -92,7 +92,7 @@ const Home = () => {
                       onOpen(), setWhichModal("signup");
                     }}
                   >
-                    Sign up for free
+                    Sign Up For Free
                   </Button>
                 ) : (
                   <Button
@@ -102,7 +102,7 @@ const Home = () => {
                     className="font-semibold"
                     onPress={() => navigateToCreate()}
                   >
-                    Create a new set
+                    Create a New Set
                   </Button>
                 )}
               </div>

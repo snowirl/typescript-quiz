@@ -134,7 +134,7 @@ const CreateCard = (props: CreateCardProps) => {
           </div>
         </CardHeader>
         <CardBody className="pt-1">
-          <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0 mx-12">
+          <div className="sm:flex sm:space-x-10 sm:mx-8 space-y-2 sm:space-y-0 mx-4">
             <div className="flex-1 flex-grow h-full space-y-1">
               <TextareaAutosize
                 className="textarea"

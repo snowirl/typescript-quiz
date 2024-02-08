@@ -11,7 +11,7 @@ import {
   RadioGroup,
   Switch,
 } from "@nextui-org/react";
-import QuizAnswers from "../components/QuizAnswers";
+import LearnAnswers from "../components/LearnAnswers";
 import { Progress, Button } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -27,14 +27,14 @@ import { db } from "../firebase";
 import { Flashcard } from "../assets/globalTypes";
 import arrayShuffle from "array-shuffle";
 import { FaGear } from "react-icons/fa6";
-import QuizRoundBreak from "../components/QuizRoundBreak";
+import LearnRoundBreak from "../components/LearnRoundBreak";
 import { motion } from "framer-motion";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
-const Quiz = () => {
+const Learn = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isQuestionFirst, _setIsQuestionFirst] = useState(true);
+  const [isQuestionFirst, _setIsQuestionFirst] = useState(false);
   // const [isShuffled, setIsShuffled] = useState(true);
   const [deckData, setDeckData] = useState<DocumentData | null>(null);
   const [originalDeck, setOriginalDeck] = useState<Flashcard[] | null>(null);
@@ -482,7 +482,7 @@ const Quiz = () => {
           {!isRoundBreak ? (
             distractors ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
                   type: "spring",
@@ -507,7 +507,7 @@ const Quiz = () => {
                         : null}
                     </p>
                     <div className="items-end flex flex-grow justify-center w-full h-full">
-                      <QuizAnswers
+                      <LearnAnswers
                         currentCard={currentCard}
                         distractors={distractors}
                         correctAnswer={
@@ -528,7 +528,7 @@ const Quiz = () => {
               </motion.div>
             ) : null
           ) : (
-            <QuizRoundBreak
+            <LearnRoundBreak
               nextRound={() => nextRound()}
               cardsCorrect={cardsCorrect}
               cardsWrong={cardsWrong}
@@ -537,7 +537,7 @@ const Quiz = () => {
           )}
           {showCorrect && !isRoundBreak ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
                 type: "spring",
@@ -563,4 +563,4 @@ const Quiz = () => {
   );
 };
 
-export default Quiz;
+export default Learn;

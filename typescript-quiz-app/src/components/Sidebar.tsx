@@ -1,6 +1,6 @@
 import Drawer from "react-modern-drawer";
 import { useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import { FaXmark, FaBars } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
@@ -65,9 +65,9 @@ const Sidebar = () => {
               variant="light"
               size="lg"
             >
-              Your sets
+              Your Sets
             </Button>
-            <Button
+            {/* <Button
               className="font-semibold w-full text-left justify-start"
               onClick={() => handleCreateButtonMenu()}
               variant="solid"
@@ -75,6 +75,15 @@ const Sidebar = () => {
               size="lg"
             >
               Create new set
+            </Button> */}
+            <Button
+              className="font-semibold w-full text-left justify-start"
+              onClick={() => handleCreateButtonMenu()}
+              variant="solid"
+              color="primary"
+              size="lg"
+            >
+              Create New Set
             </Button>
           </div>
         </div>

@@ -16,7 +16,6 @@ interface TestQuestionProps {
     selectedAnswerIndex: number
   ) => void;
   finishedTest: boolean;
-  selectedAnswer: number;
   triedToSubmit: boolean;
 }
 
@@ -110,9 +109,9 @@ const TestQuestion = (props: TestQuestionProps) => {
       className={
         props.triedToSubmit && selectedAnswerIndex === null
           ? "dark:bg-yellow-500/[.02] bg-yellow-100/20"
-          : props.finishedTest && props.selectedAnswer === correctAnswerIndex
+          : props.finishedTest && selectedAnswerIndex === correctAnswerIndex
           ? "dark:bg-green-500/[.02] bg-green-100/20"
-          : props.finishedTest && props.selectedAnswer !== correctAnswerIndex
+          : props.finishedTest && selectedAnswerIndex !== correctAnswerIndex
           ? "dark:bg-red-500/[.02] bg-red-100/20"
           : ""
       }
@@ -158,7 +157,7 @@ const TestQuestion = (props: TestQuestionProps) => {
         <RadioGroup
           color={
             props.finishedTest
-              ? correctAnswerIndex === props.selectedAnswer
+              ? correctAnswerIndex === selectedAnswerIndex
                 ? "success"
                 : "danger"
               : "primary"
@@ -166,7 +165,11 @@ const TestQuestion = (props: TestQuestionProps) => {
           onChange={selectAnswer}
           isDisabled={props.finishedTest}
           defaultValue={
-            props.finishedTest ? props?.selectedAnswer?.toString() : ""
+            props.finishedTest
+              ? selectedAnswerIndex
+                ? selectedAnswerIndex.toString()
+                : ""
+              : ""
           }
           value={selectedAnswerIndex?.toString() ?? ""}
         >

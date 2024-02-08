@@ -13,6 +13,7 @@ import {
   useDisclosure,
   Select,
   SelectItem,
+  Spinner,
 } from "@nextui-org/react";
 import { FaGear } from "react-icons/fa6";
 import {
@@ -65,15 +66,13 @@ const Test = () => {
   const [starredList, setStarredList] = useState<string[]>([]);
   const [didStartTest, setDidStartTest] = useState(false);
   const [numberOfQuestions, setNumberOfQuestions] = useState(20);
+  const [numberOfQuestionsPending, setNumberOfQuestionsPending] = useState(20);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const [answerWith, setAnswerWith] = useState("term");
   const [answerWithPending, setAnswerWithPending] = useState("term"); // so we don't change the test automatically
   const [finishedTest, setFinishedTest] = useState(false);
   const [correctCards, setCorrectCards] = useState<Flashcard[]>([]);
   const [wrongCards, setWrongCards] = useState<Flashcard[]>([]);
-  const [selectedAnswerArray, setSelectedAnswerArray] = useState<number[]>(
-    Array.from({ length: 50 })
-  );
   const [isReviewing, setIsReviewing] = useState(false);
   const [triedToSubmit, setTriedToSubmit] = useState(false); // let the questions know which ones are missing answers when user submits
 
@@ -169,6 +168,7 @@ const Test = () => {
     onClose();
     setAnswerWith(answerWithPending);
     setTriedToSubmit(false);
+    setNumberOfQuestions(numberOfQuestionsPending);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -184,7 +184,7 @@ const Test = () => {
 
     // Check if the value is a number and within the specified range
     if (!isNaN(value) && value >= 0 && value <= 50) {
-      setNumberOfQuestions(value);
+      setNumberOfQuestionsPending(value);
     }
   };
 
@@ -252,14 +252,6 @@ const Test = () => {
         prevCorrectCards.filter((card) => card !== flashcard)
       );
     }
-
-    setSelectedAnswerArray((prevSelectedAnswerArray) => {
-      const updatedArray = [...prevSelectedAnswerArray];
-      updatedArray[index] = selectedAnswerIndex;
-      return updatedArray;
-    });
-
-    console.log("Ran");
   };
 
   const handleSubmitTest = (submitAnyway: boolean) => {
@@ -314,22 +306,29 @@ const Test = () => {
   return (
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="space-y-5 flex justify-center items-center ">
-        <div className="max-w-[800px] flex-grow space-y-4 mx-4 pb-10">
+        <div className="max-w-[1000px] flex-grow space-y-4 mx-4 pb-10">
+          <motion.div
+            initial={{ opacity: 0.75 }}
+            animate={{ opacity: 1 }}
+            className="w-full"
+          >
+            <p className="font-semibold">{deckData?.title ?? "Loading..."}</p>
+          </motion.div>
           <div className="space-x-2 flex justify-between mx-1">
             <div className="space-x-2 flex items-center relative justify-between w-full">
               <Button onClick={() => navigate(`/study/${id}`)} className="z-10">
                 <IoIosArrowRoundBack className="w-7 h-7" /> Back
               </Button>
               <div></div>
-              {deckData ? (
+              {/* {deckData ? (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="absolute w-full"
+                  className="md:absolute w-full"
                 >
                   <p className="font-semibold">{deckData?.title}</p>
                 </motion.div>
-              ) : null}
+              ) : null} */}
 
               <Button isIconOnly onClick={() => onOpen()}>
                 <FaGear />
@@ -345,12 +344,13 @@ const Test = () => {
                         <div className="space-y-6">
                           <div className="flex items-center space-x-2 justify-start">
                             <input
+                              step={5}
                               type="number"
                               className="w-[72px] h-8 description rounded-lg bg-gray-100 dark:bg-dark-2"
-                              min={0}
+                              min={5}
                               max={50}
                               onChange={handleInputChange}
-                              value={numberOfQuestions}
+                              value={numberOfQuestionsPending}
                             />
                             <p className="text-base">Questions</p>
                           </div>
@@ -365,17 +365,19 @@ const Test = () => {
                             >
                               <p className="text-base">Starred only</p>
                             </Checkbox>
-                            <p>
+                            {starredList?.length < 4 ||
+                            starredList === null ||
+                            starredList === undefined ? (
                               <Chip
                                 color="warning"
                                 size="sm"
-                                className="font-semibold opacity-60 ml-2"
+                                className="font-semibold opacity-60"
                               >
                                 <p className="font-semibold">
-                                  At least 5 starred cards to select this option
+                                  Needs at least 5 starred cards
                                 </p>
                               </Chip>
-                            </p>
+                            ) : null}
                           </div>
 
                           <div className="py-1">
@@ -518,24 +520,24 @@ const Test = () => {
             </div>
           </div>
           {finishedTest && isReviewing ? (
-            <div className="relative pb-2">
+            <div className="relative pb-3 pt-6">
               <div className="w-full flex justify-center space-y-2">
-                <div className="py-2">
+                <div>
                   <p className="font-semibold text-2xl">
                     {score.toFixed(0)} / 100
                   </p>
                 </div>
               </div>
 
-              <div className="absolute items-start justify-start md:flex md:space-x-2 space-y-1 md:space-y-0 top-0 md:top-1/2 left-0">
-                <div>
+              <div className="absolute items-start justify-start md:flex space-x-0 md:space-x-2 space-y-1 md:space-y-0 bottom-0 left-0">
+                <div className="flex justify-start">
                   <Chip color="success" className="font-semibold" size="md">
                     <p className="font-semibold">
                       {correctCards.length} Correct
                     </p>
                   </Chip>
                 </div>
-                <div>
+                <div className="flex justify-start">
                   <Chip color="danger" className="font-semibold" size="md">
                     <p className="font-semibold">
                       {numberOfCards - correctCards.length} Wrong
@@ -569,12 +571,11 @@ const Test = () => {
                         generateWrongAnswers={generateWrongAnswers}
                         handleAnswer={handleAnswer}
                         finishedTest={finishedTest}
-                        selectedAnswer={selectedAnswerArray[index]}
                         triedToSubmit={triedToSubmit}
                       />
                       <div className="px-8">
                         {index < numberOfCards - 1 && (
-                          <div className="px-8">
+                          <div className="px-2">
                             <Divider />
                           </div>
                         )}
@@ -630,6 +631,7 @@ const Test = () => {
               </Button>
             </motion.div>
           ) : null}
+          {!didStartTest && isLoading && !isReviewing ? <Spinner /> : null}
         </div>
       </div>
     </div>

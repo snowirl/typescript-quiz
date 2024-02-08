@@ -8,7 +8,7 @@ import Sets from "./pages/Sets";
 import NoPage from "./pages/NoPage";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
-import Quiz from "./pages/Quiz";
+import Learn from "./pages/Learn";
 import Game from "./pages/Game";
 import Test from "./pages/Test";
 import Search from "./pages/Search";
@@ -36,7 +36,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/study/:id" element={<Study />} />
-          <Route path="/learn/:id" element={<Quiz />} />
+          <Route path="/learn/:id" element={<Learn />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/game/:id" element={<Game />} />
           <Route path="/sets/*" element={<Sets />} />

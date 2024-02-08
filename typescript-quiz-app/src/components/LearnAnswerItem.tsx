@@ -11,7 +11,7 @@ interface QuizAnswerItemProps {
   selectAnswer: (answerIndex: number) => void;
 }
 
-const QuizAnswerItem = (props: QuizAnswerItemProps) => {
+const LearnAnswerItem = (props: QuizAnswerItemProps) => {
   return (
     <div className="w-full">
       <div className="w-full h-full flex flex-col flex-grow md:flex-row md:space-x-2 md:space-y-0 space-y-2">
@@ -104,4 +104,4 @@ const QuizAnswerItem = (props: QuizAnswerItemProps) => {
   );
 };
 
-export default QuizAnswerItem;
+export default LearnAnswerItem;

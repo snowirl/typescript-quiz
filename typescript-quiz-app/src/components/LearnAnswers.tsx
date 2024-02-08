@@ -1,7 +1,7 @@
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { Flashcard } from "../assets/globalTypes";
 import { toast } from "sonner";
-import QuizAnswerItem from "./QuizAnswerItem";
+import LearnAnswerItem from "./LearnAnswerItem";
 
 interface QuizAnswersProps {
   distractors: string[] | null;
@@ -13,7 +13,7 @@ interface QuizAnswersProps {
   currentCard: Flashcard | null;
 }
 
-const QuizAnswers = (props: QuizAnswersProps) => {
+const LearnAnswers = (props: QuizAnswersProps) => {
   const [canAnswer, setCanAnswer] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -50,7 +50,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
     <div className="flex w-full ">
       <div className="w-full space-y-2">
         <div className="w-full flex space-y-2">
-          <QuizAnswerItem
+          <LearnAnswerItem
             index={0}
             correctIndex={props.correctIndex}
             showCorrect={props.showCorrect}
@@ -61,7 +61,7 @@ const QuizAnswers = (props: QuizAnswersProps) => {
           />
         </div>
         <div className="w-full flex space-y-2">
-          <QuizAnswerItem
+          <LearnAnswerItem
             index={2}
             correctIndex={props.correctIndex}
             showCorrect={props.showCorrect}
@@ -76,4 +76,4 @@ const QuizAnswers = (props: QuizAnswersProps) => {
   );
 };
 
-export default QuizAnswers;
+export default LearnAnswers;

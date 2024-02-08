@@ -16,7 +16,7 @@ interface QuizRoundBreakProps {
   cardsStudied: number;
 }
 
-const QuizRoundBreak = (props: QuizRoundBreakProps) => {
+const LearnRoundBreak = (props: QuizRoundBreakProps) => {
   const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
@@ -41,8 +41,8 @@ const QuizRoundBreak = (props: QuizRoundBreakProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{
         type: "spring",
         stiffness: 300,
@@ -100,4 +100,4 @@ const QuizRoundBreak = (props: QuizRoundBreakProps) => {
   );
 };
 
-export default QuizRoundBreak;
+export default LearnRoundBreak;
