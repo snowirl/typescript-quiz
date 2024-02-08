@@ -1,5 +1,5 @@
-import { Card, CardBody, Avatar, Button, Checkbox } from "@nextui-org/react";
-import { FaEdit, FaLock } from "react-icons/fa";
+import { Card, CardBody, Avatar, Button } from "@nextui-org/react";
+import { FaEdit } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
@@ -10,7 +10,7 @@ import { useTheme } from "next-themes";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [tab, setTab] = useState("account");
+  const [tab, _setTab] = useState("account");
   const { theme, setTheme } = useTheme();
 
   const handleButtonClick = () => {
