@@ -1,4 +1,4 @@
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import {
   InstantSearch,
   Hits,
@@ -11,11 +11,42 @@ import { useState, useEffect } from "react";
 import { Pagination } from "@nextui-org/react";
 import { useParams } from "react-router-dom"; // Import from React Router
 import ProfileCard from "./ProfileCard";
+import {
+  MultipleQueriesQuery,
+  MultipleQueriesResponse,
+} from "@algolia/client-search";
 
-const searchClient = algoliasearch(
+const algoliaClient = algoliasearch(
   "1GUAKQV47F",
   "02a87f36136ca5f67302432b104bb80c"
 );
+
+const searchClient2: SearchClient = {
+  ...algoliaClient,
+  search(requests: readonly MultipleQueriesQuery[]) {
+    const hasEmptyQuery = requests.every(({ params }) => !params?.query);
+
+    if (hasEmptyQuery) {
+      return Promise.resolve({
+        results: requests.map(() => ({
+          hits: [],
+          nbHits: 0,
+          nbPages: 0,
+          page: 0,
+          processingTimeMS: 0,
+          hitsPerPage: 0,
+          exhaustiveNbHits: false,
+          query: "",
+          params: "",
+        })),
+      } as MultipleQueriesResponse<any>);
+    }
+
+    return algoliaClient.search(requests) as Promise<
+      MultipleQueriesResponse<any>
+    >;
+  },
+};
 
 const CustomSearchBox = (props: SearchBoxProps) => {
   const { refine } = useSearchBox(props);
@@ -96,7 +127,7 @@ const SearchUsersComponent = () => {
 
   return (
     <div>
-      <InstantSearch searchClient={searchClient} indexName="users">
+      <InstantSearch searchClient={searchClient2} indexName="users">
         <CustomSearchBox searchAsYouType={false} />
 
         <Hits hitComponent={UserHit} className="w-full py-2" />

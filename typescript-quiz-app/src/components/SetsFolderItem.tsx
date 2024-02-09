@@ -129,17 +129,18 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   };
 
   return (
-    <div className="mx-2 my-2">
+    <div>
       <div
         className="w-full cursor-pointer"
         onClick={() => props.setSelectedFolder(props.folderID)}
       >
-        <Card shadow="sm">
-          <CardBody className="py-3 flex space-y-3">
+        <Card shadow="none" className="lg:h-[90px] h-fit shadow-sm">
+          <CardBody className="py-3 flex space-y-4">
             <div className="flex items-center space-x-2 mr-8">
               <FaFolder className={`h-5 w-5 text-${props.folderColor}-500`} />
               <p className="text-base overflow-ellipsis overflow-hidden line-clamp-1">
                 {props.folderName}
+                {props.folderName === "" ? "Untitled Folder" : ""}
               </p>
 
               <Dropdown>

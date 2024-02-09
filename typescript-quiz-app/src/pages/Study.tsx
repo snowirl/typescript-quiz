@@ -156,7 +156,7 @@ const Study = () => {
       toast.dismiss();
 
       toast(
-        <div className="flex text-base items-center justify-between w-full dark:bg-dark-1 dark:text-white">
+        <div className="flex text-base p-0 m-0 items-center justify-between w-full dark:bg-dark-1 dark:text-white">
           <div className="w-full flex justify-start">
             <p className="font-semibold">Unsaved changes</p>
           </div>
@@ -320,10 +320,7 @@ const Study = () => {
     }
 
     if (isFavoritedRef === undefined || starredListRef === undefined) {
-      console.log("oh noes...");
     }
-
-    console.log("saving");
 
     const activityData = localStorage.getItem(`activity/${deckData?.id}`);
     let parsedActivityData = null;
@@ -361,7 +358,11 @@ const Study = () => {
     }
 
     console.log("Saved.");
-    toast.success("Saved!");
+
+    if (!isInitial) {
+      toast.dismiss();
+      toast.success("Saved!");
+    }
 
     localStorage.removeItem(`activity/${deckData?.id}`);
     setShouldSaveData(false);
@@ -614,6 +615,7 @@ const Study = () => {
               size="sm"
             /> */}
             <Slider
+              aria-label="Progress Slider"
               step={1}
               maxValue={currentDeck.length - 1}
               minValue={0}

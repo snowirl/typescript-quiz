@@ -10,7 +10,7 @@ interface StudyCardPreviewProps {
 
 const StudyCardPreview = (props: StudyCardPreviewProps) => {
   return (
-    <Card className="rounded-lg" shadow="sm">
+    <Card className="shadow-sm" shadow="none">
       <div className="py-1 px-1 absolute w-full flex justify-end">
         <Button
           isIconOnly

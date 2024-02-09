@@ -19,7 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "react-modern-drawer/dist/index.css";
 import Sidebar from "./Sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StuduckyLogo from "../assets/StuduckyIcon.svg";
 import StuduckyLogoDark from "../assets/studuckylogo-dark.svg";
 
@@ -36,6 +36,7 @@ const NavigationMenu = () => {
   const [colorSelected, setColorSelected] = useState("zinc");
   const [isCreating, setIsCreating] = useState(false);
   const [folderName, setFolderName] = useState("");
+  const [didLookForUser, setDidLookForUser] = useState(false);
   const { user } = useUserContext();
   const navigate = useNavigate();
   const {
@@ -44,6 +45,14 @@ const NavigationMenu = () => {
     onOpenChange: onOpenChangeReportModal,
     onClose: OnCloseReportModal,
   } = useDisclosure();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      setDidLookForUser(true);
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription when the component unmounts
+  }, []);
 
   const colors = [
     "zinc",
@@ -137,41 +146,43 @@ const NavigationMenu = () => {
   return (
     <div className=" bg-gray-100 text-black dark:text-gray-100 py-1 dark:bg-dark-2">
       <div className="flex justify-between px-4 py-1 pb-3 mx-auto max-w-[1200px]">
-        <div className=" space-y-2 w-full block md:hidden">
-          <div className="flex md:hidden relative justify-between px-1 py-1 items-center space-x-2 w-full ">
+        <div className=" space-y-2 w-full block lg:hidden">
+          <div className="flex lg:hidden relative justify-between px-1 py-1 items-center space-x-2 w-full ">
             <div className="flex space-x-1">
               <Sidebar />
               <img src={StuduckyCircleLogo} alt="Logo" className="w-11" />
             </div>
             <div>
-              <div className="space-x-2 flex">
-                {user ? (
-                  <AvatarContainer />
-                ) : (
-                  <div className="space-x-2">
-                    <Button
-                      color="default"
-                      variant="light"
-                      className="font-semibold"
-                      radius="md"
-                      onPress={() => navigate("/login")}
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      color="primary"
-                      className="font-semibold px-5"
-                      size="md"
-                      onPress={() => navigate("/signup")}
-                    >
-                      Sign up
-                    </Button>
-                  </div>
-                )}
-              </div>
+              {didLookForUser ? (
+                <div className="space-x-2 flex">
+                  {user ? (
+                    <AvatarContainer />
+                  ) : (
+                    <div className="space-x-2">
+                      <Button
+                        color="default"
+                        variant="light"
+                        className="font-semibold"
+                        radius="md"
+                        onPress={() => navigate("/login")}
+                      >
+                        Login
+                      </Button>
+                      <Button
+                        color="primary"
+                        className="font-semibold px-5"
+                        size="md"
+                        onPress={() => navigate("/signup")}
+                      >
+                        Sign up
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ) : null}
             </div>
           </div>
-          <div className="flex md:hidden relative w-full justify-center">
+          <div className="flex lg:hidden relative w-full justify-center">
             <form onSubmit={handleSubmit} className="w-full mx-2">
               <FaMagnifyingGlass className="w-4 h-4 absolute left-[25px] top-1/2 transform -translate-y-1/2" />
               <input
@@ -185,11 +196,11 @@ const NavigationMenu = () => {
           </div>
         </div>
 
-        <div className="md:hidden"> </div>
+        <div className="lg:hidden"> </div>
         {/* <div className="md:hidden">
           {/* <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" /> */}
         {/* </div> */}
-        <div className="items-center hidden md:flex">
+        <div className="items-center hidden lg:flex">
           <button className="flex items-center" onClick={() => navigate("/")}>
             {/* <StuduckyLogo /> */}
 
@@ -198,10 +209,8 @@ const NavigationMenu = () => {
               alt="Logo"
               className="w-36 hidden dark:block"
             />
+
             <img src={StuduckyLogo} alt="Logo" className="w-36 dark:hidden" />
-            {/* <Chip className="mx-2 h-6 px-0 bg-dark-2 text-white dark:bg-white dark:text-black rounded-[4px]">
-              <p className="font-semibold  text-xs">Beta</p>
-            </Chip> */}
           </button>
 
           <div className="space-x-2">
@@ -326,31 +335,33 @@ const NavigationMenu = () => {
           </div>
         </div>
         {/* <div className="flex md:hidden"></div> */}
-        <div className="space-x-2 md:flex items-center hidden">
-          {user ? (
-            <AvatarContainer />
-          ) : (
-            <div className="space-x-2">
-              <Button
-                color="default"
-                variant="light"
-                className="font-semibold"
-                radius="md"
-                onPress={() => navigate("/login")}
-              >
-                Login
-              </Button>
-              <Button
-                color="primary"
-                className="font-semibold px-5"
-                size="md"
-                onPress={() => navigate("/signup")}
-              >
-                Sign up
-              </Button>
-            </div>
-          )}
-        </div>
+        {didLookForUser ? (
+          <div className="space-x-2 lg:flex items-center hidden">
+            {user ? (
+              <AvatarContainer />
+            ) : (
+              <div className="space-x-2">
+                <Button
+                  color="default"
+                  variant="light"
+                  className="font-semibold"
+                  radius="md"
+                  onPress={() => navigate("/login")}
+                >
+                  Login
+                </Button>
+                <Button
+                  color="primary"
+                  className="font-semibold px-5"
+                  size="md"
+                  onPress={() => navigate("/signup")}
+                >
+                  Sign up
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

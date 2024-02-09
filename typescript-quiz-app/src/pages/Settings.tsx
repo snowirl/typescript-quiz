@@ -94,7 +94,7 @@ const Settings = () => {
     <div className="bg-gray-100 text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen pt-6">
       <div className="flex justify-center">
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
-          <Card>
+          <Card shadow="sm" className="shadow-gray-100/10">
             <CardBody>
               <div className="flex justify-center">
                 <div className="">

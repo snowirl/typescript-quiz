@@ -68,7 +68,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
   };
 
   return (
-    <Card className="overflow-auto">
+    <Card className="overflow-auto" shadow="sm">
       <CardHeader
         className="flex gap-3 justify-between pb-0 cursor-pointer"
         onClick={handleFooterClick}

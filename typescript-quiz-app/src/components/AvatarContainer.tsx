@@ -29,7 +29,6 @@ const AvatarContainer = () => {
       setTheme("dark");
     }
   };
-
   return (
     <div>
       <div className="flex justify-center items-center space-x-2">
@@ -37,7 +36,7 @@ const AvatarContainer = () => {
         <Dropdown>
           <DropdownTrigger>
             <Avatar
-              showFallback
+              showFallback={auth.currentUser?.photoURL ? false : true}
               src={auth.currentUser?.photoURL ?? ""}
               className="cursor-pointer"
             />

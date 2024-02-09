@@ -118,7 +118,7 @@ const SetsFolders = () => {
               <div
                 className={
                   selectedFolder === null
-                    ? " mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2  items-start"
+                    ? " mx-2 my-2 grid sm:grid-cols-2 grid-cols-1 md:grid-cols-2 items-start lg:gap-4 gap-3"
                     : "hidden"
                 }
               >

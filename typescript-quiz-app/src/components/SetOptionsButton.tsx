@@ -69,6 +69,12 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
     }
   };
 
+  const copyLink = () => {
+    if (props.deckId) {
+      navigate(`/create/${props.deckId}=copy`);
+    }
+  };
+
   const deleteSet = async () => {
     if (
       props.deckId === null ||
@@ -102,6 +108,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
     onClose();
     toast.success("Deleted set.");
     console.log("deleted.");
+    navigate(0);
   };
 
   const handleFindFolders = async () => {
@@ -174,7 +181,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
 
   return (
     <div>
-      <Dropdown>
+      <Dropdown shadow="sm">
         <DropdownTrigger>
           <Button isIconOnly variant="light" size="md" radius="lg">
             <IoEllipsisHorizontalSharp className="w-5 h-5 " />
@@ -199,7 +206,11 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
           >
             Add to folder
           </DropdownItem>
-          <DropdownItem key="copy" startContent={<FaRegCopy />}>
+          <DropdownItem
+            key="copy"
+            startContent={<FaRegCopy />}
+            onPress={copyLink}
+          >
             Create a copy
           </DropdownItem>
           <DropdownItem

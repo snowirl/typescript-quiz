@@ -1,4 +1,4 @@
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch, { SearchClient } from "algoliasearch/lite";
 import {
   InstantSearch,
   Hits,
@@ -12,11 +12,42 @@ import { usePagination } from "react-instantsearch";
 import { useState, useEffect } from "react";
 import { Pagination } from "@nextui-org/react";
 import { useParams } from "react-router-dom"; // Import from React Router
+import {
+  MultipleQueriesQuery,
+  MultipleQueriesResponse,
+} from "@algolia/client-search";
 
 const algoliaClient = algoliasearch(
   "1GUAKQV47F",
   "02a87f36136ca5f67302432b104bb80c"
 );
+
+const searchClient: SearchClient = {
+  ...algoliaClient,
+  search(requests: readonly MultipleQueriesQuery[]) {
+    const hasEmptyQuery = requests.every(({ params }) => !params?.query);
+
+    if (hasEmptyQuery) {
+      return Promise.resolve({
+        results: requests.map(() => ({
+          hits: [],
+          nbHits: 0,
+          nbPages: 0,
+          page: 0,
+          processingTimeMS: 0,
+          hitsPerPage: 0,
+          exhaustiveNbHits: false,
+          query: "",
+          params: "",
+        })),
+      } as MultipleQueriesResponse<any>);
+    }
+
+    return algoliaClient.search(requests) as Promise<
+      MultipleQueriesResponse<any>
+    >;
+  },
+};
 
 const CustomSearchBox = (props: SearchBoxProps) => {
   const [myQuery, setMyQuery] = useState("");
@@ -119,7 +150,7 @@ const SearchSetsComponent = () => {
 
   return (
     <div>
-      <InstantSearch searchClient={algoliaClient} indexName="decks">
+      <InstantSearch searchClient={searchClient} indexName="decks">
         <CustomSearchBox searchAsYouType={false} />
         <Configure filters="private:false" />
         <Hits hitComponent={Hit} className="w-full py-2" />

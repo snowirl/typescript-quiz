@@ -105,7 +105,7 @@ const StudyInfo = (props: StudyInfoProps) => {
 
   return (
     <>
-      <Card radius="lg" className="p-1" shadow="md">
+      <Card radius="lg" className="p-1 shadow-sm" shadow="none">
         <CardHeader>
           <div className="flex justify-around flex-grow">
             <div className="flex-grow text-left">

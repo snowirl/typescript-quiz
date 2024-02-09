@@ -9,7 +9,7 @@ interface ProfileCardProps {
 
 const ProfileCard = (props: ProfileCardProps) => {
   const [profilePictureURL, setProfilePictureURL] = useState("");
-  const [_isPicLoading, setIsPicLoading] = useState(true);
+  const [isPicLoading, setIsPicLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,7 +64,10 @@ const ProfileCard = (props: ProfileCardProps) => {
         className="flex items-center space-x-2 p-2 cursor-pointer font-semibold"
         onClick={() => navigate(`/profile/${props.username}`)}
       >
-        <Avatar src={profilePictureURL} />
+        <Avatar
+          src={profilePictureURL}
+          fallback={!isPicLoading ? false : true}
+        />
         <p>{props.username}</p>
       </div>
     </Card>

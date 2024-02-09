@@ -42,6 +42,7 @@ const Create = () => {
   const [scrollTimeoutId, setScrollTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
+  const [isCopy, setIsCopy] = useState(false);
 
   useEffect(() => {
     if (id !== "new" && user !== null) {
@@ -138,7 +139,7 @@ const Create = () => {
     // Creates User in DB if they are not found
     let docId: string = id ?? "new";
 
-    if (id === "new") {
+    if (id === "new" || isCopy) {
       // check if we are a new set or overriding an existing one...
       try {
         const docRef = await addDoc(collection(db, "users", userID, "decks"), {
@@ -219,12 +220,24 @@ const Create = () => {
   };
 
   const initializeDeck = async () => {
-    const q = query(collectionGroup(db, "decks"), where("id", "==", id));
+    let newId: string | undefined = id;
+    if (id?.includes("=copy")) {
+      newId = id.replace(/=copy\s*$/, "");
+      setIsCopy(true);
+    } else {
+      setIsCopy(false);
+    }
+    const q = query(collectionGroup(db, "decks"), where("id", "==", newId));
 
     try {
       const docRef = await getDocs(q);
 
-      if (docRef.docs[0].data().owner !== auth.currentUser?.displayName) {
+      if (
+        (docRef.docs[0].data().owner !== auth.currentUser?.displayName &&
+          !id?.includes("=copy")) ||
+        (docRef.docs[0].data().private &&
+          docRef.docs[0].data().owner !== auth.currentUser?.displayName)
+      ) {
         navigate("/create/new");
         toast.error("Error: Cannot edit a deck you do not own.");
         throw new Error("You do not own this deck.");
@@ -239,7 +252,7 @@ const Create = () => {
       return;
     }
 
-    const q1 = query(collectionGroup(db, "cards"), where("id", "==", id));
+    const q1 = query(collectionGroup(db, "cards"), where("id", "==", newId));
 
     try {
       const docRef = await getDocs(q1);
