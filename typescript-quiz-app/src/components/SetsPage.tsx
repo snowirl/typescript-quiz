@@ -1,8 +1,6 @@
 import { Tabs, Tab } from "@nextui-org/react";
 import { Key, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaExclamationTriangle } from "react-icons/fa";
-import { useUserContext } from "../context/userContext";
 import { useLocation } from "react-router-dom";
 import { auth } from "../firebase";
 import { toast } from "sonner";
@@ -12,7 +10,6 @@ const SetsPage = () => {
   const [tab, setTab] = useState("recents");
 
   const navigate = useNavigate();
-  const { user } = useUserContext();
   const location = useLocation();
 
   useEffect(() => {
