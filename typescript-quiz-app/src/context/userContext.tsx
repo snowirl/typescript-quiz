@@ -10,6 +10,10 @@ import {
   inMemoryPersistence,
   setPersistence,
   browserLocalPersistence,
+  updatePassword,
+  deleteUser,
+  updateEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { ReactNode } from "react";
@@ -24,6 +28,10 @@ interface UserContextType {
   signInUser: (email: string, password: string, rememberMe: boolean) => void;
   logOutUser: () => void;
   forgotPassword: (email: string) => Promise<void>;
+  changePassword: (newPassword: string) => void;
+  handleDeleteUser: () => void;
+  changeEmail: (email: string) => void;
+  sendVerificationEmail: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -66,6 +74,7 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
       })
       .then(() => {
         addUserToDatabase(username);
+        sendVerificationEmail();
       })
       .catch((err) => {
         if (err.code) {
@@ -167,6 +176,88 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
     return sendPasswordResetEmail(auth, email);
   };
 
+  const changePassword = (newPassword: string) => {
+    const user = auth.currentUser;
+
+    if (user === null) {
+      return;
+    }
+
+    updatePassword(user, newPassword)
+      .then(() => {
+        // Update successful.
+        toast.success("Password changed");
+      })
+      .catch((error) => {
+        // An error ocurred
+        // ...
+        console.log(error);
+        toast.error("Error changing password. Refresh the page and try again");
+      });
+  };
+
+  const handleDeleteUser = () => {
+    const user = auth.currentUser;
+
+    if (user === null) {
+      return;
+    }
+
+    deleteUser(user)
+      .then(() => {
+        // User deleted.
+        toast.success("Deleted user. Sad to see you go!");
+      })
+      .catch((error) => {
+        // An error ocurred
+        // ...
+        console.log(error);
+        toast.error("Error deleting account. Refresh the page and try again");
+      });
+  };
+
+  const changeEmail = (email: string) => {
+    const user = auth.currentUser;
+
+    if (user === null) {
+      return;
+    }
+
+    updateEmail(user, email)
+      .then(() => {
+        // Email updated!
+        // ...
+        toast.success("Email changed");
+      })
+      .catch((error) => {
+        // An error occurred
+        // ...
+        console.log(error);
+
+        if (error.code === "auth/operation-not-allowed") {
+          toast.error(
+            "You need to verify your current email before changing it. Resent a new verification email"
+          );
+          sendVerificationEmail();
+        } else {
+          toast.error("Error changing email");
+        }
+      });
+  };
+
+  const sendVerificationEmail = () => {
+    const user = auth.currentUser;
+
+    if (user === null) {
+      return;
+    }
+
+    sendEmailVerification(user).then(() => {
+      // Email verification sent!
+      // ...
+    });
+  };
+
   const contextValue = {
     user,
     loading,
@@ -175,6 +266,10 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
     signInUser,
     logOutUser,
     forgotPassword,
+    changePassword,
+    changeEmail,
+    handleDeleteUser,
+    sendVerificationEmail,
   };
 
   return (

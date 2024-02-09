@@ -27,13 +27,13 @@ const Signup = () => {
   const [isUserAvailable, setIsUserAvailable] = useState(false);
   let typingTimer: NodeJS.Timeout | null = null;
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const toggleVisibility = () => setIsPasswordVisible(!isPasswordVisible);
+
   const [size, setSize] = useState<"md" | "lg">("md"); // Default size is 'md'
 
   const { registerUser, user, error } = useUserContext();
 
   const navigate = useNavigate();
-
-  const toggleVisibility = () => setIsPasswordVisible(!isPasswordVisible);
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);

@@ -165,14 +165,16 @@ const SetCard = (props: SetCardProps) => {
         <CardHeader className="px-2 pt-2 pb-1">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
-              <div className="flex items-center space-x-2">
-                <Avatar
-                  src={profilePictureURL}
-                  className=""
-                  fallback={!isPicLoading ? false : true}
-                />
-                <p className="font-semibold">{deck?.username}</p>
-              </div>
+              <button onClick={() => navigate(`/profile/${deck?.username}`)}>
+                <div className="flex items-center space-x-2 hover:underline">
+                  <Avatar
+                    src={profilePictureURL}
+                    className=""
+                    fallback={!isPicLoading ? false : true}
+                  />
+                  <p className="font-semibold">{deck?.username}</p>
+                </div>
+              </button>
             </div>
 
             {isLoading || props.removeSetFromFolder ? null : (
