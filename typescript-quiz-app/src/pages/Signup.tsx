@@ -13,6 +13,7 @@ import { FaEye, FaEyeSlash, FaXmark } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { toast } from "sonner";
 
 const Signup = () => {
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -70,6 +71,12 @@ const Signup = () => {
       navigate("/sets/recents");
     }
   }, [user]);
+
+  useEffect(() => {
+    if (size === "lg" && error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (typingTimer !== null) {
@@ -152,7 +159,7 @@ const Signup = () => {
   return (
     <div className="bg-white text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       {error ? (
-        <div className="bg-rose-500 w-full h-10 flex justify-center items-center">
+        <div className="hidden bg-rose-500 w-full h-10 md:flex justify-center items-center">
           <p className="text-white font-semibold text-sm">{error}</p>
         </div>
       ) : null}

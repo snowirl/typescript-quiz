@@ -222,10 +222,11 @@ const NavigationMenu = () => {
                   <Button
                     isIconOnly
                     color="primary"
-                    className="rounded-full"
+                    radius="full"
                     variant="solid"
+                    size="md"
                   >
-                    <FaPlus className="w-4 h-4" />
+                    <FaPlus />
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu

@@ -153,7 +153,7 @@ const Profile = () => {
       <div className="w-full max-w-[800px] mx-6 text-left space-y-4">
         <Card className="w-full bg-black/0 shadow-none">
           <div className="justify-start text-left space-y-4 items-center pb-10">
-            <div className="py-2">
+            <div className="pt-2 pb-8">
               <Button onClick={() => navigate(-1)}>
                 <IoIosArrowRoundBack className="w-7 h-7" /> Back
               </Button>
@@ -162,7 +162,7 @@ const Profile = () => {
               <Avatar src={profilePictureURL ?? ""} size="lg" />
               <p className="text-xl font-semibold">{id}</p>
             </div>
-            <div>{/* <p className="text-base">Here is my bio...</p> */}</div>
+            {/*  */}
           </div>
         </Card>
         <div className="space-y-2">

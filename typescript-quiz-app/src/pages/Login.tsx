@@ -11,6 +11,7 @@ import { FormEvent, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaXmark } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
+import { toast } from "sonner";
 
 const Login = () => {
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -66,6 +67,12 @@ const Login = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (size === "lg" && error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -91,7 +98,7 @@ const Login = () => {
   return (
     <div className="bg-white text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       {error ? (
-        <div className="bg-rose-500 w-full min-h-10 py-2 px-2 flex justify-center items-center">
+        <div className="hidden bg-rose-500 w-full min-h-10 py-2 px-2 md:flex justify-center items-center">
           <p className="text-white font-semibold text-sm">{error}</p>
         </div>
       ) : null}

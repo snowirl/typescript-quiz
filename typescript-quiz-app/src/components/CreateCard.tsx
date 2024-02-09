@@ -124,10 +124,11 @@ const CreateCard = (props: CreateCardProps) => {
                   variant="light"
                   size="sm"
                   radius="md"
+                  color="default"
                   isIconOnly
                   onClick={() => props.handleCardDelete(props.index)}
                 >
-                  <FaTrash className="w-4 h-4" />
+                  <FaTrash />
                 </Button>
               </Tooltip>
             ) : null}
