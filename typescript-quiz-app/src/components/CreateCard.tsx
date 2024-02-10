@@ -11,21 +11,22 @@ import { Flashcard } from "../assets/globalTypes";
 import { FaTrash, FaImage } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useRef, ChangeEvent } from "react";
+import { useRef, ChangeEvent, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { uid } from "uid";
 
 interface CreateCardProps {
   flashcard: Flashcard;
   index: number;
   handleCardDelete: (val: number) => void;
-  handleCardChange: (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    index: number
-  ) => void;
+  handleCardChange: (flashcard: Flashcard, index: number) => void;
   handleCardImageChange: (url: string, side: string, val: number) => void;
 }
 
 const CreateCard = (props: CreateCardProps) => {
+  const [front, setFront] = useState("");
+  const [back, setBack] = useState("");
+  const [image, setImage] = useState<string | undefined>("");
   const fileInputFrontRef = useRef<HTMLInputElement>(null);
   const fileInputBackRef = useRef<HTMLInputElement>(null);
 
@@ -84,6 +85,7 @@ const CreateCard = (props: CreateCardProps) => {
             side,
             props.index
           );
+          setImage(newDownloadURL.toString());
         });
       })
       .catch((error) => {
@@ -99,8 +101,34 @@ const CreateCard = (props: CreateCardProps) => {
     }
   };
 
+  useEffect(() => {
+    // // Reset the input values when the flashcard prop changes
+    // // Use defaultValue to set the initial values
+    // if (fileInputFrontRef.current) {
+    //   fileInputFrontRef.current.value = props.flashcard.front;
+    // }
+    // if (fileInputBackRef.current) {
+    //   fileInputBackRef.current.value = props.flashcard.back;
+    // }
+    setFront(props.flashcard.front);
+    setBack(props.flashcard.back);
+    setImage(props.flashcard.backImage);
+  }, [props.flashcard]);
+
+  const onInputDone = () => {
+    let flashcard: Flashcard = {
+      front: front,
+      back: back,
+      backImage: image ?? "",
+      cardId: props.flashcard.cardId,
+    };
+
+    props.handleCardChange(flashcard, props.index);
+  };
+
   return (
     <motion.div
+      key={props.index}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{
@@ -139,8 +167,9 @@ const CreateCard = (props: CreateCardProps) => {
             <div className="flex-1 flex-grow h-full space-y-1">
               <TextareaAutosize
                 className="textarea"
-                value={props.flashcard.front}
-                onChange={(e) => props.handleCardChange(e, props.index)}
+                value={front}
+                onChange={(e) => setFront(e.target.value)}
+                onBlur={onInputDone}
                 placeholder="Enter term"
                 name="front"
                 maxLength={500}
@@ -160,27 +189,15 @@ const CreateCard = (props: CreateCardProps) => {
                   >
                     <FaImage />
                   </Button> */}
-                  <input
-                    type="file"
-                    accept=".jpg, .jpeg, .png"
-                    style={{ display: "none" }}
-                    ref={fileInputFrontRef}
-                    onChange={(e) => handleFileChange(e, "front")}
-                  />
-                  <Image
-                    className=""
-                    width={150}
-                    alt="frontImage"
-                    src={props.flashcard.frontImage}
-                  />
                 </div>
               </div>
             </div>
             <div className="flex-1 flex-grow h-full space-y-1">
               <TextareaAutosize
                 className="textarea"
-                value={props.flashcard.back}
-                onChange={(e) => props.handleCardChange(e, props.index)}
+                value={back}
+                onChange={(e) => setBack(e.target.value)}
+                onBlur={onInputDone}
                 placeholder="Enter definition"
                 name="back"
                 maxLength={500}

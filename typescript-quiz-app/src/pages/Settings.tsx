@@ -421,7 +421,7 @@ const Settings = () => {
                         size="md"
                         onClick={onOpen}
                       >
-                        Delete My Account
+                        Delete Account
                       </Button>
                       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                         <ModalContent className="text-black dark:text-gray-100">

@@ -96,9 +96,8 @@ const NavigationMenu = () => {
     console.log("Create folder");
 
     if (!isCreating) {
-      setIsCreating(false);
+      setIsCreating(true);
     } else {
-      console.log(isCreating);
       return;
     }
 

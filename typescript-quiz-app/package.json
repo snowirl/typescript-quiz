@@ -33,6 +33,8 @@
     "react-loading-skeleton": "^3.3.1",
     "react-modern-drawer": "^1.2.2",
     "react-toastify": "^9.1.3",
+    "react-virtualized-auto-sizer": "^1.0.22",
+    "react-window": "^1.8.10",
     "sonner": "^1.4.0",
     "tailwind-safelist-generator": "^1.0.0",
     "uid": "^2.0.2"
@@ -40,6 +42,7 @@
   "devDependencies": {
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/react-window": "^1.8.8",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",

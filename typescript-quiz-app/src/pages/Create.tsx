@@ -82,14 +82,12 @@ const Create = () => {
     setFlashcardList(list);
   };
 
-  const handleCardChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const { name, value } = e.target;
+  const handleCardChange = (flashcard: Flashcard, index: number) => {
     const list: Flashcard[] = [...flashcardList]; // Replace `YourCardType` with the actual type of the card object in your list
-    list[index][name] = value;
+    list[index] = flashcard;
     setFlashcardList(list);
+
+    console.log(list);
   };
 
   const handleCreateSet = async () => {
@@ -326,8 +324,8 @@ const Create = () => {
             placeholder="Description of your set"
             minRows={4}
             className="description"
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
+            onBlur={(e) => setDescription(e.target.value)}
+            defaultValue={description}
             maxLength={280}
           />
 

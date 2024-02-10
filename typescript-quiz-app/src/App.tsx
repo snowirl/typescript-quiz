@@ -41,6 +41,7 @@ function App() {
           <Route index element={<Home />} />
 
           <Route path="/study/:id" element={<Study />} />
+
           <Route path="/learn/:id" element={<Learn />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/game/:id" element={<Game />} />

@@ -17,6 +17,7 @@ import { useUserContext } from "../context/userContext";
 
 interface SetsCreateFolderProps {
   refreshFolders: () => void;
+  folderCount: number;
 }
 
 const SetsCreateFolder = (props: SetsCreateFolderProps) => {
@@ -52,6 +53,12 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
       toast.error("No user signed in");
       return;
     }
+
+    if (props.folderCount <= 30) {
+      toast.error("Maximum folders created");
+      return;
+    }
+
     if (!isCreating) {
       setIsCreating(true);
     } else {
