@@ -13,7 +13,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRef, ChangeEvent, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { uid } from "uid";
 
 interface CreateCardProps {
   flashcard: Flashcard;
