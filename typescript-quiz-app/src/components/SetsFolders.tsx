@@ -40,6 +40,10 @@ const SetsFolders = () => {
       handleFindFolders(pageIndex);
       setIsInitial(false);
     }
+
+    if (folderCount === 0 && isInitial) {
+      setIsLoading(false);
+    }
   }, [folderCount]);
 
   useEffect(() => {

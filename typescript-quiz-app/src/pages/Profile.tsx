@@ -11,12 +11,15 @@ import {
   getDocs,
   getCountFromServer,
   where,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getStorage, getDownloadURL, ref } from "firebase/storage";
 import { auth } from "../firebase";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { toast } from "sonner";
 
 const Profile = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -26,7 +29,8 @@ const Profile = () => {
   const displayPerPage = 3;
   const { id } = useParams();
   const [profilePictureURL, setProfilePictureURL] = useState("");
-  const [_isPicLoading, setIsPicLoading] = useState(true);
+  const [isPicLoading, setIsPicLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null | undefined>(null);
 
   const navigate = useNavigate();
 
@@ -45,16 +49,19 @@ const Profile = () => {
       } else {
         console.log("Nope in.");
       }
-
-      if (id !== undefined) {
-        getImageByUserId(id);
-        handleFindSets(0);
-        getDeckCount();
-      }
     });
+    findUser();
 
     return () => unsubscribe(); // Cleanup the subscription when the component unmounts
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      getImageByUserId(userId);
+      handleFindSets(0);
+      getDeckCount();
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (id !== undefined) {
@@ -62,13 +69,46 @@ const Profile = () => {
     }
   }, [pageIndex]);
 
+  const findUser = async () => {
+    if (id === undefined) {
+      return;
+    }
+
+    const docRef = doc(db, "usernames", id);
+    const docSnap = await getDoc(docRef);
+
+    try {
+      await getDoc(docRef);
+      if (docSnap.data()) {
+        setUserId(docSnap?.data()?.uid);
+      } else {
+        toast.error("No user found");
+        setIsLoading(false);
+      }
+    } catch (e) {
+      toast.error("No user found");
+      console.log(e);
+    }
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  };
+
   const getDeckCount = async () => {
     if (deckCount > 0 || id === undefined) {
       return;
     }
 
+    if (userId === undefined || userId === null) {
+      return;
+    }
+
     try {
-      const coll = collection(db, "users", id, "decks");
+      const coll = collection(db, "users", userId, "decks");
       const snapshot = await getCountFromServer(coll);
       setDeckCount(snapshot.data().count);
     } catch (e) {
@@ -77,12 +117,12 @@ const Profile = () => {
   };
 
   const handleFindSets = async (pageNum: number) => {
-    if (id === undefined) {
+    if (userId === undefined || userId === null) {
       return;
     }
 
     let list: DocumentData = [];
-    const setsRef = collection(db, "users", id, "decks");
+    const setsRef = collection(db, "users", userId, "decks");
 
     let q = query(
       setsRef,
@@ -159,8 +199,12 @@ const Profile = () => {
               </Button>
             </div>
             <div className="space-y-2 flex items-center space-x-2">
-              <Avatar src={profilePictureURL ?? ""} size="lg" />
-              <p className="text-xl font-semibold">{id}</p>
+              <Avatar
+                src={profilePictureURL ?? ""}
+                size="lg"
+                fallback={!isPicLoading ? false : true}
+              />
+              {userId ? <p className="text-xl font-semibold">{id}</p> : null}
             </div>
             {/*  */}
           </div>

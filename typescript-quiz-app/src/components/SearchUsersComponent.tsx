@@ -98,13 +98,14 @@ const CustomSearchBox = (props: SearchBoxProps) => {
 interface UserProps {
   hit: {
     objectID: string;
+    uid: string;
   };
 }
 
 function UserHit({ hit }: UserProps) {
   return (
     <div className="my-3">
-      <ProfileCard username={hit.objectID} />
+      <ProfileCard username={hit.objectID} uid={hit.uid} />
     </div>
   );
 }
@@ -127,7 +128,7 @@ const SearchUsersComponent = () => {
 
   return (
     <div>
-      <InstantSearch searchClient={searchClient2} indexName="users">
+      <InstantSearch searchClient={searchClient2} indexName="usernames">
         <CustomSearchBox searchAsYouType={false} />
 
         <Hits hitComponent={UserHit} className="w-full py-2" />

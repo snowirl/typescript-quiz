@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 interface ProfileCardProps {
   username: string;
+  uid?: string;
 }
 
 const ProfileCard = (props: ProfileCardProps) => {
@@ -13,8 +14,8 @@ const ProfileCard = (props: ProfileCardProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (props.username) {
-      getImageByUserId(props.username);
+    if (props.uid) {
+      getImageByUserId(props.uid);
     }
   }, []);
 

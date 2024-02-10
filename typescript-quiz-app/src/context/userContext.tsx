@@ -7,13 +7,13 @@ import {
   signOut,
   sendPasswordResetEmail,
   User,
-  inMemoryPersistence,
   setPersistence,
   browserLocalPersistence,
   updatePassword,
   deleteUser,
   updateEmail,
   sendEmailVerification,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { ReactNode } from "react";
@@ -104,7 +104,9 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
     const userId = auth.currentUser?.uid;
 
     try {
-      await setDoc(doc(db, "usernames", username), {});
+      await setDoc(doc(db, "usernames", username), {
+        uid: auth.currentUser?.uid,
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
       return;
@@ -127,7 +129,9 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
     setLoading(true);
     setError(null);
 
-    const remember = rememberMe ? browserLocalPersistence : inMemoryPersistence;
+    const remember = rememberMe
+      ? browserLocalPersistence
+      : browserSessionPersistence;
 
     setPersistence(auth, remember)
       .then(() => {
