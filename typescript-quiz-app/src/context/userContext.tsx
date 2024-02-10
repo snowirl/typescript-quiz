@@ -17,7 +17,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { ReactNode } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { toast } from "sonner";
 
 interface UserContextType {
