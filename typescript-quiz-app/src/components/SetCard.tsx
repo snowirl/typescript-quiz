@@ -40,7 +40,7 @@ const SetCard = (props: SetCardProps) => {
   const [disabled, setDisabled] = useState(false);
   const [isPicLoading, setIsPicLoading] = useState(true);
   const navigate = useNavigate();
-  const userId = auth.currentUser?.displayName ?? null;
+  const userId = auth.currentUser?.uid ?? null;
   const deckId = props?.deckId ?? null;
 
   useEffect(() => {
@@ -230,7 +230,7 @@ const SetCard = (props: SetCardProps) => {
                 ) : null}
                 {disabled ? null : (
                   <SetOptionsButton
-                    username={deck?.username}
+                    username={deck?.owner}
                     deckId={props.deckId}
                   />
                 )}

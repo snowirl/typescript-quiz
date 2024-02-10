@@ -76,7 +76,7 @@ const SearchCard = (props: SearchCardProps) => {
   };
 
   return (
-    <Card className="w-full p-1" shadow="sm" radius="lg">
+    <Card className="w-full p-1 shadow-sm" shadow="none">
       <CardHeader className="px-2 pt-2 pb-1">
         <div className="flex justify-between w-full">
           <div className="flex-grow-1">

@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 interface StudyInfoProps {
+  owner: string;
   username: string;
   description: string;
   profilePictureURL: string;
@@ -37,7 +38,7 @@ const StudyInfo = (props: StudyInfoProps) => {
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const userID = auth.currentUser?.displayName ?? null;
+  const userID = auth.currentUser?.uid ?? null;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -122,10 +123,7 @@ const StudyInfo = (props: StudyInfoProps) => {
               </div>
             </div>
             <div className="flex-grow flex justify-end">
-              <SetOptionsButton
-                username={props.username}
-                deckId={props.deckId}
-              />
+              <SetOptionsButton username={props.owner} deckId={props.deckId} />
 
               <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>

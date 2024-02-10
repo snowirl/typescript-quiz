@@ -73,7 +73,7 @@ const Study = () => {
 
   let { id } = useParams();
   const pageID: string = id ?? "";
-  let userID: string = auth.currentUser?.displayName ?? "Error";
+  let userID: string | null = auth.currentUser?.uid ?? null;
   const { user } = useUserContext();
   const navigate = useNavigate();
   const { isOpen, onOpen: onOpenLockedModal, onOpenChange } = useDisclosure(); // for locked modal
@@ -90,7 +90,7 @@ const Study = () => {
       return;
     }
 
-    userID = auth.currentUser?.displayName ?? "Error"; // make sure isnt error, also [user] so it isnt null
+    userID = auth.currentUser?.uid ?? null; // make sure isnt error, also [user] so it isnt null
 
     const intervalId = setInterval(() => {
       // Use the values from the refs, which are always up-to-date
@@ -274,6 +274,9 @@ const Study = () => {
   };
 
   const initializeActivity = async () => {
+    if (userID === null) {
+      return;
+    }
     const q = doc(db, "users", userID, "activity", pageID);
     try {
       const docRef = await getDoc(q);
@@ -309,7 +312,7 @@ const Study = () => {
   };
 
   const handleSaveData = async () => {
-    if (isSaving || user === null) {
+    if (isSaving || user === null || userID === null) {
       return;
     } else {
       setIsSaving(true);
@@ -668,6 +671,7 @@ const Study = () => {
             />
 
             <StudyInfo
+              owner={deckData?.owner}
               username={deckData?.username}
               description={deckData?.description}
               profilePictureURL={profilePictureURL}

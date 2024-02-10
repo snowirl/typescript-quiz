@@ -101,20 +101,25 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
   };
 
   const addUserToDatabase = async (username: string) => {
-    const docRef = doc(db, "users", username);
-    const docSnap = await getDoc(docRef);
+    const userId = auth.currentUser?.uid;
 
-    if (docSnap.exists()) {
-      console.log("Found user.");
-    } else {
-      console.log("No such user!");
+    try {
+      await setDoc(doc(db, "usernames", username), {});
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      return;
+    }
 
-      try {
-        await setDoc(doc(db, "users", username), {});
-      } catch (e) {
-        console.error("Error adding document: ", e);
-        return;
-      }
+    if (userId === undefined) {
+      console.log("user is not defined.");
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "users", userId), {});
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      return;
     }
   };
 

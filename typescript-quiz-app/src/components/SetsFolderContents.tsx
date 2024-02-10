@@ -18,7 +18,7 @@ interface SetsFoldersContentsProps {
 }
 
 const SetsFolderContents = (props: SetsFoldersContentsProps) => {
-  const userId = auth.currentUser?.displayName ?? null;
+  const userId = auth.currentUser?.uid ?? null;
 
   const [folderData, setFolderData] = useState<DocumentData | null>();
   const [isLoading, setIsLoading] = useState(true);

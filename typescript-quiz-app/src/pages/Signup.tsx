@@ -113,7 +113,7 @@ const Signup = () => {
     try {
       const docRef = doc(
         db,
-        "users",
+        "usernames",
         usernameRef.current.value.toLowerCase().trim()
       );
 

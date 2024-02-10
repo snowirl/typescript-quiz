@@ -117,7 +117,7 @@ const Create = () => {
       return;
     }
 
-    const userID: string = auth.currentUser?.displayName ?? "Error"; // changed to display name in Algolia era
+    const userID: string = auth.currentUser?.uid ?? "Error"; // changed to display name in Algolia era
     const displayName: string = auth.currentUser?.displayName ?? "Error";
 
     const docRef = doc(db, "users", userID);
@@ -233,10 +233,10 @@ const Create = () => {
       const docRef = await getDocs(q);
 
       if (
-        (docRef.docs[0].data().owner !== auth.currentUser?.displayName &&
+        (docRef.docs[0].data().owner !== auth.currentUser?.uid &&
           !id?.includes("=copy")) ||
         (docRef.docs[0].data().private &&
-          docRef.docs[0].data().owner !== auth.currentUser?.displayName)
+          docRef.docs[0].data().owner !== auth.currentUser?.uid)
       ) {
         navigate("/create/new");
         toast.error("Error: Cannot edit a deck you do not own.");

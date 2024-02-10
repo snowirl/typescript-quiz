@@ -5,10 +5,16 @@ import {
   Button,
   Input,
   Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
 } from "@nextui-org/react";
 import { FaEdit, FaEye, FaEyeSlash } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { updateProfile } from "firebase/auth";
 import { useRef, ChangeEvent, useState, useEffect } from "react";
 import { Switch } from "@nextui-org/react";
@@ -16,6 +22,8 @@ import { LuMoon, LuSun } from "react-icons/lu";
 import { useTheme } from "next-themes";
 import { useUserContext } from "../context/userContext";
 import { toast } from "sonner";
+import { deleteDoc, doc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,16 +31,24 @@ const Settings = () => {
   const passRef = useRef<HTMLInputElement | null>(null);
   const passRef2 = useRef<HTMLInputElement | null>(null);
 
+  const deleteRef = useRef<HTMLInputElement | null>(null);
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const [tab, setTab] = useState("account");
   const [email, setEmail] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
+  const [deleteUsername, setDeleteUsername] = useState(""); // for delete account
+  const [deleteInvalid, setDeleteInvalid] = useState(true);
   const { theme, setTheme } = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordVisible2, setIsPasswordVisible2] = useState(false);
   const toggleVisibility = () => setIsPasswordVisible(!isPasswordVisible);
   const toggleVisibility2 = () => setIsPasswordVisible2(!isPasswordVisible2);
 
-  const { changePassword, changeEmail } = useUserContext();
+  const { changePassword, changeEmail, handleDeleteUser } = useUserContext();
+
+  const navigate = useNavigate();
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -74,7 +90,7 @@ const Settings = () => {
 
     const storage = getStorage();
 
-    const userId = auth.currentUser?.displayName;
+    const userId = auth.currentUser?.uid;
 
     const storageRef = ref(storage, `profilePictures/${userId}`);
 
@@ -150,6 +166,39 @@ const Settings = () => {
     }
 
     changeEmail(email);
+  };
+
+  useEffect(() => {
+    if (!auth.currentUser?.displayName) {
+      setDeleteInvalid(true);
+      return;
+    }
+
+    if (deleteUsername === auth.currentUser?.displayName) {
+      setDeleteInvalid(false);
+    } else {
+      setDeleteInvalid(true);
+    }
+
+    return;
+  }, [deleteUsername]);
+
+  const handleDeleteAccount = async () => {
+    if (deleteInvalid) {
+      toast.error("Username does not match");
+    } else {
+      handleDeleteUser();
+      const userId = auth.currentUser?.displayName ?? null;
+
+      if (userId) {
+        try {
+          await deleteDoc(doc(db, "usernames", userId));
+          navigate("/");
+        } catch (e) {
+          console.log("Error deleting username");
+        }
+      }
+    }
   };
 
   return (
@@ -370,9 +419,63 @@ const Settings = () => {
                         className="font-semibold"
                         variant="solid"
                         size="md"
+                        onClick={onOpen}
                       >
                         Delete My Account
                       </Button>
+                      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                        <ModalContent className="text-black dark:text-gray-100">
+                          {(onClose) => (
+                            <>
+                              <ModalHeader className="flex flex-col gap-1">
+                                Delete Account
+                              </ModalHeader>
+                              <ModalBody>
+                                <p>
+                                  We're sorry to see you go! Before you proceed,
+                                  please take a moment to consider the
+                                  following:<br></br> <br></br>1. Deleting your
+                                  account will permanently remove all your data,
+                                  including study materials and progress.
+                                  <br></br>
+                                  <br></br> 2. This action cannot be undone.
+                                  Once deleted, your account cannot be
+                                  recovered.<br></br>
+                                </p>
+                                <p className="pt-4 font-semibold">
+                                  Please type in your username to confirm
+                                  deletion: {auth.currentUser?.displayName}
+                                </p>
+                                <Input
+                                  size="md"
+                                  labelPlacement="outside"
+                                  placeholder="Enter your username"
+                                  ref={deleteRef}
+                                  value={deleteUsername}
+                                  onValueChange={setDeleteUsername}
+                                />
+                              </ModalBody>
+                              <ModalFooter>
+                                <Button
+                                  color="primary"
+                                  variant="light"
+                                  onPress={onClose}
+                                  className="font-semibold"
+                                >
+                                  Close
+                                </Button>
+                                <Button
+                                  color="danger"
+                                  onPress={handleDeleteAccount}
+                                  className="font-semibold"
+                                >
+                                  Delete Account
+                                </Button>
+                              </ModalFooter>
+                            </>
+                          )}
+                        </ModalContent>
+                      </Modal>
                     </div>
                   </div>
                 ) : null}

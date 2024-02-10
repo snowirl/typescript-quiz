@@ -59,7 +59,7 @@ const ProfileCard = (props: ProfileCardProps) => {
   };
 
   return (
-    <Card className="w-full p-1 my-2" shadow="sm" radius="lg">
+    <Card className="w-full p-1 my-2 shadow-sm" shadow="none">
       <div
         className="flex items-center space-x-2 p-2 cursor-pointer font-semibold"
         onClick={() => navigate(`/profile/${props.username}`)}

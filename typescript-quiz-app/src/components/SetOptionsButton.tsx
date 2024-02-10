@@ -42,7 +42,7 @@ interface SetOptionsButtonProps {
 }
 
 const SetOptionsButton = (props: SetOptionsButtonProps) => {
-  const userID = auth.currentUser?.displayName ?? null;
+  const userID = auth.currentUser?.uid ?? null;
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {

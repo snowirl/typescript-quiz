@@ -57,16 +57,19 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
     } else {
       return;
     }
-    const userID: string = auth.currentUser?.displayName ?? "Error";
-    try {
-      await addDoc(collection(db, "users", userID, "folders"), {
-        folderName: folderName,
-        folderColor: colorSelected,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
+    const userID: string | null = auth.currentUser?.uid ?? null;
 
-      return;
+    if (userID !== null) {
+      try {
+        await addDoc(collection(db, "users", userID, "folders"), {
+          folderName: folderName,
+          folderColor: colorSelected,
+        });
+      } catch (e) {
+        console.error("Error adding document: ", e);
+
+        return;
+      }
     }
 
     setIsCreating(false);

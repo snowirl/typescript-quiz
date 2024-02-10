@@ -21,7 +21,7 @@ const SetsCreatedSets = () => {
   const [deckList, setDeckList] = useState<DocumentData | null>(null);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const displayPerPage = 3;
-  const userID = auth.currentUser?.displayName ?? "Error";
+  const userID = auth.currentUser?.uid ?? null;
   const location = useLocation();
   const { user } = useUserContext();
 
@@ -48,7 +48,7 @@ const SetsCreatedSets = () => {
   }, [deckList]);
 
   const getDeckCount = async () => {
-    if (deckCount > 0) {
+    if (deckCount > 0 || userID === null) {
       return;
     }
 
@@ -62,7 +62,7 @@ const SetsCreatedSets = () => {
   };
 
   const handleFindSets = async (pageNum: number) => {
-    if (user === null) {
+    if (user === null || userID === null) {
       return;
     }
 

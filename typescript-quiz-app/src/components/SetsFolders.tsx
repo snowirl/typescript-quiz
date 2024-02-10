@@ -22,7 +22,7 @@ const SetsFolders = () => {
   const [folderIDs, setFolderIDs] = useState<DocumentData>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const userID = auth.currentUser?.displayName ?? "Error";
+  const userID = auth.currentUser?.uid ?? null;
   const { user } = useUserContext();
   const [folderCount, setFolderCount] = useState<number>(0);
   const displayPerPage = 6;
@@ -55,6 +55,9 @@ const SetsFolders = () => {
   };
 
   const getFolderCount = async () => {
+    if (userID === null) {
+      return;
+    }
     try {
       const coll = collection(db, "users", userID, "folders");
       const snapshot = await getCountFromServer(coll);
@@ -65,7 +68,7 @@ const SetsFolders = () => {
   };
 
   const handleFindFolders = async (pageNum: number) => {
-    if (user === null) {
+    if (user === null || userID === null) {
       return;
     }
 

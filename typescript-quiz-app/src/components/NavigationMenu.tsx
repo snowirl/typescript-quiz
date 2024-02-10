@@ -102,7 +102,7 @@ const NavigationMenu = () => {
       return;
     }
 
-    const userID: string | null = auth.currentUser?.displayName ?? null;
+    const userID: string | null = auth.currentUser?.uid ?? null;
 
     if (userID === null) {
       return;

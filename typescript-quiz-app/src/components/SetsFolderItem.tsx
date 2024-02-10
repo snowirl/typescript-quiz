@@ -44,7 +44,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   const [folderName, setFolderName] = useState(props.folderName);
   const [_isCreating, setIsCreating] = useState(false);
 
-  const userID = auth.currentUser?.displayName ?? null;
+  const userID = auth.currentUser?.uid ?? null;
 
   const {
     isOpen: isOpenDelete,

@@ -23,7 +23,7 @@ const SetsFavorites = () => {
   const displayPerPage = 3;
   const { user } = useUserContext();
 
-  const userID = auth.currentUser?.displayName ?? "Error";
+  const userID = auth.currentUser?.uid ?? null;
 
   useEffect(() => {
     if (location.pathname === "/sets/favorites" && user) {
@@ -44,7 +44,7 @@ const SetsFavorites = () => {
   }, [pageIndex]);
 
   const getFavoritedDeckCount = async () => {
-    if (deckCount > 0) {
+    if (deckCount > 0 || userID === null) {
       return;
     }
 
@@ -62,7 +62,7 @@ const SetsFavorites = () => {
   };
 
   const handleFindSets = async (pageNum: number) => {
-    if (user === null) {
+    if (user === null || userID === null) {
       return;
     }
 
