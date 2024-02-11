@@ -72,7 +72,7 @@ const SetsFavorites = () => {
       setsRef,
       where("favorited", "==", true),
       orderBy("timestamp", "desc"),
-      limit(5 * (pageNum + 1))
+      limit(displayPerPage * (pageNum + 1))
     );
 
     if ((pageNum + 1) * displayPerPage - deckList?.length < pageNum) {

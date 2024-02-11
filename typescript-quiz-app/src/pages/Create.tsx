@@ -65,6 +65,10 @@ const Create = () => {
   }, [scrollTimeoutId]);
 
   const handleCardAdd = () => {
+    if (flashcardList.length >= 150) {
+      toast.error("Card limit reached");
+      return;
+    }
     setFlashcardList([...flashcardList, flashcard]);
 
     if (flashcardList.length > 0) {
@@ -115,26 +119,15 @@ const Create = () => {
       return;
     }
 
-    const userID: string = auth.currentUser?.uid ?? "Error"; // changed to display name in Algolia era
-    const displayName: string = auth.currentUser?.displayName ?? "Error";
+    const userID: string | null = auth.currentUser?.uid ?? null; // changed to display name in Algolia era
+    const displayName: string | null = auth.currentUser?.displayName ?? null;
 
-    const docRef = doc(db, "users", userID);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      console.log("Found user.");
-    } else {
-      console.log("No such user!");
-
-      try {
-        await setDoc(doc(db, "users", userID), {});
-      } catch (e) {
-        console.error("Error adding document: ", e);
-        setIsCreating(false);
-        return;
-      }
+    if (!userID || !displayName) {
+      return;
     }
-    // Creates User in DB if they are not found
+
+    checkIfUserExists();
+
     let docId: string = id ?? "new";
 
     if (id === "new" || isCopy) {
@@ -276,6 +269,40 @@ const Create = () => {
       top: document.body.scrollHeight,
       behavior: "smooth", // Optional: Adds smooth scrolling animation
     });
+  };
+
+  const checkIfUserExists = async () => {
+    const userID: string | null = auth.currentUser?.uid ?? null; // changed to display name in Algolia era
+    const displayName: string | null = auth.currentUser?.displayName ?? null;
+
+    if (!userID || !displayName) {
+      return;
+    }
+
+    const docRef = doc(db, "users", userID);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Found user.");
+    } else {
+      console.log("No such user!");
+
+      try {
+        await setDoc(doc(db, "users", userID), {});
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        setIsCreating(false);
+        return;
+      }
+
+      try {
+        await setDoc(doc(db, "usernames", displayName), { uid: userID });
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        setIsCreating(false);
+        return;
+      }
+    }
   };
 
   return (

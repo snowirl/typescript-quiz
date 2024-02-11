@@ -108,7 +108,10 @@ const SetsFolders = () => {
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <div className="mx-4 flex justify-start pb-1">
             {selectedFolder === null ? (
-              <SetsCreateFolder refreshFolders={refreshFolders} />
+              <SetsCreateFolder
+                refreshFolders={refreshFolders}
+                folderCount={folderCount}
+              />
             ) : (
               <Button
                 className="font-semibold"

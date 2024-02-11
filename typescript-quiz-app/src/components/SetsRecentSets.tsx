@@ -7,6 +7,7 @@ import {
   orderBy,
   getCountFromServer,
   DocumentData,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import SetCard from "./SetCard";
@@ -47,7 +48,12 @@ const SetsRecentSets = () => {
     }
     try {
       const coll = collection(db, "users", userID, "activity");
-      const snapshot = await getCountFromServer(coll);
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+      const snapshot = await getCountFromServer(
+        query(coll, where("timestamp", ">=", threeMonthsAgo))
+      );
       setDeckCount(snapshot.data().count);
     } catch (e) {
       console.log(e);
@@ -60,12 +66,16 @@ const SetsRecentSets = () => {
       return;
     }
 
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
     let list: DocumentData = [];
     const setsRef = collection(db, "users", userID, "activity");
     let q = query(
       setsRef,
       orderBy("timestamp", "desc"),
-      limit(5 * (pageNum + 1))
+      where("timestamp", ">=", threeMonthsAgo),
+      limit(displayPerPage * (pageNum + 1))
     );
 
     if ((pageNum + 1) * displayPerPage - deckList?.length < pageNum) {

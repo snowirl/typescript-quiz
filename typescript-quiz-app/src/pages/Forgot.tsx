@@ -1,34 +1,22 @@
-import {
-  Input,
-  Card,
-  CardBody,
-  Button,
-  Checkbox,
-  Image,
-} from "@nextui-org/react";
+import { Input, Card, CardBody, Button, Image } from "@nextui-org/react";
 import StuduckyCircleLogo from "../assets/StuduckyCircle.svg";
 import { FormEvent, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash, FaXmark } from "react-icons/fa6";
+import { FaXmark } from "react-icons/fa6";
 import { useUserContext } from "../context/userContext";
 import { toast } from "sonner";
 
-const Login = () => {
+const Signup = () => {
   const emailRef = useRef<HTMLInputElement | null>(null);
-  const passRef = useRef<HTMLInputElement | null>(null);
 
   const [email, setEmail] = useState("");
-  const [emailInvalid, setEmailInvalid] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
+  const [emailInvalid, setEmailInvalid] = useState(false);
   const [size, setSize] = useState<"md" | "lg">("md"); // Default size is 'md'
 
-  const { signInUser, user, error } = useUserContext();
+  const { error, forgotPassword } = useUserContext();
 
   const navigate = useNavigate();
-
-  const toggleVisibility = () => setIsPasswordVisible(!isPasswordVisible);
 
   const validateEmail = (value: string) =>
     value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
@@ -62,12 +50,6 @@ const Login = () => {
   }, [email]);
 
   useEffect(() => {
-    if (user) {
-      navigate("/sets/recents");
-    }
-  }, [user]);
-
-  useEffect(() => {
     if (size === "lg" && error) {
       toast.error(error);
     }
@@ -77,7 +59,6 @@ const Login = () => {
     event.preventDefault();
 
     const email = emailRef.current?.value;
-    const password = passRef.current?.value;
 
     if (emailInvalid || emailRef.current?.value === "") {
       setEmailInvalid(true);
@@ -85,20 +66,15 @@ const Login = () => {
       return;
     }
 
-    if (passRef.current?.value === "") {
-      passRef.current?.focus();
-      return;
-    }
-
-    if (email && password) {
-      signInUser(email, password, rememberMe);
+    if (email) {
+      forgotPassword(email);
     }
   };
 
   return (
     <div className="bg-white text-black dark:text-gray-100 dark:bg-dark-2 min-h-screen">
       {error ? (
-        <div className="hidden bg-rose-500 w-full min-h-10 py-2 px-2 md:flex justify-center items-center">
+        <div className="hidden bg-rose-500 w-full h-10 md:flex justify-center items-center">
           <p className="text-white font-semibold text-sm">{error}</p>
         </div>
       ) : null}
@@ -119,7 +95,7 @@ const Login = () => {
       <div className="md:pt-20 pt-10 space-y-5 flex justify-center items-center">
         <Card
           shadow="none"
-          className="bg-black/0 w-full max-w-[550px] md:mx-10 mx-4"
+          className="w-full max-w-[550px] md:mx-10 mx-4 bg-black/0"
           radius="md"
         >
           <CardBody className="md:px-12 px-4 md:py-8 py-4">
@@ -131,7 +107,10 @@ const Login = () => {
               </div>
               <div>
                 <p className="text-xl font-semibold text-center">
-                  Log in to your account
+                  Forgot Password
+                </p>
+                <p className="text-center pt-4">
+                  We will send you an email to reset your password.
                 </p>
               </div>
               <form className="space-y-4" onSubmit={handleFormSubmit}>
@@ -150,28 +129,6 @@ const Login = () => {
                     onValueChange={setEmail}
                     ref={emailRef}
                   />
-                  <Input
-                    label="Password"
-                    type={isPasswordVisible ? "text" : "password"}
-                    placeholder="Enter your password"
-                    variant="bordered"
-                    size={size}
-                    ref={passRef}
-                    labelPlacement="outside"
-                    endContent={
-                      <button
-                        className="focus:outline-none"
-                        type="button"
-                        onClick={toggleVisibility}
-                      >
-                        {isPasswordVisible ? (
-                          <FaEyeSlash className="text-2xl text-default-400 pointer-events-none" />
-                        ) : (
-                          <FaEye className="text-2xl text-default-400 pointer-events-none" />
-                        )}
-                      </button>
-                    }
-                  />
                 </div>
                 <div className="">
                   <Button
@@ -180,29 +137,17 @@ const Login = () => {
                     size={size}
                     className="font-semibold w-full"
                   >
-                    Log in
+                    Email Me
                   </Button>
                 </div>
               </form>
-              <div className="flex items-center justify-between">
-                <Checkbox isSelected={rememberMe} onValueChange={setRememberMe}>
-                  Remember me
-                </Checkbox>
+
+              <div className="flex justify-center items-center pt-4">
                 <button
                   className="hover:underline"
-                  onClick={() => navigate("/forgot")}
+                  onClick={() => navigate("/login")}
                 >
-                  <p className="text-base">Forgot password?</p>
-                </button>
-              </div>
-              <div className="flex justify-center items-center pt-4">
-                <button className="hover:underline">
-                  <p
-                    className="text-base font-semibold"
-                    onClick={() => navigate("/signup")}
-                  >
-                    Don't have an account?
-                  </p>
+                  <p className="text-base font-semibold">Have an account?</p>
                 </button>
               </div>
             </div>
@@ -213,4 +158,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

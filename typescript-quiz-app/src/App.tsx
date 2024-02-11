@@ -16,6 +16,7 @@ import Legal from "./pages/Legal";
 import { Toaster } from "sonner";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Forgot from "./pages/Forgot";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot" element={<Forgot />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
 
