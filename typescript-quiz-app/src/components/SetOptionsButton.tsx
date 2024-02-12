@@ -181,7 +181,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
 
   return (
     <div>
-      <Dropdown shadow="sm">
+      <Dropdown shadow="sm" className="dropdown">
         <DropdownTrigger>
           <Button isIconOnly variant="light" size="md" radius="lg">
             <IoEllipsisHorizontalSharp className="w-5 h-5 " />

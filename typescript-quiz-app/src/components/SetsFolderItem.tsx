@@ -26,6 +26,7 @@ import { setDoc, doc, deleteDoc } from "firebase/firestore";
 import { auth } from "../firebase";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 interface SetsFolderItemProps {
   folderName: string;
@@ -129,7 +130,14 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   };
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, translateY: 5 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{
+        ease: "linear",
+        duration: 0.3,
+      }}
+    >
       <div
         className="w-full cursor-pointer"
         onClick={() => props.setSelectedFolder(props.folderID)}
@@ -284,7 +292,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </motion.div>
   );
 };
 

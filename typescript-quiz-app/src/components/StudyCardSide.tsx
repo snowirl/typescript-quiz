@@ -142,7 +142,7 @@ const StudyCardSide = (props: StudyCardSideProps) => {
               <IoEllipsisHorizontalSharp className="w-5 h-5" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent className="dropdown">
             <div className="px-1 py-2 space-y-4">
               <RadioGroup
                 label="Initial Side"

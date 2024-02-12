@@ -33,7 +33,7 @@ const AvatarContainer = () => {
     <div>
       <div className="flex justify-center items-center space-x-2">
         <p className="font-semibold text-sm">{auth.currentUser?.displayName}</p>
-        <Dropdown>
+        <Dropdown className="dropdown">
           <DropdownTrigger>
             <Avatar
               showFallback={auth.currentUser?.photoURL ? false : true}

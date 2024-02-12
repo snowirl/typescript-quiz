@@ -221,7 +221,7 @@ const NavigationMenu = () => {
                 Your Sets
               </button>
 
-              <Dropdown>
+              <Dropdown className="dropdown">
                 <DropdownTrigger>
                   {/* <button className="font-semibold text-sm flex items-center ">
                     Create <FaAngleDown className="text-sm ml-1" />
