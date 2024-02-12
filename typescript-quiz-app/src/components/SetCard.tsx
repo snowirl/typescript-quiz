@@ -17,8 +17,10 @@ import {
   doc,
   deleteDoc,
   DocumentData,
+  arrayRemove,
+  updateDoc,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@nextui-org/react";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import Skeleton from "react-loading-skeleton";
@@ -27,10 +29,12 @@ import { motion } from "framer-motion";
 import { IoIosRemove } from "react-icons/io";
 import SetOptionsButton from "./SetOptionsButton";
 import { FaLock } from "react-icons/fa";
+import { toast } from "sonner";
 
 interface SetCardProps {
   deckId?: string | null;
   removeSetFromFolder?: (set: string) => void;
+  folderId?: string | null;
 }
 
 const SetCard = (props: SetCardProps) => {
@@ -40,6 +44,7 @@ const SetCard = (props: SetCardProps) => {
   const [disabled, setDisabled] = useState(false);
   const [isPicLoading, setIsPicLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const userId = auth.currentUser?.uid ?? null;
   const deckId = props?.deckId ?? null;
 
@@ -77,7 +82,19 @@ const SetCard = (props: SetCardProps) => {
         )
       ) {
         // Execute your function when the specific error occurs
+        location.pathname.includes("/sets/");
+
+        if (location.pathname.includes("/sets/folders")) {
+          console.log("In folder");
+          if (deckId && deckId !== undefined) {
+            removeSetFromFolder(props.deckId ?? "");
+          }
+        } else {
+          console.log("not in folder");
+          handleDeleteActivitySet();
+        }
         handleDeleteActivitySet();
+        return;
       } else {
         // Handle other errors
         console.log(e);
@@ -85,6 +102,7 @@ const SetCard = (props: SetCardProps) => {
     }
 
     setIsLoading(false);
+    setDisabled(false);
   };
 
   const handleDeleteActivitySet = async () => {
@@ -93,6 +111,10 @@ const SetCard = (props: SetCardProps) => {
     }
 
     setDisabled(true);
+    setIsLoading(false);
+
+    setDeck(null);
+    setProfilePictureURL("");
     // deletes reents set when there is an undefined error retrieving it, so most likely deleted or privated.
     const setRef = doc(db, "users", userId, "activity", deckId);
 
@@ -104,6 +126,34 @@ const SetCard = (props: SetCardProps) => {
     }
 
     console.log("deleted.");
+  };
+
+  const removeSetFromFolder = async (deckId: string) => {
+    if (
+      userId === null ||
+      props.folderId === undefined ||
+      props.folderId === null
+    ) {
+      console.log("User is null. Cannot find folders.");
+      return;
+    }
+
+    if (deckId === "") {
+      return;
+    }
+
+    try {
+      await updateDoc(
+        doc(db, "users", userId, "folders", props.folderId.toString()),
+        {
+          sets: arrayRemove(deckId),
+        }
+      );
+    } catch (e) {
+      console.log(e);
+      toast.error("Error removing set");
+      return;
+    }
   };
 
   const getImageByUserId = async (userId: string) => {
@@ -187,7 +237,8 @@ const SetCard = (props: SetCardProps) => {
 
             {props.removeSetFromFolder !== undefined &&
             props.deckId !== undefined &&
-            props.deckId !== null ? (
+            props.deckId !== null &&
+            !disabled ? (
               <div className="flex">
                 <Tooltip
                   content="Remove set from folder"

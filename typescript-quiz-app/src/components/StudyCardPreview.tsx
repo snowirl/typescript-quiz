@@ -10,7 +10,7 @@ interface StudyCardPreviewProps {
 
 const StudyCardPreview = (props: StudyCardPreviewProps) => {
   return (
-    <Card className="shadow-sm" shadow="none">
+    <Card className="shadow-sm  md:min-h-[40px]" shadow="none">
       <div className="py-1 px-1 absolute w-full flex justify-end">
         <Button
           isIconOnly
@@ -45,6 +45,7 @@ const StudyCardPreview = (props: StudyCardPreviewProps) => {
                 className="max-w-[300px]"
                 alt="backImage"
                 src={props.flashcard.backImage}
+                loading="lazy"
               />
             ) : null}
           </div>

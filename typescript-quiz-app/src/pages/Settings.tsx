@@ -226,7 +226,7 @@ const Settings = () => {
                   </Tabs>
                 </div>
                 <div className="hidden md:flex">
-                  <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[150px] pr-2 border-black/10 dark:border-white/10">
+                  <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[140px] pr-2 border-black/10 dark:border-white/10">
                     <Button
                       variant="light"
                       color={tab === "account" ? "primary" : "default"}

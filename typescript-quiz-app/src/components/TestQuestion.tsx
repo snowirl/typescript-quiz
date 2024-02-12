@@ -141,6 +141,7 @@ const TestQuestion = (props: TestQuestionProps) => {
             // width={imageWidth}
             alt="card image"
             src={props.flashcard.backImage}
+            loading="lazy"
           />
         ) : null}
 

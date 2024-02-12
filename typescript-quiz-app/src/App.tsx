@@ -16,7 +16,7 @@ import Legal from "./pages/Legal";
 import { Toaster } from "sonner";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Forgot from "./pages/Forgot";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
       <Toaster
         toastOptions={{
           className:
-            "text-base border-none dark:bg-dark-1 dark:shadow-lg dark:shadow-white/5 dark:text-white",
+            "description text-base shadow-sm border-black/10 dark:bg-dark-1 bg-white dark:border-white/20 rounded-xl",
           classNames: {
             error: "dark:text-rose-300 dark:bg-rose-900 bg-white text-rose-500",
             success:
@@ -35,15 +35,14 @@ function App() {
         }}
         richColors
       />
+      <ScrollToTop />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot" element={<Forgot />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
 
           <Route path="/study/:id" element={<Study />} />
-
           <Route path="/learn/:id" element={<Learn />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/game/:id" element={<Game />} />

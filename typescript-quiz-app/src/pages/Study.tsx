@@ -83,6 +83,9 @@ const Study = () => {
 
   useEffect(() => {
     initializeDeckInfo();
+    window.scrollTo({
+      top: 0,
+    });
   }, []);
 
   useEffect(() => {
@@ -160,12 +163,11 @@ const Study = () => {
           <div className="w-full flex justify-start">
             <p className="font-semibold">Unsaved changes</p>
           </div>
-          <div className="w-full flex justify-end">
+          <div className="flex w-full justify-end">
             <Button
               color="primary"
-              className="font-bold h-9 w-9"
+              className="font-bold h-9 w-9 right-0"
               onClick={() => handleSaveData()}
-              radius="sm"
             >
               Save
             </Button>

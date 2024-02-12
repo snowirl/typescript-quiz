@@ -3,6 +3,7 @@ import { FaFolder } from "react-icons/fa6";
 import {
   DocumentData,
   arrayRemove,
+  arrayUnion,
   doc,
   getDoc,
   updateDoc,
@@ -11,7 +12,7 @@ import { useEffect } from "react";
 import { auth, db } from "../firebase";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Spinner, Pagination } from "@nextui-org/react";
+import { Spinner, Pagination, Button } from "@nextui-org/react";
 
 interface SetsFoldersContentsProps {
   folderId: string | null;
@@ -109,9 +110,55 @@ const SetsFolderContents = (props: SetsFoldersContentsProps) => {
     }
 
     // props.handleFindFolders(0);
-    toast.success("Removed set from folder");
+
+    toast(
+      <div className="flex text-base p-0 m-0 items-center justify-between w-full dark:bg-dark-1 dark:text-white">
+        <div className="w-full flex justify-start">
+          <p className="font-semibold">Removed set</p>
+        </div>
+        <div className="w-full flex justify-end">
+          <Button
+            color="primary"
+            className="font-bold h-9 w-9"
+            onClick={() => undoSetToFolder(deckId)}
+          >
+            Undo
+          </Button>
+        </div>
+      </div>,
+      { duration: 10000 }
+    );
     setPageIndex(0);
 
+    handleFindFolder();
+  };
+
+  const undoSetToFolder = async (deckId: string) => {
+    if (
+      userId === null ||
+      props.folderId === undefined ||
+      props.folderId === null
+    ) {
+      console.log("User is null. Cannot find folders.");
+      return;
+    }
+
+    try {
+      await updateDoc(
+        doc(db, "users", userId, "folders", props.folderId.toString()),
+        {
+          sets: arrayUnion(deckId),
+        }
+      );
+    } catch (e) {
+      console.log(e);
+      toast.error("Error");
+      return;
+    }
+
+    toast.dismiss();
+    toast.success("Change undone");
+    setPageIndex(0);
     handleFindFolder();
   };
 
@@ -132,6 +179,7 @@ const SetsFolderContents = (props: SetsFoldersContentsProps) => {
               key={index}
               deckId={id}
               removeSetFromFolder={removeSetFromFolder}
+              folderId={props.folderId}
             ></SetCard>
           ))}
           {folderData && !isLoading ? (

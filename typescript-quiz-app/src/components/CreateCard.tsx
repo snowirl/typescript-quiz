@@ -227,6 +227,7 @@ const CreateCard = (props: CreateCardProps) => {
                     className="max-w-[250px]"
                     alt="backImage"
                     src={props.flashcard.backImage}
+                    loading="lazy"
                   />
                   {props.flashcard.backImage ? (
                     <Button

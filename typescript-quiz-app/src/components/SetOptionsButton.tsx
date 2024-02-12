@@ -114,7 +114,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
     onClose();
     toast.success("Deleted set.");
     console.log("deleted.");
-    navigate(0);
+    navigate(-1);
   };
 
   const handleFindFolders = async () => {
@@ -302,7 +302,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
                 Add to folder
               </ModalHeader>
               <ModalBody className="bg-gray-100 dark:bg-dark-2">
-                <div className="space-y-2 grid grid-cols-1 items-start max-h-[400px] overflow-y-auto">
+                <div className="space-y-2 grid grid-cols-1 items-start max-h-[400px] overflow-y-auto min-h-[50px]">
                   {folderList !== null ? (
                     folderList
                       // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
@@ -328,6 +328,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
                   color="danger"
                   variant="light"
                   onPress={onCloseFolderModal}
+                  className="font-semibold"
                 >
                   Close
                 </Button>
@@ -335,6 +336,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
                   color="primary"
                   onPress={handleAddSetToFolder}
                   isDisabled={selectedFolder === null ? true : false}
+                  className="font-semibold"
                 >
                   Add
                 </Button>
