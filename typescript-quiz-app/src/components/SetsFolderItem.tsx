@@ -138,60 +138,59 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
         duration: 0.3,
       }}
     >
-      <div
-        className="w-full cursor-pointer"
-        onClick={() => props.setSelectedFolder(props.folderID)}
-      >
+      <div className="w-full cursor-pointer">
         <Card shadow="none" className="lg:h-[90px] h-fit shadow-sm">
-          <CardBody className="py-3 flex space-y-4">
+          <CardBody
+            className="py-3 flex space-y-4"
+            onClick={() => props.setSelectedFolder(props.folderID)}
+          >
             <div className="flex items-center space-x-2 mr-8">
               <FaFolder className={`h-5 w-5 text-${props.folderColor}-500`} />
               <p className="text-base overflow-ellipsis overflow-hidden line-clamp-1">
                 {props.folderName}
                 {props.folderName === "" ? "Untitled Folder" : ""}
               </p>
-
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    size="sm"
-                    isIconOnly
-                    aria-label="Folder settings"
-                    className="absolute right-2"
-                    radius="md"
-                    variant="light"
-                  >
-                    <IoEllipsisHorizontalSharp className="w-5 h-5" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Static Actions"
-                  className="text-black/80 dark:text-white/80 max-w-[200px]"
-                >
-                  <DropdownItem
-                    key="new"
-                    startContent={<FaEdit />}
-                    onPress={onOpen}
-                  >
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    className="text-danger"
-                    color="danger"
-                    startContent={<FaTrash />}
-                    onPress={onOpenDelete}
-                  >
-                    Delete
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
             </div>
             <Chip size="sm">
               {props.sets?.length ?? 0}{" "}
               {props.sets?.length == 1 ? "set" : "sets"}
             </Chip>
           </CardBody>
+          <Dropdown className="">
+            <DropdownTrigger>
+              <Button
+                size="sm"
+                isIconOnly
+                aria-label="Folder settings"
+                className="absolute right-2 top-2"
+                radius="md"
+                variant="light"
+              >
+                <IoEllipsisHorizontalSharp className="w-5 h-5" />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Static Actions"
+              className="text-black/80 dark:text-white/80 max-w-[200px]"
+            >
+              <DropdownItem
+                key="new"
+                startContent={<FaEdit />}
+                onPress={onOpen}
+              >
+                Edit
+              </DropdownItem>
+              <DropdownItem
+                key="delete"
+                className="text-danger"
+                color="danger"
+                startContent={<FaTrash />}
+                onPress={onOpenDelete}
+              >
+                Delete
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </Card>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm">

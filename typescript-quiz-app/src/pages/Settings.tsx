@@ -24,6 +24,7 @@ import { useUserContext } from "../context/userContext";
 import { toast } from "sonner";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { Tabs, Tab } from "@nextui-org/react";
 
 const Settings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -207,8 +208,24 @@ const Settings = () => {
         <div className="max-w-[800px] flex-grow space-y-4 px-4">
           <Card shadow="sm" className="shadow-gray-100/10">
             <CardBody>
-              <div className="flex justify-center">
-                <div className="">
+              <div className="justify-center md:flex">
+                <div className="flex md:hidden justify-center">
+                  <Tabs
+                    aria-label="Options"
+                    variant="underlined"
+                    selectedKey={tab}
+                    onSelectionChange={(key: React.Key) =>
+                      setTab(key.toString())
+                    }
+                    size="sm"
+                  >
+                    <Tab key="account" title="Account"></Tab>
+                    <Tab key="preferences" title="Preferences"></Tab>
+                    <Tab key="password" title="Password"></Tab>
+                    <Tab key="delete" title="Delete"></Tab>
+                  </Tabs>
+                </div>
+                <div className="hidden md:flex">
                   <div className="h-full text-lg space-y-2 border border-r-2 border-y-0 border-l-0 py-2 w-[150px] pr-2 border-black/10 dark:border-white/10">
                     <Button
                       variant="light"
@@ -246,7 +263,7 @@ const Settings = () => {
                   </div>
                 </div>
                 {tab === "account" ? (
-                  <div className="flex flex-col justify-start items-start space-y-4 w-full mx-4 my-4">
+                  <div className="flex flex-col justify-start items-start space-y-4 w-full px-4 my-4">
                     <div className="space-y-4 items-center w-full"></div>
                     <p className="text-xl font-semibold">
                       Change Profile Picture
@@ -325,7 +342,7 @@ const Settings = () => {
                   </div>
                 ) : null}
                 {tab === "preferences" ? (
-                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full px-4 my-4">
                     <div className="py-2">
                       <p className="font-semibold text-xl pb-4">
                         Toggle Dark Mode
@@ -351,7 +368,7 @@ const Settings = () => {
                 ) : null}
 
                 {tab === "password" ? (
-                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full px-4 my-4">
                     <p className="font-semibold text-xl">Change Password</p>
                     <div className="">
                       <Input
@@ -411,7 +428,7 @@ const Settings = () => {
                   </div>
                 ) : null}
                 {tab === "delete" ? (
-                  <div className="flex flex-col justify-start items-start space-y-3 w-full mx-4 my-4">
+                  <div className="flex flex-col justify-start items-start space-y-3 w-full px-4 my-4">
                     <p className="font-semibold text-xl">Delete Your Account</p>
                     <div className=" w-full justify-start items-start flex">
                       <Button
@@ -447,7 +464,7 @@ const Settings = () => {
                                   deletion: {auth.currentUser?.displayName}
                                 </p>
                                 <Input
-                                  size="md"
+                                  size="lg"
                                   labelPlacement="outside"
                                   placeholder="Enter your username"
                                   ref={deleteRef}

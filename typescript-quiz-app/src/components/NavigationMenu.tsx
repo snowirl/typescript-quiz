@@ -80,6 +80,10 @@ const NavigationMenu = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Additional handling, such as triggering the search
+    if (searchInput.length <= 0) {
+      return;
+    }
+
     const containsSearch = location.pathname.includes("search");
     if (!containsSearch) {
       navigate(`/search/sets/${searchInput}`);
@@ -183,14 +187,24 @@ const NavigationMenu = () => {
           </div>
           <div className="flex lg:hidden relative w-full justify-center">
             <form onSubmit={handleSubmit} className="w-full mx-2">
-              <FaMagnifyingGlass className="w-4 h-4 absolute left-[25px] top-1/2 transform -translate-y-1/2" />
+              <Button
+                type="submit"
+                className="absolute left-[8px] top-1/2 transform -translate-y-1/2 rounded-l-full rounded-r-none"
+                radius="full"
+                isIconOnly
+                variant="light"
+                size="md"
+              >
+                <FaMagnifyingGlass />
+              </Button>
+
               <input
                 placeholder="Search sets, users"
                 className="description w-full  rounded-full pl-12"
                 type="text"
                 onChange={handleInputChange}
               />
-              <input type="submit" className="hidden" />
+              {/* <input type="submit" className="hidden" /> */}
             </form>
           </div>
         </div>
@@ -322,14 +336,22 @@ const NavigationMenu = () => {
           </div>
           <div className="flex items-center relative mx-2">
             <form onSubmit={handleSubmit}>
-              <FaMagnifyingGlass className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2" />
+              <Button
+                type="submit"
+                className="absolute left-[0px] top-1/2 transform -translate-y-1/2 rounded-l-full rounded-r-none"
+                radius="full"
+                isIconOnly
+                variant="light"
+                size="md"
+              >
+                <FaMagnifyingGlass />
+              </Button>
               <input
                 placeholder="Search sets, users"
                 className="description md:w-[280px] xl:w-[400px] rounded-full pl-12"
                 type="text"
                 onChange={handleInputChange}
               />
-              <input type="submit" className="hidden" />
             </form>
           </div>
         </div>

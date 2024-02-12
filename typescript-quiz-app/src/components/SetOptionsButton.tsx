@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import StudyFolderItem from "./StudyFolderItem";
 import { useEffect } from "react";
+import { useUserContext } from "../context/userContext";
 
 interface SetOptionsButtonProps {
   username: string;
@@ -55,6 +56,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const { user } = useUserContext();
 
   useEffect(() => {
     if (!isOpenFolderModal) {
@@ -70,6 +72,10 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
   };
 
   const copyLink = () => {
+    if (user === null) {
+      toast.warning("Please log in to copy a set");
+      return;
+    }
     if (props.deckId) {
       navigate(`/create/${props.deckId}=copy`);
     }
@@ -179,6 +185,15 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
     }
   };
 
+  const handleOpenFolderModal = () => {
+    if (user === null) {
+      toast.warning("Please log in to add sets to a folder");
+      return;
+    }
+
+    onOpenFolderModal();
+  };
+
   return (
     <div>
       <Dropdown shadow="sm" className="dropdown">
@@ -202,7 +217,7 @@ const SetOptionsButton = (props: SetOptionsButtonProps) => {
           <DropdownItem
             key="folder"
             startContent={<FaFolderPlus />}
-            onPress={onOpenFolderModal}
+            onPress={handleOpenFolderModal}
           >
             Add to folder
           </DropdownItem>
