@@ -54,7 +54,7 @@ const SetsCreateFolder = (props: SetsCreateFolderProps) => {
       return;
     }
 
-    if (props.folderCount <= 30) {
+    if (props.folderCount >= 30) {
       toast.error("Maximum folders created");
       return;
     }

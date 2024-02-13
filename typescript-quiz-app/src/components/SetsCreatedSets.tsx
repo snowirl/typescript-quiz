@@ -14,6 +14,7 @@ import { Pagination } from "@nextui-org/react";
 import { useLocation } from "react-router-dom";
 import { useUserContext } from "../context/userContext";
 import { Spinner } from "@nextui-org/react";
+import SetsNoSetsFound from "./SetsNoSetsFound";
 
 const SetsCreatedSets = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -29,6 +30,8 @@ const SetsCreatedSets = () => {
     if (location.pathname === "/sets/created" && user) {
       handleFindSets(0);
       getDeckCount();
+    } else {
+      setIsLoading(false);
     }
 
     return () => {
@@ -49,6 +52,7 @@ const SetsCreatedSets = () => {
 
   const getDeckCount = async () => {
     if (deckCount > 0 || userID === null) {
+      setIsLoading(false);
       return;
     }
 
@@ -63,6 +67,7 @@ const SetsCreatedSets = () => {
 
   const handleFindSets = async (pageNum: number) => {
     if (user === null || userID === null) {
+      setIsLoading(false);
       return;
     }
 
@@ -98,7 +103,7 @@ const SetsCreatedSets = () => {
         <div className="flex justify-center flex-col  items-center">
           <div className="flex-grow space-y-4 px-4 h-[540px] w-full max-w-[800px]">
             {!isLoading ? (
-              deckList !== null ? (
+              deckList !== null && deckList.length > 0 ? (
                 deckList
                   .slice(
                     pageIndex * displayPerPage,
@@ -107,7 +112,9 @@ const SetsCreatedSets = () => {
                   .map((deck: DocumentData, index: number) => (
                     <SetCard key={index} deckId={deck.id} />
                   ))
-              ) : null
+              ) : (
+                <SetsNoSetsFound />
+              )
             ) : (
               <Spinner />
             )}

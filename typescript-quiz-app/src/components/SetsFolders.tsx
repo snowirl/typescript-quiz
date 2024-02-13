@@ -17,7 +17,6 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 
 const SetsFolders = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isInitial, setIsInitial] = useState<boolean>(true);
   const [folderList, setFolderList] = useState<DocumentData | null>(null);
   const [folderIDs, setFolderIDs] = useState<DocumentData>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
@@ -29,22 +28,12 @@ const SetsFolders = () => {
 
   useEffect(() => {
     if (user === null) {
+      setIsLoading(false);
       return;
     }
     // handleFindFolders(0);
     getFolderCount();
   }, [user]);
-
-  useEffect(() => {
-    if (folderCount > 0 && isInitial) {
-      handleFindFolders(pageIndex);
-      setIsInitial(false);
-    }
-
-    if (folderCount === 0 && isInitial) {
-      setIsLoading(false);
-    }
-  }, [folderCount]);
 
   useEffect(() => {
     if (folderCount > 0) {
@@ -55,7 +44,7 @@ const SetsFolders = () => {
   const refreshFolders = () => {
     setPageIndex(0);
     getFolderCount();
-    handleFindFolders(pageIndex);
+    // handleFindFolders(pageIndex);
   };
 
   const getFolderCount = async () => {
@@ -66,6 +55,12 @@ const SetsFolders = () => {
       const coll = collection(db, "users", userID, "folders");
       const snapshot = await getCountFromServer(coll);
       setFolderCount(snapshot.data().count);
+      if (snapshot.data().count === 0) {
+        setIsLoading(false);
+        setFolderList(null);
+      } else {
+        handleFindFolders(pageIndex);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -132,31 +127,37 @@ const SetsFolders = () => {
                     : "hidden"
                 }
               >
-                {folderList !== null
-                  ? folderList
-                      .slice(
-                        pageIndex * displayPerPage,
-                        (pageIndex + 1) * displayPerPage
-                      )
-                      // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
-                      .map((folder: DocumentData, index: number) => (
-                        <SetsFolderItem
-                          folderName={folder.folderName}
-                          folderColor={folder.folderColor}
-                          key={index}
-                          folderID={
-                            folderIDs !== null
-                              ? folderIDs[index + pageIndex * displayPerPage]
-                              : "Error"
-                          }
-                          sets={folder.sets}
-                          setSelectedFolder={setSelectedFolder}
-                          index={index + 1}
-                          refreshFolders={refreshFolders}
-                          pageIndex={pageIndex}
-                        />
-                      ))
-                  : null}
+                {folderList !== null && folderList.length > 0 ? (
+                  folderList
+                    .slice(
+                      pageIndex * displayPerPage,
+                      (pageIndex + 1) * displayPerPage
+                    )
+                    // .slice(recentsIndex * 5, recentsIndex * 5 + 5)
+                    .map((folder: DocumentData, index: number) => (
+                      <SetsFolderItem
+                        folderName={folder.folderName}
+                        folderColor={folder.folderColor}
+                        key={index}
+                        folderID={
+                          folderIDs !== null
+                            ? folderIDs[index + pageIndex * displayPerPage]
+                            : "Error"
+                        }
+                        sets={folder.sets}
+                        setSelectedFolder={setSelectedFolder}
+                        index={index + 1}
+                        refreshFolders={refreshFolders}
+                        pageIndex={pageIndex}
+                      />
+                    ))
+                ) : (
+                  <div className="w-full flex text-left">
+                    <p className="font-semibold text-black/50 dark:text-white/70 pl-2">
+                      No folders found
+                    </p>
+                  </div>
+                )}
               </div>
               <div className={selectedFolder === null ? "hidden" : "block"}>
                 {folderList === null ? (

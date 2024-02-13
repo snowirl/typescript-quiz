@@ -14,6 +14,7 @@ import SetCard from "./SetCard";
 import { Pagination } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
 import { Spinner } from "@nextui-org/react";
+import SetsNoSetsFound from "./SetsNoSetsFound";
 
 const SetsFavorites = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -29,6 +30,8 @@ const SetsFavorites = () => {
     if (location.pathname === "/sets/favorites" && user) {
       handleFindSets(0);
       getFavoritedDeckCount();
+    } else {
+      setIsLoading(false);
     }
 
     return () => {
@@ -99,7 +102,7 @@ const SetsFavorites = () => {
         <div className="flex justify-center flex-col  items-center">
           <div className="flex-grow space-y-4 px-4 min-h-[540px] w-full max-w-[800px]">
             {!isLoading ? (
-              deckList !== null ? (
+              deckList !== null && deckList.length > 0 ? (
                 deckList
                   .slice(
                     pageIndex * displayPerPage,
@@ -108,7 +111,9 @@ const SetsFavorites = () => {
                   .map((deck: DocumentData, index: number) => (
                     <SetCard key={index} deckId={deck.docId} />
                   ))
-              ) : null
+              ) : (
+                <SetsNoSetsFound />
+              )
             ) : (
               <Spinner />
             )}

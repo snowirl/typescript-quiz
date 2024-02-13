@@ -111,6 +111,8 @@ const SetsFolderContents = (props: SetsFoldersContentsProps) => {
 
     // props.handleFindFolders(0);
 
+    toast.dismiss();
+
     toast(
       <div className="flex text-base p-0 m-0 items-center justify-between w-full dark:bg-dark-1 dark:text-white">
         <div className="w-full flex justify-start">

@@ -198,6 +198,14 @@ const SetCard = (props: SetCardProps) => {
     navigate(`/study/${deck?.id}`);
   };
 
+  const navigateToProfile = () => {
+    if (disabled) {
+      return;
+    }
+
+    navigate(`/profile/${deck?.username}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, translateY: 5 }}
@@ -215,7 +223,7 @@ const SetCard = (props: SetCardProps) => {
         <CardHeader className="px-2 pt-2 pb-1">
           <div className="flex justify-between w-full">
             <div className="flex-grow-1">
-              <button onClick={() => navigate(`/profile/${deck?.username}`)}>
+              <button onClick={navigateToProfile}>
                 <div className="flex items-center space-x-2 hover:underline">
                   <Avatar
                     src={profilePictureURL}

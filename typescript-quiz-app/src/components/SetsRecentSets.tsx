@@ -15,6 +15,7 @@ import { Pagination } from "@nextui-org/react";
 import { useUserContext } from "../context/userContext";
 import { useLocation } from "react-router-dom";
 import { Spinner } from "@nextui-org/react";
+import SetsNoSetsFound from "./SetsNoSetsFound";
 
 const SetsRecentSets = () => {
   const [deckCount, setDeckCount] = useState<number>(0);
@@ -102,7 +103,7 @@ const SetsRecentSets = () => {
         <div className="flex justify-center flex-col  items-center">
           <div className="flex-grow space-y-4 px-4 min-h-[540px] w-full max-w-[800px]">
             {!isLoading ? (
-              deckList !== null ? (
+              deckList !== null && deckList.length > 0 ? (
                 deckList
                   .slice(
                     pageIndex * displayPerPage,
@@ -111,7 +112,9 @@ const SetsRecentSets = () => {
                   .map((deck: DocumentData, index: number) => (
                     <SetCard key={index} deckId={deck.docId} />
                   ))
-              ) : null
+              ) : (
+                <SetsNoSetsFound />
+              )
             ) : (
               <Spinner />
             )}
