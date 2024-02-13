@@ -68,6 +68,7 @@ const Study = () => {
   const [profilePictureURL, setProfilePictureURL] = useState("");
   const [isAnimating, setIsAnimating] = useState(false); // if card is animating
   const [isInitial, setIsInitial] = useState(true);
+  const isInitialRef = useRef(isInitial);
   const controls = useAnimationControls(); // for card animation
   const [error, setError] = useState<string>("");
 
@@ -173,7 +174,7 @@ const Study = () => {
             </Button>
           </div>
         </div>,
-        { duration: Infinity }
+        { duration: Infinity, dismissible: false }
       );
       console.log("ran....");
     } else {
@@ -363,8 +364,9 @@ const Study = () => {
     }
 
     console.log("Saved.");
+    console.log(isInitial);
 
-    if (!isInitial) {
+    if (!isInitialRef.current) {
       toast.dismiss();
       toast.success("Saved!");
     }
@@ -373,6 +375,7 @@ const Study = () => {
     setShouldSaveData(false);
     setIsSaving(false);
     setIsInitial(false);
+    isInitialRef.current = false;
   };
 
   useEffect(() => {

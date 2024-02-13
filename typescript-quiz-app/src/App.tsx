@@ -30,7 +30,8 @@ function App() {
             error: "dark:text-rose-300 dark:bg-rose-900 bg-white text-rose-500",
             success:
               "dark:text-green-400 dark:bg-green-900 bg-white text-green-600",
-            warning: "text-yellow-600 bg-yellow-50 dark:bg-yellow-700",
+            warning:
+              "text-yellow-600 dark:text-yellow-200 bg-yellow-50 dark:bg-yellow-700",
             info: "bg-blue-400",
           },
         }}
