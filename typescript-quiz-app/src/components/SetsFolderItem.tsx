@@ -43,7 +43,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [colorSelected, setColorSelected] = useState(props.folderColor);
   const [folderName, setFolderName] = useState(props.folderName);
-  const [_isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const userID = auth.currentUser?.uid ?? null;
 
@@ -81,7 +81,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   }, [props.folderName]);
 
   const editFolder = async () => {
-    if (userID === null) {
+    if (userID === null || isCreating) {
       console.log("No user found. Cannot edit folder.");
       return;
     }
@@ -110,7 +110,7 @@ const SetsFolderItem = (props: SetsFolderItemProps) => {
   };
 
   const deleteFolder = async () => {
-    if (userID === null) {
+    if (userID === null || isCreating) {
       console.log("No user found. Cannot edit folder.");
       return;
     }

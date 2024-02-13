@@ -169,21 +169,23 @@ const SetsFolderContents = (props: SetsFoldersContentsProps) => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <div className="space-y-4 my-6 mx-4 text-left">
+        <div className="space-y-4 my-6 mx-4 text-left ">
           <div className="flex space-x-2 items-center">
             <FaFolder
               className={`h-5 w-5 text-${folderData?.folderColor}-500`}
             />
             <p>{folderData?.folderName}</p>
           </div>
-          {displayedSets?.map((id: string, index: number) => (
-            <SetCard
-              key={index}
-              deckId={id}
-              removeSetFromFolder={removeSetFromFolder}
-              folderId={props.folderId}
-            ></SetCard>
-          ))}
+          <div className="min-h-[510px] space-y-4">
+            {displayedSets?.map((id: string, index: number) => (
+              <SetCard
+                key={index}
+                deckId={id}
+                removeSetFromFolder={removeSetFromFolder}
+                folderId={props.folderId}
+              ></SetCard>
+            ))}
+          </div>
           {folderData && !isLoading ? (
             folderData?.sets?.length === 0 || folderData?.sets === undefined ? (
               <p className="text-2xl text-center font-semibold dark:text-white/40 text-black/40 py-6">

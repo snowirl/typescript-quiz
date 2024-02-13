@@ -218,21 +218,22 @@ const Profile = () => {
 
           <Divider orientation="horizontal" />
         </div>
-
-        {!isLoading ? (
-          deckList !== null ? (
-            deckList
-              .slice(
-                pageIndex * displayPerPage,
-                (pageIndex + 1) * displayPerPage
-              )
-              .map((deck: DocumentData, index: number) => (
-                <SetCard key={index} deckId={deck.id} />
-              ))
-          ) : null
-        ) : (
-          <Spinner />
-        )}
+        <div className="min-h-[510px] space-y-4">
+          {!isLoading ? (
+            deckList !== null ? (
+              deckList
+                .slice(
+                  pageIndex * displayPerPage,
+                  (pageIndex + 1) * displayPerPage
+                )
+                .map((deck: DocumentData, index: number) => (
+                  <SetCard key={index} deckId={deck.id} />
+                ))
+            ) : null
+          ) : (
+            <Spinner />
+          )}
+        </div>
         <div className=" w-full flex justify-center pt-6 py-8">
           <Pagination
             size="lg"

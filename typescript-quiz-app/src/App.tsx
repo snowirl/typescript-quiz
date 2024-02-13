@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ScrollToTop from "./components/ScrollToTop";
 import Forgot from "./pages/Forgot";
+import Quiz from "./pages/Quiz";
 
 function App() {
   return (
@@ -46,7 +47,7 @@ function App() {
           <Route index element={<Home />} />
 
           <Route path="/study/:id" element={<Study />} />
-          <Route path="/learn/:id" element={<Learn />} />
+          <Route path="/learn/:id" element={<Quiz />} />
           <Route path="/test/:id" element={<Test />} />
           <Route path="/game/:id" element={<Game />} />
           <Route path="/sets/*" element={<Sets />} />
