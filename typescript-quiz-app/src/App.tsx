@@ -8,7 +8,6 @@ import Sets from "./pages/Sets";
 import NoPage from "./pages/NoPage";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
-import Learn from "./pages/Learn";
 import Game from "./pages/Game";
 import Test from "./pages/Test";
 import Search from "./pages/Search";
