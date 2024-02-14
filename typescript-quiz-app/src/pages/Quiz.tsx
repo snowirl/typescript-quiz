@@ -22,6 +22,7 @@ import {
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaGear } from "react-icons/fa6";
 import QuizCard from "../components/QuizCard";
+import arrayShuffle from "array-shuffle";
 
 const flashcards: Flashcard[] = [
   {
@@ -34,9 +35,22 @@ const flashcards: Flashcard[] = [
 const Quiz = () => {
   const [_isLoading, setIsLoading] = useState(true);
   const [deckData, setDeckData] = useState<DocumentData | null>(null);
-  const [_originalDeck, setOriginalDeck] = useState(flashcards); // original deck
-  const [_currentDeck, setCurrentDeck] = useState(flashcards); // currently using deck we have modified
+  const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
+  const [shuffledDeck, setShuffledDeck] = useState<Flashcard[] | null>(null); // currently using deck we have modified
   const [_starredList, setStarredList] = useState<string[] | null>(null);
+  const [isStarredOnly, setIsStarredOnly] = useState(false);
+  const [box0, setBox0] = useState<Flashcard[] | null>(null); // wrong, initial
+  const [box1, setBox1] = useState<Flashcard[] | null>(null);
+  const [box2, setBox2] = useState<Flashcard[] | null>(null);
+  const [box3, setBox3] = useState<Flashcard[] | null>(null);
+  const [box4, setBox4] = useState<Flashcard[] | null>(null); // mastered
+  const [currentCardList, setCurrentCardList] =
+    useState<Flashcard[]>(flashcards); // current cards from a box
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isFrontFirst, setIsFrontFirst] = useState(false);
+  const boxOrder = [1, 1, 2, 1, 1, 2, 1, 1, 3];
+  const [boxIndex, setBoxIndex] = useState(0); // which order we are in box order
+  const [didStart, setDidStart] = useState(false);
 
   const userID = auth?.currentUser?.displayName ?? null;
   const { id } = useParams();
@@ -58,6 +72,25 @@ const Quiz = () => {
       initializeActivity();
     }
   }, [deckData]);
+
+  useEffect(() => {
+    if (shuffledDeck) {
+      if (!didStart) {
+        drawCards();
+        setDidStart(true);
+      }
+    }
+  }, [shuffledDeck]);
+
+  useEffect(() => {
+    if (!box1) {
+      return;
+    }
+
+    if (boxIndex === 0 || boxIndex === 3 || boxIndex === 6) {
+      setCurrentCardList(box1);
+    }
+  }, [box1]);
 
   const initializeDeckInfo = async () => {
     setIsLoading(true);
@@ -85,10 +118,8 @@ const Quiz = () => {
     try {
       const docRef = await getDocs(q);
 
-      console.log(docRef.docs[0].data().cards);
-
       setOriginalDeck(docRef.docs[0].data().cards);
-      setCurrentDeck(docRef.docs[0].data().cards);
+      setShuffledDeck(arrayShuffle(docRef.docs[0].data().cards));
     } catch (e) {
       console.log("error occurred: " + e);
 
@@ -108,6 +139,45 @@ const Quiz = () => {
       setStarredList(docRef.data()?.starred);
     } catch (e) {
       console.log("error occurred: " + e);
+    }
+  };
+
+  const drawCards = () => {
+    const maxCardsToDraw = 10;
+
+    if (!shuffledDeck) {
+      return;
+    }
+
+    if (shuffledDeck.length > 0) {
+      // Determine the number of cards to draw (up to a maximum of 10)
+      const cardsToDraw = Math.min(maxCardsToDraw, shuffledDeck.length);
+
+      // Draw the specified number of cards from the shuffled deck
+      const drawnCards = shuffledDeck.slice(0, cardsToDraw);
+
+      // Update the current deck and current card list
+      setShuffledDeck(
+        shuffledDeck.filter((card) => !drawnCards.includes(card))
+      );
+
+      setBox1((prevBox1) => {
+        if (prevBox1 === null) {
+          // If box1 is initially null, set it to the drawn cards
+          return drawnCards;
+        } else {
+          // If box1 already has cards, concatenate the drawn cards
+          return [...prevBox1, ...drawnCards];
+        }
+      });
+
+      setCurrentCardIndex(0);
+
+      // Log the drawn cards or perform other actions
+      console.log("Drawn Cards:", drawnCards);
+    } else {
+      console.log("No cards remaining in the current deck.");
+      // Handle the case where there are no cards remaining in the current deck
     }
   };
 
@@ -143,15 +213,13 @@ const Quiz = () => {
             </div>
           </div>
           <div className="space-y-2">
-            <p>Title</p>
-            <Progress
-              aria-label="Loading..."
-              value={60}
-              className="max-w-full"
-              size="sm"
-            />
+            <p>{deckData ? deckData.title : "Loading..."}</p>
+            <Progress aria-label="Loading..." value={60} size="sm" />
           </div>
-          <QuizCard />
+          <QuizCard
+            flashcard={currentCardList[currentCardIndex]}
+            isFrontFirst={isFrontFirst}
+          />
         </div>
       </div>
     </div>
