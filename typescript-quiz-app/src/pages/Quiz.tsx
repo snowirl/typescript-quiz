@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { auth, db } from "../firebase";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -14,15 +14,25 @@ import { Flashcard } from "../assets/globalTypes";
 import {
   Button,
   Checkbox,
+  Chip,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Progress,
+  Select,
+  SelectItem,
+  useDisclosure,
 } from "@nextui-org/react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaGear } from "react-icons/fa6";
 import QuizCard from "../components/QuizCard";
 import arrayShuffle from "array-shuffle";
+import QuizRoundBreak from "../components/QuizRoundBreak";
 
 const flashcards: Flashcard[] = [
   {
@@ -37,22 +47,32 @@ const Quiz = () => {
   const [deckData, setDeckData] = useState<DocumentData | null>(null);
   const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
   const [shuffledDeck, setShuffledDeck] = useState<Flashcard[] | null>(null); // currently using deck we have modified
-  const [_starredList, setStarredList] = useState<string[] | null>(null);
+  const [starredList, setStarredList] = useState<string[] | null>(null);
   const [isStarredOnly, setIsStarredOnly] = useState(false);
   const [box0, setBox0] = useState<Flashcard[] | null>(null); // wrong, initial
   const [box1, setBox1] = useState<Flashcard[] | null>(null);
   const [box2, setBox2] = useState<Flashcard[] | null>(null);
   const [box3, setBox3] = useState<Flashcard[] | null>(null);
   const [box4, setBox4] = useState<Flashcard[] | null>(null); // mastered
-  const [currentCardList, setCurrentCardList] =
-    useState<Flashcard[]>(flashcards); // current cards from a box
+  const [currentCardList, setCurrentCardList] = useState<Flashcard[] | null>(
+    null
+  ); // current cards from a box
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [isFrontFirst, setIsFrontFirst] = useState(false);
   const boxOrder = [1, 1, 2, 1, 1, 2, 1, 1, 3];
-  const [boxIndex, setBoxIndex] = useState(0); // which order we are in box order
-  const [didStart, setDidStart] = useState(false);
+  const [boxIndex, setBoxIndex] = useState(-1); // which order we are in box order
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
+    null
+  );
+  const [correctIndex, setCorrectIndex] = useState(0);
+  const [isBreak, setIsBreak] = useState(false);
+  const [isStart, setIsStart] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false); // so our chip on card doesn't flicker when skipping index
+  const [answerWith, setAnswerWith] = useState("term");
+  const [answerWithPending, setAnswerWithPending] = useState("term");
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-  const userID = auth?.currentUser?.displayName ?? null;
+  const userID = auth?.currentUser?.uid ?? null;
+  const displayName = auth?.currentUser?.displayName ?? null;
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -74,23 +94,71 @@ const Quiz = () => {
   }, [deckData]);
 
   useEffect(() => {
-    if (shuffledDeck) {
-      if (!didStart) {
-        drawCards();
-        setDidStart(true);
-      }
+    if (!box1) {
+      return;
+    }
+  }, [box1]);
+
+  useEffect(() => {
+    setCorrectIndex(Math.floor(Math.random() * 4));
+    setSelectedAnswerIndex(null);
+  }, [currentCardIndex]);
+
+  useEffect(() => {
+    if (shuffledDeck === null) {
+      return;
+    }
+    if (!isStart) {
+      setBoxIndex(0);
+      setIsStart(true);
     }
   }, [shuffledDeck]);
 
   useEffect(() => {
-    if (!box1) {
+    if (shuffledDeck === null) {
       return;
     }
 
-    if (boxIndex === 0 || boxIndex === 3 || boxIndex === 6) {
-      setCurrentCardList(box1);
+    setIsRetrying(false);
+
+    if (boxIndex === 0 || boxIndex === 3 || (boxIndex === 6 && isStart)) {
+      if (shuffledDeck.length > 0) {
+        drawCards();
+      } else {
+        console.log("No more cards to draw....");
+        nextRound();
+      }
+    } else if (boxIndex === 1 || boxIndex === 4 || boxIndex === 7) {
+      if (box0 !== null) {
+        setCurrentCardList(arrayShuffle(box0));
+        setCurrentCardIndex(0);
+        setBox0(null);
+        setIsRetrying(true);
+      } else {
+        console.log("No wrong cards, moving on.");
+        setIsBreak(true);
+      }
+    } else if (boxOrder[boxIndex] === 2) {
+      if (box2 !== null) {
+        setCurrentCardList(arrayShuffle(box2));
+        setCurrentCardIndex(0);
+        setBox2(null);
+      } else {
+        console.log("No box 2 cards, moving on.");
+        nextRound();
+      }
+      console.log("got here.");
+    } else if (boxOrder[boxIndex] === 3) {
+      if (box3 !== null) {
+        setCurrentCardList(arrayShuffle(box3));
+        setCurrentCardIndex(0);
+        setBox3(null);
+      } else {
+        console.log("No box 3 cards, moving on.");
+        nextRound();
+      }
     }
-  }, [box1]);
+  }, [boxIndex]);
 
   const initializeDeckInfo = async () => {
     setIsLoading(true);
@@ -133,10 +201,12 @@ const Quiz = () => {
     if (userID === null || id === undefined) {
       return;
     }
+
     const q = doc(db, "users", userID, "activity", id);
     try {
       const docRef = await getDoc(q);
       setStarredList(docRef.data()?.starred);
+      console.log(docRef.data());
     } catch (e) {
       console.log("error occurred: " + e);
     }
@@ -161,24 +231,185 @@ const Quiz = () => {
         shuffledDeck.filter((card) => !drawnCards.includes(card))
       );
 
-      setBox1((prevBox1) => {
-        if (prevBox1 === null) {
-          // If box1 is initially null, set it to the drawn cards
-          return drawnCards;
-        } else {
-          // If box1 already has cards, concatenate the drawn cards
-          return [...prevBox1, ...drawnCards];
-        }
-      });
+      if (box0 !== null) {
+        setCurrentCardList(arrayShuffle([...box0, ...drawnCards]));
+      } else {
+        setCurrentCardList(drawnCards);
+      }
 
       setCurrentCardIndex(0);
 
       // Log the drawn cards or perform other actions
-      console.log("Drawn Cards:", drawnCards);
+      // console.log("Drawn Cards:", drawnCards);
     } else {
       console.log("No cards remaining in the current deck.");
       // Handle the case where there are no cards remaining in the current deck
     }
+  };
+
+  const selectAnswer = (index: number) => {
+    if (currentCardList === null || selectedAnswerIndex !== null) {
+      return;
+    }
+
+    setSelectedAnswerIndex(index);
+
+    if (index === correctIndex) {
+      handleBoxPlacementCorrect();
+    } else {
+      handleBoxPlacementWrong();
+    }
+  };
+
+  const handleBoxPlacementWrong = () => {
+    if (currentCardList === null) {
+      return;
+    }
+
+    const cardToMove = currentCardList[currentCardIndex];
+
+    let updatedBox0 = null;
+
+    if (box0 === null) {
+      updatedBox0 = [cardToMove];
+    } else {
+      updatedBox0 = [...box0, cardToMove];
+    }
+    setBox0(updatedBox0); // ALL MOVE TO BOX 0
+  };
+
+  const handleBoxPlacementCorrect = () => {
+    if (currentCardList === null) {
+      return;
+    }
+
+    const cardToMove = currentCardList[currentCardIndex];
+
+    if (boxOrder[boxIndex] === 1) {
+      let updatedBox2 = null;
+
+      if (box2 === null) {
+        updatedBox2 = [cardToMove];
+      } else {
+        updatedBox2 = [...box2, cardToMove];
+      }
+
+      setBox2(updatedBox2);
+    } else if (boxOrder[boxIndex] === 2) {
+      let updatedBox3 = null;
+
+      if (box3 === null) {
+        updatedBox3 = [cardToMove];
+      } else {
+        updatedBox3 = [...box3, cardToMove];
+      }
+      setBox3(updatedBox3);
+    } else if (boxOrder[boxIndex] === 3) {
+      let updatedBox4 = null;
+
+      if (box4 === null) {
+        updatedBox4 = [cardToMove];
+      } else {
+        updatedBox4 = [...box4, cardToMove];
+      }
+      setBox4(updatedBox4);
+    }
+  };
+
+  const nextCard = () => {
+    if (currentCardList === null) {
+      return;
+    }
+    if (currentCardIndex < currentCardList.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1);
+    } else {
+      // Handle the case where there are no more cards (optional)
+      console.log("No more cards");
+      console.log("Box 0: " + box0);
+      console.log("Box 1: " + box1);
+      console.log("Box 2: " + box2);
+      console.log("Box 3: " + box3);
+      console.log("Box 4: " + box4);
+
+      if (boxIndex === 0 || boxIndex === 3 || boxIndex === 6) {
+        nextRound(); // auto go next round if we are these
+      } else {
+        setIsRetrying(false);
+        setIsBreak(true);
+      }
+    }
+  };
+
+  const nextRound = () => {
+    if (checkIfDone()) {
+      console.log("Done with the quiz...");
+      return;
+    }
+    const nextIndex = boxIndex + 1;
+
+    if (nextIndex < boxOrder.length) {
+      setBoxIndex(boxIndex + 1);
+    } else {
+      setBoxIndex(0);
+    }
+
+    setIsBreak(false);
+    setSelectedAnswerIndex(null);
+  };
+
+  const checkIfDone = () => {
+    // change when starred is added.
+    if (box4 !== null && originalDeck) {
+      if (box4.length >= originalDeck.length) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value !== "") {
+      console.log(e.target.value);
+      setAnswerWithPending(e.target.value);
+    }
+  };
+
+  const getStarredDeck = () => {
+    if (starredList !== null) {
+      console.log(starredList);
+
+      // Filter the original deck based on the starredList
+      const newDeck = originalDeck.filter((flashcard) =>
+        starredList.includes(flashcard.cardId)
+      );
+
+      // Shuffle the new deck
+      setShuffledDeck(arrayShuffle(newDeck));
+    }
+  };
+  const resetLearn = () => {
+    setBox0(null);
+    setBox1(null);
+    setBox2(null);
+    setBox3(null);
+    setBox4(null);
+    setBoxIndex(-1);
+    setIsStart(false);
+    setCurrentCardIndex(0);
+    setCurrentCardList(null);
+    setSelectedAnswerIndex(null);
+    setIsBreak(false);
+    setIsRetrying(false);
+    setAnswerWith(answerWithPending);
+
+    if (isStarredOnly) {
+      getStarredDeck();
+    } else {
+      setShuffledDeck(arrayShuffle(originalDeck));
+    }
+
+    onClose();
   };
 
   return (
@@ -193,35 +424,130 @@ const Quiz = () => {
             </div>
 
             <div className="w-1/3  flex justify-end space-x-2 items-center">
-              <Popover placement="bottom">
-                <PopoverTrigger>
-                  <Button isIconOnly>
-                    <FaGear />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="px-4 py-3">
-                    <Checkbox
-                    //   isSelected={isStarredOnly}
-                    //   onValueChange={setIsStarredOnly}
-                    >
-                      Starred cards only
-                    </Checkbox>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <Button onClick={() => onOpen()} isIconOnly>
+                <FaGear />
+              </Button>
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-4 pb-2">
             <p>{deckData ? deckData.title : "Loading..."}</p>
-            <Progress aria-label="Loading..." value={60} size="sm" />
+            <p>{boxOrder[boxIndex]}</p>
+            <Progress
+              aria-label="Loading..."
+              value={
+                currentCardList
+                  ? (currentCardIndex / (currentCardList.length - 1)) * 100
+                  : 0
+              }
+              size="sm"
+            />
           </div>
-          <QuizCard
-            flashcard={currentCardList[currentCardIndex]}
-            isFrontFirst={isFrontFirst}
-          />
+          {!isBreak ? (
+            <QuizCard
+              flashcard={
+                currentCardList ? currentCardList[currentCardIndex] : null
+              }
+              originalDeck={originalDeck}
+              selectedAnswerIndex={selectedAnswerIndex}
+              selectAnswer={selectAnswer}
+              correctIndex={correctIndex}
+              boxIndex={boxIndex}
+              isRetrying={isRetrying}
+              answerWith={answerWith}
+            />
+          ) : (
+            <QuizRoundBreak nextRound={nextRound} />
+          )}
         </div>
       </div>
+
+      {selectedAnswerIndex !== null && !isBreak ? (
+        <Button
+          size="lg"
+          color="primary"
+          className="font-semibold"
+          onClick={nextCard}
+        >
+          Next
+        </Button>
+      ) : null}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-black dark:text-white">
+                Learn Options
+              </ModalHeader>
+              <ModalBody className="text-black/90 dark:text-gray-100">
+                <div className="space-y-4">
+                  <Checkbox
+                    onValueChange={setIsStarredOnly}
+                    isSelected={isStarredOnly}
+                  >
+                    Starred only
+                  </Checkbox>
+                  <div className="py-1">
+                    <Select
+                      label="Answer with"
+                      labelPlacement="outside"
+                      placeholder=""
+                      value={answerWithPending}
+                      defaultSelectedKeys={[answerWithPending]}
+                      className="text-base"
+                      size="md"
+                      onChange={handleSelectChange}
+                    >
+                      <SelectItem
+                        key="term"
+                        value="term"
+                        isDisabled={answerWithPending === "term" ? true : false}
+                        className="text-black dark:text-white"
+                      >
+                        Term
+                      </SelectItem>
+                      <SelectItem
+                        key="def"
+                        value="definition"
+                        isDisabled={answerWithPending === "def" ? true : false}
+                        className="text-black dark:text-white"
+                      >
+                        Definition
+                      </SelectItem>
+                      {/* <SelectItem
+                        key="mixed"
+                        value="mixed"
+                        isDisabled={
+                          answerWithPending === "mixed" ? true : false
+                        }
+                        className="text-black dark:text-white"
+                      >
+                        Mixed
+                      </SelectItem> */}
+                    </Select>
+                  </div>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  className="font-semibold"
+                >
+                  Close
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={resetLearn}
+                  className="font-semibold"
+                >
+                  Confirm
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

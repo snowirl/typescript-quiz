@@ -93,14 +93,14 @@ const TestContainer = (props: TestContainerProps) => {
   };
 
   return (
-    <div>
-      <Card>
-        <CardHeader className="px-4">
+    <div className="w-full flex justify-center py-4">
+      <Card className="w-full max-w-[900px]">
+        <CardHeader className="p-6">
           <p className="text-xl font-semibold">Test Results</p>
         </CardHeader>
-        <CardBody className="px-4">
+        <CardBody className="px-6">
           <div className="space-y-4 text-center">
-            <p>{text}</p>
+            <p className="text-xl">{text}</p>
             <div className="w-full flex justify-center py-4">
               <CircularProgress
                 aria-label="Loading..."
@@ -133,7 +133,7 @@ const TestContainer = (props: TestContainerProps) => {
             </div>
           </div>
         </CardBody>
-        <CardFooter className="space-x-2">
+        <CardFooter className="space-x-2 p-6">
           <div className="flex justify-center w-full space-x-2">
             <Button
               color="primary"
