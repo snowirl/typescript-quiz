@@ -17,7 +17,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { ReactNode } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "sonner";
 
 interface UserContextType {
@@ -119,6 +119,21 @@ export const UserContextProvider = (props: UserContextProviderProps) => {
 
     try {
       await setDoc(doc(db, "users", userId), {});
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      return;
+    }
+
+    // GIVE EVERYONE THE GENGAR SET
+    try {
+      await setDoc(
+        doc(db, "users", userId, "activity", "jxrpPwEECGianF00Y4yF"),
+        {
+          docId: "jxrpPwEECGianF00Y4yF",
+          favorited: false,
+          timestamp: serverTimestamp(),
+        }
+      );
     } catch (e) {
       console.error("Error adding document: ", e);
       return;

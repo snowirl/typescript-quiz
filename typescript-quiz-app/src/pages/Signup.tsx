@@ -25,6 +25,7 @@ const Signup = () => {
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [didCheckUsername, setDidCheckUsername] = useState(false);
   const [isUserAvailable, setIsUserAvailable] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   let typingTimer: NodeJS.Timeout | null = null;
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const toggleVisibility = () => setIsPasswordVisible(!isPasswordVisible);
@@ -68,7 +69,13 @@ const Signup = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/sets/recents");
+      // Wait for 2 seconds before navigating
+      const timeoutId = setTimeout(() => {
+        navigate("/sets/recents");
+      }, 1000);
+
+      // Clear the timeout to avoid unintended navigation if the component unmounts
+      return () => clearTimeout(timeoutId);
     }
   }, [user]);
 
@@ -76,6 +83,8 @@ const Signup = () => {
     if (size === "lg" && error) {
       toast.error(error);
     }
+
+    setIsCreating(false);
   }, [error]);
 
   useEffect(() => {
@@ -134,6 +143,9 @@ const Signup = () => {
   };
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (isCreating) {
+      return;
+    }
     event.preventDefault();
 
     const email = emailRef.current?.value;
@@ -153,6 +165,7 @@ const Signup = () => {
 
     if (email && username && password) {
       registerUser(email, username, password);
+      setIsCreating(true);
     }
   };
 

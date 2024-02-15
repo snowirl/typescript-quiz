@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { BsFillLightningFill } from "react-icons/bs";
 import { TfiWorld } from "react-icons/tfi";
-import { FaCheck } from "react-icons/fa6";
+import { FaCheck, FaCircleCheck } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
 import StudyWhite from "../assets/StudyWhite.png";
@@ -138,14 +138,28 @@ const Home = () => {
                 shadow="sm"
                 className="z-10 shadow-xl dark:shadow-white/10"
               />
+              <div className="flex w-full items-center justify-around pt-10">
+                <div className="flex items-center space-x-2 ">
+                  <FaCircleCheck className="text-green-500" />
+                  <p>Customizable flashcards</p>
+                </div>
+                <div className="flex items-center space-x-2 ">
+                  <FaCircleCheck className="text-green-500" />
+                  <p>Simple interface</p>
+                </div>
+                <div className="flex items-center space-x-2 ">
+                  <FaCircleCheck className="text-green-500" />
+                  <p>Completely Free</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
-        <motion.div className="w-full bg-primary py-10 mt-72 justify-center">
+        <motion.div className="w-full bg-zinc-800 py-10 mt-48 justify-center">
           <div className="py-4">
             {/* <p className="text-3xl font-semibold text-white">Benefits</p> */}
           </div>
-          <div className="w-full flex justify-center items-center space-x-10 pt-2 pb-14">
+          <div className="w-full flex justify-center items-center space-x-10 pt-0 pb-8">
             <div className="lg:flex w-full justify-center max-w-[2000px] space-y-24 lg:space-y-0">
               <div className="text-white lg:w-1/3  space-y-4 mx-8">
                 <div className="flex justify-center py-4">
@@ -262,11 +276,49 @@ const Home = () => {
             </Swiper>
           </div>
         </div>
-        <div className="w-full bg-primary text-white my-10">
-          <p>Features</p>
+        <div className="w-full bg-zinc-800 text-white my-10 py-10">
+          {/* <div className="w-full mb-8 text-xl">
+            <p className="text-center">Features</p>
+          </div> */}
+          <div className="w-full flex justify-center items-center">
+            <div className="py-8 text-lg w-full lg:w-1/2 mx-10 grid grid-cols-1 lg:grid-cols-2 lg:gap-2 text-left space-y-4 lg:space-y-0">
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Create unlimited flashcard sets</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Customizable flashcards with images</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Customizable profiles</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Search for public sets</p>
+              </div>{" "}
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Matching flashcard game</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Unlimited Free Test Generator</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Quiz with spaced repetition algorithm</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaCircleCheck />
+                <p>Customizable folders organize sets</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="py-10">
+        <div className="py-10 pb-20">
           {!isUserSignedIn ? (
             <Button
               size="lg"
