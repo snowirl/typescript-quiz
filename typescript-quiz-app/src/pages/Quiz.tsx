@@ -22,6 +22,7 @@ import {
   Progress,
   Select,
   SelectItem,
+  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -39,7 +40,7 @@ const flashcards: Flashcard[] = [
 ];
 
 const Quiz = () => {
-  const [_isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [deckData, setDeckData] = useState<DocumentData | null>(null);
   const [originalDeck, setOriginalDeck] = useState(flashcards); // original deck
   const [shuffledDeck, setShuffledDeck] = useState<Flashcard[] | null>(null); // currently using deck we have modified
@@ -66,6 +67,9 @@ const Quiz = () => {
   const [answerWith, setAnswerWith] = useState("term");
   const [answerWithPending, setAnswerWithPending] = useState("term");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const [correctCards, setCorrectCards] = useState<Flashcard[] | null>(null);
+  const [wrongCards, setWrongCards] = useState<Flashcard[] | null>(null);
 
   const userID = auth?.currentUser?.uid ?? null;
   const { id } = useParams();
@@ -108,6 +112,13 @@ const Quiz = () => {
       setIsStart(true);
     }
   }, [shuffledDeck]);
+
+  useEffect(() => {
+    if (!isBreak) {
+      setCorrectCards(null);
+      setWrongCards(null);
+    }
+  }, [isBreak]);
 
   useEffect(() => {
     if (shuffledDeck === null) {
@@ -271,6 +282,12 @@ const Quiz = () => {
       updatedBox0 = [...box0, cardToMove];
     }
     setBox0(updatedBox0); // ALL MOVE TO BOX 0
+
+    if (wrongCards === null) {
+      setWrongCards([cardToMove]);
+    } else {
+      setWrongCards([...wrongCards, cardToMove]);
+    }
   };
 
   const handleBoxPlacementCorrect = () => {
@@ -308,6 +325,12 @@ const Quiz = () => {
         updatedBox4 = [...box4, cardToMove];
       }
       setBox4(updatedBox4);
+    }
+
+    if (correctCards === null) {
+      setCorrectCards([cardToMove]);
+    } else {
+      setCorrectCards([...correctCards, cardToMove]);
     }
   };
 
@@ -395,6 +418,8 @@ const Quiz = () => {
     setCurrentCardList(null);
     setSelectedAnswerIndex(null);
     setIsBreak(false);
+    setCorrectCards(null);
+    setWrongCards(null);
     setIsRetrying(false);
     setAnswerWith(answerWithPending);
 
@@ -439,21 +464,29 @@ const Quiz = () => {
               size="sm"
             />
           </div>
-          {!isBreak ? (
-            <QuizCard
-              flashcard={
-                currentCardList ? currentCardList[currentCardIndex] : null
-              }
-              originalDeck={originalDeck}
-              selectedAnswerIndex={selectedAnswerIndex}
-              selectAnswer={selectAnswer}
-              correctIndex={correctIndex}
-              boxIndex={boxIndex}
-              isRetrying={isRetrying}
-              answerWith={answerWith}
-            />
+          {!isLoading ? (
+            !isBreak ? (
+              <QuizCard
+                flashcard={
+                  currentCardList ? currentCardList[currentCardIndex] : null
+                }
+                originalDeck={originalDeck}
+                selectedAnswerIndex={selectedAnswerIndex}
+                selectAnswer={selectAnswer}
+                correctIndex={correctIndex}
+                boxIndex={boxIndex}
+                isRetrying={isRetrying}
+                answerWith={answerWith}
+              />
+            ) : (
+              <QuizRoundBreak
+                nextRound={nextRound}
+                correctCards={correctCards}
+                wrongCards={wrongCards}
+              />
+            )
           ) : (
-            <QuizRoundBreak nextRound={nextRound} />
+            <Spinner />
           )}
         </div>
       </div>

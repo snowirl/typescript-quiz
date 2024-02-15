@@ -1,6 +1,4 @@
 import { Button } from "@nextui-org/button";
-import StudyDark from "../assets/StudyDark.png";
-import StudyLight from "../assets/StudyLight.png";
 import { Image } from "@nextui-org/react";
 import { motion, Variants, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -12,6 +10,14 @@ import { TfiWorld } from "react-icons/tfi";
 import { FaCheck } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+import StudyWhite from "../assets/StudyWhite.png";
+import StudyDark from "../assets/StudyDark.png";
+import LearnWhite from "../assets/LearnWhite.png";
+import LearnDark from "../assets/LearnDark.png";
+import TestWhite from "../assets/TestWhite.png";
+import TestDark from "../assets/TestDark.png";
+import GameWhite from "../assets/GameWhite.png";
+import GameDark from "../assets/GameDark.png";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -128,9 +134,9 @@ const Home = () => {
             >
               <Image
                 alt="NextUI hero Image"
-                src={theme === "dark" ? StudyDark : StudyLight}
+                src={theme === "dark" ? StudyDark : StudyWhite}
                 shadow="sm"
-                className="z-10"
+                className="z-10 shadow-xl dark:shadow-white/10"
               />
             </motion.div>
           </div>
@@ -139,7 +145,7 @@ const Home = () => {
           <div className="py-4">
             {/* <p className="text-3xl font-semibold text-white">Benefits</p> */}
           </div>
-          <div className="w-full flex justify-center items-center space-x-10 pt-14 pb-20">
+          <div className="w-full flex justify-center items-center space-x-10 pt-2 pb-14">
             <div className="lg:flex w-full justify-center max-w-[2000px] space-y-24 lg:space-y-0">
               <div className="text-white lg:w-1/3  space-y-4 mx-8">
                 <div className="flex justify-center py-4">
@@ -179,36 +185,108 @@ const Home = () => {
             </div>
           </div>
         </motion.div>
-        <div className="py-24">
-          <Swiper
-            cssMode={true}
-            navigation={true}
-            pagination={true}
-            mousewheel={true}
-            keyboard={true}
-            modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-            className="mySwiper h-full"
-            loop={true}
-          >
-            <SwiperSlide>
-              <Image
-                alt="NextUI hero Image"
-                src={theme === "dark" ? StudyDark : StudyLight}
-                shadow="sm"
-                className="z-10"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                alt="NextUI hero Image"
-                src={theme === "dark" ? StudyDark : StudyLight}
-                shadow="sm"
-                className="z-10"
-              />
-            </SwiperSlide>
-          </Swiper>
+        <div className="flex w-full justify-center">
+          <div className="py-24 max-w-7xl w-full px-4 my-10">
+            <Swiper
+              cssMode={true}
+              navigation={true}
+              pagination={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+              className="mySwiper h-full"
+              loop={true}
+            >
+              <SwiperSlide>
+                <div className="h-fit relative">
+                  <Image
+                    alt="NextUI hero Image"
+                    src={theme === "dark" ? LearnDark : LearnWhite}
+                    shadow="none"
+                    className=""
+                  />
+                  <div className="w-full space-y-4 rounded-xl px-2 py-2 mb-16 mt-10">
+                    <p className="text-3xl font-semibold">Learn</p>
+                    <p className="">
+                      We use the Leitner System to quiz our users, which is a
+                      spaced repetition technique designed to enhance the
+                      efficiency of learning by strategically scheduling review
+                      sessions for flashcards based on the user's mastery level.
+                    </p>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="h-fit relative">
+                  <Image
+                    alt="NextUI hero Image"
+                    src={theme === "dark" ? TestDark : TestWhite}
+                    shadow="none"
+                    className=""
+                  />
+                  <div className="w-full space-y-4 rounded-xl px-2 py-2 mb-16 mt-10">
+                    <p className="text-3xl font-semibold">Test</p>
+                    <p className="">
+                      Create customizable tests with up to 50 questions to test
+                      your mastery of a subject, using any flashcard set you
+                      create or find. Users can see their results and understand
+                      their subject more with our test reviews. Users can also
+                      take
+                      <span className="font-semibold">
+                        {" "}
+                        unlimited free tests!
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="h-fit relative">
+                  <Image
+                    alt="NextUI hero Image"
+                    src={theme === "dark" ? GameDark : GameWhite}
+                    shadow="none"
+                    className=""
+                  />
+                  <div className="w-full space-y-4 rounded-xl px-2 py-2 mb-16 mt-10">
+                    <p className="text-3xl font-semibold">Game</p>
+                    <p className="">
+                      Race against the clock and your own memory as you connect
+                      pairs across diverse categories, each challenging your
+                      understanding. This makes learning and testing your
+                      knowledge fun and engaging!
+                    </p>
+                  </div>
+                </div>
+              </SwiperSlide>
+            </Swiper>
+          </div>
         </div>
-        <div className="bg-gray-100 dark:bg-dark-2 w-full h-[800px]"></div>
+        <div className="w-full bg-primary text-white my-10">
+          <p>Features</p>
+        </div>
+
+        <div className="py-10">
+          {!isUserSignedIn ? (
+            <Button
+              size="lg"
+              color="primary"
+              className="font-semibold"
+              onPress={() => navigate("/signup")}
+            >
+              Sign Up For Free
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              color="primary"
+              className="font-semibold"
+              onPress={() => navigateToCreate()}
+            >
+              Create a New Set
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );
