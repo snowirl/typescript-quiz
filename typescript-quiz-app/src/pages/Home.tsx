@@ -1,10 +1,15 @@
 import { Button } from "@nextui-org/button";
-import quizScreenshot from "../assets/quiz-screenshot.png";
+import StudyDark from "../assets/StudyDark.png";
+import StudyLight from "../assets/StudyLight.png";
 import { Image } from "@nextui-org/react";
 import { motion, Variants, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "next-themes";
+import { BsFillLightningFill } from "react-icons/bs";
+import { TfiWorld } from "react-icons/tfi";
+import { FaCheck } from "react-icons/fa6";
 
 const cardVariants: Variants = {
   offscreen: {
@@ -27,6 +32,7 @@ const Home = () => {
   let y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -106,7 +112,7 @@ const Home = () => {
           </div>
         </div>
         <div className="flex justify-center w-full py-10 px-8 items-center">
-          <div className="max-w-[900px] w-full">
+          <div className="max-w-[1400px] w-full">
             <motion.div
               initial="offscreen"
               whileInView="onscreen"
@@ -116,47 +122,54 @@ const Home = () => {
             >
               <Image
                 alt="NextUI hero Image"
-                src={quizScreenshot}
+                src={theme === "dark" ? StudyDark : StudyLight}
                 shadow="sm"
                 className="z-10"
               />
             </motion.div>
           </div>
         </div>
-        <motion.div
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: false, amount: 0.8 }}
-          variants={cardVariants}
-          className="w-full bg-primary flex py-10 mt-72 justify-center"
-        >
-          <div className="w-full max-w-[1200px] flex justify-center items-center space-x-10">
-            <div className="text-white w-1/3 space-y-2">
-              <p className="font-bold text-xl ">Efficient Learning</p>
-              <Image />
-              <p>
-                Users can create and access a variety of study materials,
-                including flashcards and quizzes, making learning more
-                efficient.
-              </p>
-            </div>
-            <div className="text-white w-1/3 space-y-2">
-              <p className="font-bold text-xl ">Efficient Learning</p>
-              <Image />
-              <p>
-                Users can create and access a variety of study materials,
-                including flashcards and quizzes, making learning more
-                efficient.
-              </p>
-            </div>
-            <div className="text-white w-1/3 space-y-2">
-              <p className="font-bold text-xl ">Efficient Learning</p>
-              <Image />
-              <p>
-                Users can create and access a variety of study materials,
-                including flashcards and quizzes, making learning more
-                efficient.
-              </p>
+        <motion.div className="w-full bg-primary py-10 mt-72 justify-center">
+          <div className="py-4">
+            {/* <p className="text-3xl font-semibold text-white">Benefits</p> */}
+          </div>
+          <div className="w-full flex justify-center items-center space-x-10 pt-14 pb-20">
+            <div className="lg:flex w-full justify-center max-w-[2000px] space-y-24 lg:space-y-0">
+              <div className="text-white lg:w-1/3  space-y-4 mx-8">
+                <div className="flex justify-center py-4">
+                  <BsFillLightningFill className="w-8 h-8" />
+                </div>
+                <p className="font-bold text-2xl ">Easy Setup</p>
+
+                <p>
+                  Get started in seconds! Our user-friendly interface makes
+                  creating flashcard sets a breeze, so you can focus on
+                  learning, not on navigating complex tools.
+                </p>
+              </div>
+              <div className="text-white lg:w-1/3 space-y-4 mx-8">
+                <div className="flex justify-center py-4">
+                  <FaCheck className="w-8 h-8" />
+                </div>
+                <p className="font-bold text-2xl ">Save Your Progress</p>
+
+                <p>
+                  Never lose your focus as you effortlessly save your starred
+                  cards, allowing you to seamlessly pick up right where you left
+                  off.
+                </p>
+              </div>
+              <div className="text-white lg:w-1/3 space-y-4 mx-8">
+                <div className="flex justify-center py-4">
+                  <TfiWorld className="w-8 h-8" />
+                </div>
+                <p className="font-bold text-2xl ">Study Anywhere</p>
+
+                <p>
+                  Study anytime, anywhere! Studucky is available on your mobile
+                  device as well as your desktop computer.
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>

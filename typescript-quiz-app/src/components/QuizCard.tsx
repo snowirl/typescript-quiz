@@ -9,7 +9,7 @@ import {
 import { Flashcard } from "../assets/globalTypes";
 import QuizAnswer from "./QuizAnswer";
 import { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface QuizCardProps {
   flashcard: Flashcard | null;
@@ -27,7 +27,6 @@ const QuizCard = (props: QuizCardProps) => {
     null
   );
   const [isFrontFirst, setIsFrontFirst] = useState<boolean>(false);
-  const controls = useAnimation();
 
   useEffect(() => {
     if (props.flashcard) {
@@ -64,24 +63,9 @@ const QuizCard = (props: QuizCardProps) => {
     setWrongFlashcards(wrongAnswers);
   };
 
-  const handleAnimateCard = async () => {
-    await controls.start({
-      opacity: 0,
-      transition: { duration: 0 },
-      /* Add other animation properties if needed */
-    });
-
-    await controls.start({
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.9 },
-      /* Add other animation properties if needed */
-    });
-  };
-
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <Card shadow="sm" className="min-h-[450px]">
+      <Card shadow="sm" className="min-h-[525px]">
         <CardHeader>
           {props.isRetrying ? (
             <Chip color="danger">
@@ -116,8 +100,8 @@ const QuizCard = (props: QuizCardProps) => {
           </div>
         </CardBody>
         <div className="space-y-2 px-4 pt-4">
-          <div className="flex space-x-2 h-full">
-            <div className="w-1/2">
+          <div className="md:flex md:space-x-2 h-full space-y-2 md:space-y-0">
+            <div className="md:w-1/2">
               <QuizAnswer
                 flashcard={props.flashcard}
                 wrongFlashcard={wrongFlashcards ? wrongFlashcards[0] : null}
@@ -128,7 +112,7 @@ const QuizCard = (props: QuizCardProps) => {
                 selectAnswer={props.selectAnswer}
               />
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <QuizAnswer
                 flashcard={props.flashcard}
                 wrongFlashcard={wrongFlashcards ? wrongFlashcards[1] : null}
@@ -140,8 +124,8 @@ const QuizCard = (props: QuizCardProps) => {
               />
             </div>
           </div>
-          <div className="flex space-x-2 h-full">
-            <div className="w-1/2 ">
+          <div className="md:flex md:space-x-2 h-full space-y-2 md:space-y-0">
+            <div className="md:w-1/2 ">
               <QuizAnswer
                 flashcard={props.flashcard}
                 wrongFlashcard={wrongFlashcards ? wrongFlashcards[2] : null}
@@ -152,7 +136,7 @@ const QuizCard = (props: QuizCardProps) => {
                 selectAnswer={props.selectAnswer}
               />
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <QuizAnswer
                 flashcard={props.flashcard}
                 wrongFlashcard={wrongFlashcards ? wrongFlashcards[3] : null}
@@ -166,7 +150,7 @@ const QuizCard = (props: QuizCardProps) => {
           </div>
         </div>
 
-        <CardFooter>{/* <p>Footer</p> */}</CardFooter>
+        <CardFooter className="py-2">{/* <p>Footer</p> */}</CardFooter>
       </Card>
     </motion.div>
   );

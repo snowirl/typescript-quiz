@@ -14,15 +14,11 @@ import { Flashcard } from "../assets/globalTypes";
 import {
   Button,
   Checkbox,
-  Chip,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Progress,
   Select,
   SelectItem,
@@ -72,7 +68,6 @@ const Quiz = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const userID = auth?.currentUser?.uid ?? null;
-  const displayName = auth?.currentUser?.displayName ?? null;
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -430,8 +425,10 @@ const Quiz = () => {
             </div>
           </div>
           <div className="space-y-4 pb-2">
-            <p>{deckData ? deckData.title : "Loading..."}</p>
-            <p>{boxOrder[boxIndex]}</p>
+            <p className="font-semibold">
+              {deckData ? deckData.title : "Loading..."}
+            </p>
+            {/* <p>{boxOrder[boxIndex]}</p> */}
             <Progress
               aria-label="Loading..."
               value={
@@ -462,14 +459,16 @@ const Quiz = () => {
       </div>
 
       {selectedAnswerIndex !== null && !isBreak ? (
-        <Button
-          size="lg"
-          color="primary"
-          className="font-semibold"
-          onClick={nextCard}
-        >
-          Next
-        </Button>
+        <div className="">
+          <Button
+            size="lg"
+            color="primary"
+            className="font-semibold"
+            onClick={nextCard}
+          >
+            Continue
+          </Button>
+        </div>
       ) : null}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -548,6 +547,7 @@ const Quiz = () => {
           )}
         </ModalContent>
       </Modal>
+      <div className="py-4"></div>
     </div>
   );
 };
