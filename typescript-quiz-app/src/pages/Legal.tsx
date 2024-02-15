@@ -13,7 +13,7 @@ const Legal = () => {
       <div className="flex justify-center items-center space-y-5 mx-4 pb-20">
         <Card className="flex-grow max-w-[1000px]">
           <CardHeader className="justify-center py-6">
-            <Tabs
+            {/* <Tabs
               aria-label="Options"
               size="sm"
               variant="underlined"
@@ -24,7 +24,7 @@ const Legal = () => {
               <Tab key="privacy" title="Privacy Policy" />
               <Tab key="cookie" title="Cookie Policy" />
               <Tab key="copyright" title="Copyright Infringement" />
-            </Tabs>
+            </Tabs> */}
           </CardHeader>
           <CardBody className="px-10">
             <div className="space-y-8">
