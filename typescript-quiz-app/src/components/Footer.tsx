@@ -1,5 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { FaDiscord } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const discordButtonLink = () => {
@@ -12,31 +13,31 @@ const Footer = () => {
       <div className="w-full mx-auto max-w-screen-xl px-4 pt-4 pb-6 lg:flex md:items-center md:justify-between lg:space-y-4 space-y-4">
         <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
           © 2023{" "}
-          <a href="https://studucky.com/" className="hover:underline">
+          <Link to="https://studucky.com/" className="hover:underline">
             Studucky™
-          </a>
+          </Link>
           . All Rights Reserved.
         </span>
         <ul className="font-bold flex flex-wrap items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0 justify-center my-3">
           <li>
-            <a href="/legal" className="mr-4 hover:underline md:mr-6 ">
+            <Link to="/legal" className="mr-4 hover:underline md:mr-6 ">
               About
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/legal" className="mr-4 hover:underline md:mr-6">
+            <Link to="/legal" className="mr-4 hover:underline md:mr-6">
               Privacy Policy
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/legal" className="mr-4 hover:underline md:mr-6">
+            <Link to="/legal" className="mr-4 hover:underline md:mr-6">
               Licensing
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/legal" className="hover:underline">
+            <Link to="/legal" className="hover:underline">
               Contact
-            </a>
+            </Link>
           </li>
         </ul>
         <Button

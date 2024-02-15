@@ -15,6 +15,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 import "react-modern-drawer/dist/index.css";
@@ -167,7 +168,8 @@ const NavigationMenu = () => {
                         variant="light"
                         className="font-semibold"
                         radius="md"
-                        onPress={() => navigate("/login")}
+                        to={"/login"}
+                        as={Link}
                       >
                         Login
                       </Button>
@@ -175,7 +177,8 @@ const NavigationMenu = () => {
                         color="primary"
                         className="font-semibold px-5"
                         size="md"
-                        onPress={() => navigate("/signup")}
+                        to={"/signup"}
+                        as={Link}
                       >
                         Sign up
                       </Button>
@@ -214,7 +217,7 @@ const NavigationMenu = () => {
           {/* <img src={StuduckyCircleLogo} alt="Logo" className="w-12 mr-2" /> */}
         {/* </div> */}
         <div className="items-center hidden lg:flex">
-          <button className="flex items-center" onClick={() => navigate("/")}>
+          <button onClick={() => navigate("/")} className="flex items-center">
             {/* <StuduckyLogo /> */}
 
             <img
@@ -228,12 +231,14 @@ const NavigationMenu = () => {
 
           <div className="space-x-2">
             <div className="px-4 flex space-x-6">
-              <button
+              <Button
+                to={"/sets/recents"}
+                as={Link}
                 className="font-semibold text-sm flex items-center"
-                onClick={() => navigate("/sets/recents")}
+                variant="light"
               >
                 Your Sets
-              </button>
+              </Button>
 
               <Dropdown className="dropdown">
                 <DropdownTrigger>
@@ -363,11 +368,12 @@ const NavigationMenu = () => {
             ) : (
               <div className="space-x-2">
                 <Button
+                  to={"/login"}
+                  as={Link}
                   color="default"
                   variant="light"
                   className="font-semibold"
                   radius="md"
-                  onPress={() => navigate("/login")}
                 >
                   Login
                 </Button>
@@ -375,7 +381,8 @@ const NavigationMenu = () => {
                   color="primary"
                   className="font-semibold px-5"
                   size="md"
-                  onPress={() => navigate("/signup")}
+                  to={"/signup"}
+                  as={Link}
                 >
                   Sign up
                 </Button>

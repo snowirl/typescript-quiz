@@ -39,6 +39,7 @@
     "react-virtualized-auto-sizer": "^1.0.22",
     "react-window": "^1.8.10",
     "sonner": "^1.4.0",
+    "swiper": "^11.0.6",
     "tailwind-safelist-generator": "^1.0.0",
     "uid": "^2.0.2"
   },

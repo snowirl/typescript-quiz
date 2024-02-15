@@ -10,6 +10,12 @@ import { useTheme } from "next-themes";
 import { BsFillLightningFill } from "react-icons/bs";
 import { TfiWorld } from "react-icons/tfi";
 import { FaCheck } from "react-icons/fa6";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const cardVariants: Variants = {
   offscreen: {
@@ -32,7 +38,7 @@ const Home = () => {
   let y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -154,9 +160,9 @@ const Home = () => {
                 <p className="font-bold text-2xl ">Save Your Progress</p>
 
                 <p>
-                  Never lose your focus as you effortlessly save your starred
-                  cards, allowing you to seamlessly pick up right where you left
-                  off.
+                  Never lose your focus as you effortlessly save your flashcards
+                  and activity, allowing you to seamlessly pick up right where
+                  you left off.
                 </p>
               </div>
               <div className="text-white lg:w-1/3 space-y-4 mx-8">
@@ -167,12 +173,41 @@ const Home = () => {
 
                 <p>
                   Study anytime, anywhere! Studucky is available on your mobile
-                  device as well as your desktop computer.
+                  device as well as your computer.
                 </p>
               </div>
             </div>
           </div>
         </motion.div>
+        <div className="py-24">
+          <Swiper
+            cssMode={true}
+            navigation={true}
+            pagination={true}
+            mousewheel={true}
+            keyboard={true}
+            modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+            className="mySwiper h-full"
+            loop={true}
+          >
+            <SwiperSlide>
+              <Image
+                alt="NextUI hero Image"
+                src={theme === "dark" ? StudyDark : StudyLight}
+                shadow="sm"
+                className="z-10"
+              />
+            </SwiperSlide>
+            <SwiperSlide>
+              <Image
+                alt="NextUI hero Image"
+                src={theme === "dark" ? StudyDark : StudyLight}
+                shadow="sm"
+                className="z-10"
+              />
+            </SwiperSlide>
+          </Swiper>
+        </div>
         <div className="bg-gray-100 dark:bg-dark-2 w-full h-[800px]"></div>
       </div>
     </>
